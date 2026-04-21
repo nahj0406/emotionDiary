@@ -1,0 +1,55 @@
+/* // 필요한 폰트 설정 */
+.paperLogy {font-family: var(--font-paperlogy) !important;}
+.poppins {font-family: var(--font-poppins) !important;}
+
+.font-\[120px\] {
+   --min: 3.5714rem;
+   --min: 7.1428rem;
+   --size: 6.25vw;
+   --max: 8.5714rem;
+   font-size: clamp(var(--min), var(--size), var(--max));
+}
+
+.font-\[35px\] {
+   --min: 2.1428rem; /* 30 */
+   --size: 1.82vw;
+   --max: 35px;
+   font-size: clamp(var(--min), var(--size), var(--max));
+}
+
+
+/* // 기본 레이아웃 너비 */
+.containerV1 {
+   width: 100%;
+   max-width: 1400px;
+   margin: 0 auto;
+}
+
+
+.sec {
+   position: relative;
+   z-index: 2;
+   width: 100%;
+   height: 100dvh;
+}
+
+
+
+@media (max-width: 1380px) {
+   .containerV1 {
+      padding: 0 13px;
+   }
+}
+
+
+@media (max-width: 768px) {
+   .font-\[120px\] {--min: 70px;}
+}
+
+@media (max-width: 480px) {
+   .font-\[120px\] {--min: 50px;}
+}
+
+@media (max-width: 380px) {
+   .font-\[120px\] {--min: 45px;}
+}

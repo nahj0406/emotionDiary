@@ -1,0 +1,24 @@
+.header {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: #ccc;
+  padding: 20px 15px;
+}
+
+.header .outer {
+  display: flex;
+  gap: 15px;
+}
+
+.header .outer > a {
+  font-size: 16px;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+.header .outer > a:hover,
+.header .outer > a.active {
+  color: crimson;
+}

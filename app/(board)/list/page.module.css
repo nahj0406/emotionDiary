@@ -1,0 +1,11 @@
+.list {
+   display: grid;
+   gap: 15px;
+}
+
+.list > .post {
+   padding: 10px 15px;
+   border: 1px solid #ededed;
+   border-radius: 5px;
+   background: #e6e6e6;
+}

@@ -1,0 +1,23 @@
+'use client'
+
+import styles from './page.module.css'
+import { postType } from "@/app/utils/interfaces"
+
+export function ListContainer({ result }: { result: postType[] }) {
+
+   return (
+      <div className={styles.list}>
+         {result.map((post: postType, i:number) => {
+
+            const content = post.content.replace(/<[^>]*>/g, ''); // 텍스트 html 태그 제거
+
+            return (
+               <div className={styles.post} key={`${post._id}_${i+1}`}>
+                  <h3>{post.title}</h3>
+                  <p>{content}</p>
+               </div>
+            )
+         })}
+      </div>
+   )
+}

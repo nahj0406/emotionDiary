@@ -1,0 +1,40 @@
+.layer_box {
+   display: grid;
+}
+
+.title {
+   font-size: 30px;
+   color: #333;
+}
+
+.form {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+}
+
+.content {
+   display: grid;
+   gap: 15px;
+   margin-top: 20px;
+   width: 100%;
+}
+
+.content .input {
+   border: 1px solid #ededed;
+   border-radius: 5px;
+   padding: 7px 10px;
+   width: 100%;
+   font-size: 20px;
+   transition: border-color .3s;
+}
+
+.content .input:focus {
+   border-color: #666;
+}
+
+.buttonBox {
+   margin-top: 20px;
+   display: flex;
+   gap: 15px;
+}

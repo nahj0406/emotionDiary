@@ -1,0 +1,12 @@
+.button {
+   padding: 7px 10px;
+   font-size: 15px;
+   border: 1px solid #666;
+   border-radius: 5px;
+   cursor: pointer;
+   transition: all 0.3s;
+}
+
+.cancel {
+   background: #ccc;
+}
