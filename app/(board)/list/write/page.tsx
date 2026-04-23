@@ -35,7 +35,9 @@ export default function Write() {
 
    const data = {
       title: formData.get('title'),
+      // name: formData.get('title'),
       content: editor?.getHTML(),
+      // create_add: new Date(),
    }
 
    try {
@@ -47,12 +49,12 @@ export default function Write() {
          body: JSON.stringify(data),
       })
 
+      if (!res.ok) throw new Error('에러')
+
       await NiceModal.show(ConfirmModal, {
         message: "글이 등록되었습니다.",
         autoClose: 1000,
       });
-
-      if (!res.ok) throw new Error('에러')
    } catch (err) {
       await NiceModal.show(ConfirmModal, {
         message: "작성이 실패했습니다.",
