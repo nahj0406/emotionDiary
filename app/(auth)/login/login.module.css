@@ -1,0 +1,48 @@
+.login {
+   display: flex;
+   flex-direction: column;
+   gap: 15px;
+}
+
+.input_box {
+   display: flex;
+   flex-direction: column;
+   gap: 5px;
+}
+
+.input_box > span {
+   font-size: 14px;
+   color: #fff;
+   font-weight: 500;
+}
+
+.input_box > input {
+   border: 1px solid #fff;
+   background: rgba(255,255,255,0.9);
+   color: #111;
+   font-size: 16px;
+   padding: 10px;
+   border-radius: 5px;
+}
+
+.input_box > input::placeholder {
+   color: #555;
+}
+
+.button_box {
+   margin-top: 20px;
+   display: flex;
+   flex-direction: column;
+   gap: 10px;
+}
+
+.button_box button {
+   width: 100%;
+   padding: 13px 10px;
+   text-align: center;
+   font-size: 16px;
+   border-radius: 5px;
+}
+
+.button_box button.submit {background: crimson;}
+.button_box button.signUp {background: rgb(223, 122, 142);}

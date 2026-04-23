@@ -1,0 +1,15 @@
+.view_container {
+   display: grid;
+   gap: 15px;
+}
+
+.view_container .title {
+   font-size: 30px;
+   font-weight: 600;
+}
+
+.view_container .content_box {
+   border: 1px solid #ededed;
+   padding-top: 20px;
+   min-height: 500px;
+}
