@@ -1,10 +1,13 @@
 'use client'
 import NiceModal from '@ebay/nice-modal-react';
+import { SessionProvider } from 'next-auth/react';
 
 export default function ModalProvider ({children} : {children: React.ReactNode;}) {
    return (
-      <NiceModal.Provider>
-         {children}
-      </NiceModal.Provider>
+      <SessionProvider>
+         <NiceModal.Provider>
+            {children}
+         </NiceModal.Provider>
+      </SessionProvider>
    )  
 }

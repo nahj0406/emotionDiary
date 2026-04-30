@@ -1,6 +1,6 @@
-import connectDB from "@/app/utils/database"
+import connectDB from "@/utils/database"
 import { ListContainer } from "./client";
-import { PostDB } from "@/app/utils/interfaces";
+import { PostDB } from "@/utils/types/interfaces";
 
 export default async function List() {
 

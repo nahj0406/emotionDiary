@@ -8,27 +8,28 @@ import clsx from "clsx";
 export function CheckInput({
   custom,
   name,
-  id,
   icon,
+  checked,
+  onChange,
 }: {
   custom: boolean;
   name: string;
-  id: string;
   icon?: string;
+  checked: boolean;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }) {
-  const [active, setActive] = useState(false);
 
   return (
    <div className={styles.input_wrapper}>
       <input
          type="checkbox"
          name={name}
-         id={id}
-         onChange={(e) => setActive(e.target.checked)}
+         checked={checked}
+         onChange={onChange}
          hidden={custom}
       />
       {custom && (
-         <div className={clsx(styles.check_bg, { [styles.active]: active })}>
+         <div className={clsx(styles.check_bg, { [styles.active]: checked })}>
             {icon ? (
             <Image src={icon} alt={"체크박스 아이콘 필요"} />
             ) : (

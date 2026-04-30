@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 import styles from './page.module.css'
-import { postType } from "@/app/utils/interfaces"
+import { postType } from "@/utils/types/interfaces"
 
 export function ListContainer({ result }: { result: postType[] }) {
 

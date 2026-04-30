@@ -1,4 +1,4 @@
-import connectDB from "@/app/utils/database";
+import connectDB from "@/utils/database";
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 

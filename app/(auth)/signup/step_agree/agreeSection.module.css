@@ -1,0 +1,42 @@
+.container {
+   display: grid;
+}
+
+.container .title {
+   font-size: 30px;
+   font-weight: 600;
+   color: #111;
+   text-align: center;
+   margin-bottom: 50px;
+}
+
+.checkBox_group {
+   display: grid;
+   gap: 30px;
+}
+
+.checkBox_group .document_box {
+   display: flex;
+   flex-direction: column;
+   gap: 15px;
+   width: 100%;
+}
+
+.all_check .check_box {
+   font-size: 20px;
+}
+
+.check_box {
+   display: flex;
+   gap: 5px;
+   font-size: 16px;
+}
+
+.document_box .content {
+   height: 200px;
+   min-height: 200px;
+   border: 1px solid #e7e7e7;
+   border-radius: 5px;
+   padding: 15px;
+   overflow-y: scroll;
+}

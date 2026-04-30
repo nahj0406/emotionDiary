@@ -1,6 +1,6 @@
 import styles from './page.module.css'
-import connectDB from "@/app/utils/database"
-import { PostDB } from "@/app/utils/interfaces";
+import connectDB from "@/utils/database"
+import { PostDB } from "@/utils/types/interfaces";
 import { ObjectId } from 'mongodb';
 import { ContentBox } from './client';
 import clsx from 'clsx';
