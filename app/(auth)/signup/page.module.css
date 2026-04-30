@@ -1,0 +1,22 @@
+
+/* step public style */
+.button_box {
+   display: flex;
+   gap: 15px;
+   width: 100%;
+   max-width: 400px;
+   margin: 30px auto 0;
+}
+
+.button_box > button {
+   width: 100%;
+}
+
+/* 인증 버튼 */
+.ctf_btn {
+   width: 100%;
+   max-width: fit-content;
+   padding: 5px;
+   border: 1px solid #ccc;
+   border-radius: 5px;
+}

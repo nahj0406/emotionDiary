@@ -27,41 +27,41 @@ export default function Write() {
   })
 
   const handleSubmit = async (e: React.MouseEvent) => {
-   e.preventDefault();
+      e.preventDefault();
 
-   if(!formRef.current || !editor) return
+      if(!formRef.current || !editor) return
 
-   const formData = new FormData(formRef.current)
+      const formData = new FormData(formRef.current)
 
-   const data = {
-      title: formData.get('title'),
-      // name: formData.get('title'),
-      content: editor?.getHTML(),
-      // create_add: new Date(),
-   }
+      const data = {
+         title: formData.get('title'),
+         // name: formData.get('title'),
+         content: editor?.getHTML(),
+         // create_add: new Date(),
+      }
 
-   try {
-      const res = await fetch('/api/post/write', {
-         method: 'POST',
-         headers: {
-            'Content-Type': 'application/json',
-         },
-         body: JSON.stringify(data),
-      })
+      try {
+         const res = await fetch('/api/post/write', {
+            method: 'POST',
+            headers: {
+               'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+         })
 
-      if (!res.ok) throw new Error('에러')
+         if (!res.ok) throw new Error('에러')
 
-      await NiceModal.show(ConfirmModal, {
-        message: "글이 등록되었습니다.",
-        autoClose: 1000,
-      });
-   } catch (err) {
-      await NiceModal.show(ConfirmModal, {
-        message: "작성이 실패했습니다.",
-        autoClose: 1000,
-      });
-      console.error(err)
-   }
+         await NiceModal.show(ConfirmModal, {
+            message: "글이 등록되었습니다.",
+            autoClose: 1000,
+         });
+      } catch (err) {
+         await NiceModal.show(ConfirmModal, {
+            message: "작성이 실패했습니다.",
+            autoClose: 1000,
+         });
+         console.error(err)
+      }
   }
 
    return (
