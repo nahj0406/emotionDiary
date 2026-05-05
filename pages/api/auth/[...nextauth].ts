@@ -24,7 +24,7 @@ export const authOptions: NextAuthOptions = {
          //직접 DB에서 아이디,비번 비교하고
          //아이디,비번 맞으면 return 결과, 틀리면 return null 해야함
          async authorize(credentials) {
-            if (!credentials) return null;
+            if (!credentials) throw new Error('잘못된 요청입니다.');
 
             const db = (await connectDB).db("community");
 
@@ -33,8 +33,7 @@ export const authOptions: NextAuthOptions = {
             });
 
             if (!user) {
-               console.log("해당 이메일은 없음");
-               return null;
+               throw new Error('존재하지 않는 이메일입니다.');
             }
 
             const pwcheck = await bcrypt.compare(
@@ -43,12 +42,10 @@ export const authOptions: NextAuthOptions = {
             );
 
             if (!pwcheck) {
-               console.log("비번틀림");
-               return null;
+               throw new Error('비밀번호가 일치하지 않습니다.')
             }
 
             if(!user.emailVerified) {
-               console.log('이메일 인증 안됨');
                throw new Error('이메일 인증이 필요합니다.')
             }
 
@@ -75,6 +72,7 @@ export const authOptions: NextAuthOptions = {
       jwt: async ({ token, user }) => {
          if (user) {
             token.user = {
+               id: user.id,
                nickname: user.nickname,
                name: user.name,
                email: user.email,

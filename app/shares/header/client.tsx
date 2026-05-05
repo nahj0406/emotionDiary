@@ -7,6 +7,8 @@ import clsx from "clsx";
 import SideBar from '../sideBar/sideBar';
 import { useState } from 'react';
 import { useSession } from "next-auth/react";
+import { UserDB } from "@/utils/types/interfaces";
+import { WithId } from "mongodb";
 import { signOut } from "next-auth/react";
 
 export const MenuLink = ({href, children}:{href: string, children: React.ReactNode;}) => {
@@ -17,27 +19,35 @@ export const MenuLink = ({href, children}:{href: string, children: React.ReactNo
    )
 }
 
-export function SignWrapper() {
+export function SignWrapper({user}:{user:WithId<UserDB> | null}) {
    const [sideOpen, setSideOpen] = useState<boolean>(false);
    const { data: sesstion, status } = useSession();
 
-   console.log(sesstion);
+   console.log('유저정보', sesstion);
 
    if(status === 'loading') return <p>로딩중...</p>
 
    return (
       <>
          <div className={styles.sign_box}>
-           <button onClick={()=> setSideOpen(true)} className={styles.button} type='button'>로그인</button>
-           {sesstion && (
+           {
+            sesstion ?
                <>
-                  <p>환영합니다{sesstion.user.name}</p>
-                  <button className={styles.button} onClick={()=> signOut()} type='button'>로그아웃</button>
+                  <Link href={'/mypage'} className={styles.user_thumbnail}>
+                     {
+                        user?.thumbnail ? 
+                           <img src={user?.thumbnail} alt="유저 썸네일" />
+                        : <img src="img/user_unknown.png" alt="no-img" />
+                     }
+                  </Link>
+                  <button onClick={()=> signOut()} className={styles.button} type='button'>로그아웃</button>
                </>
-           )}
+               :
+               <button onClick={()=> setSideOpen(true)} className={styles.button} type='button'>로그인</button>
+           }
          </div>
-
-         <SideBar openKey={sideOpen} keyUpdate={setSideOpen} />
+         
+         {!sesstion && <SideBar user={user} openKey={sideOpen} keyUpdate={setSideOpen} />}
       </>
    )
 }

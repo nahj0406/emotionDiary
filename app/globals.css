@@ -76,6 +76,10 @@
     background: none;
   }
 
+  input::-ms-reveal {
+    display: none;
+  }
+
   dt {
     font-weight: normal;
   }
