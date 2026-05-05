@@ -22,6 +22,18 @@
    gap: inherit;
 }
 
+.write_field .pw_box .pw_input {
+   position: relative;
+}
+
+.write_field .pw_box .pw_input button {
+   position: absolute;
+   z-index: 3;
+   top: 50%;
+   right: 10px;
+   transform: translateY(-50%);
+}
+
 .write_field span.essential {
    position: relative;
    display: inline-block;

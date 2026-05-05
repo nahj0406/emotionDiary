@@ -18,8 +18,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "추억은 만남보다 밈에 남아",
-  description: "추억속의 밈들을 공유해 보세요. 추억은 만남보다 밈에 남아",
+  title: "나누북",
+  description: "여러분이 사랑하는 책과 이야기들을 공유하고 나눠보세요",
 };
 
 export default function RootLayout({

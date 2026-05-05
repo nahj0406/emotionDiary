@@ -2,14 +2,12 @@
 import SubmitBtn from "@/components/button/submitBtn/submit_btn"
 import { useRouter } from "next/navigation"
 import styles from './page.module.css'
-import { useEditor } from '@tiptap/react'
-import StarterKit from '@tiptap/starter-kit'
-import Image from '@tiptap/extension-image'
 import TiptapEditor from "@/components/Editor/Tiptap";
 import clsx from "clsx";
 import { useRef } from "react"
 import ConfirmModal from '@/components/modals/ConfirmModal';
 import NiceModal from "@ebay/nice-modal-react";
+import { useTiptapEditor } from "@/components/Editor/useTiptap"
 
 export default function Write() {
 
@@ -17,14 +15,7 @@ export default function Write() {
    const formRef = useRef<HTMLFormElement>(null);
 
 
-   const editor = useEditor({
-    content: '<p>내용을 입력해 주세요.</p>',
-    extensions: [
-      StarterKit,
-      Image,
-    ],
-    immediatelyRender: false,
-  })
+   const editor = useTiptapEditor();
 
   const handleSubmit = async (e: React.MouseEvent) => {
       e.preventDefault();

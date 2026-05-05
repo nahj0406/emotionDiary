@@ -5,6 +5,9 @@
   width: 100%;
   background: #ccc;
   padding: 20px 15px;
+  display: flex;
+  justify-content: space-between;
+  z-index: 1000;
 }
 
 .header .outer {

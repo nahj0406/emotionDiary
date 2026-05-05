@@ -20,9 +20,11 @@ export default function Login() {
       redirect: false,
     });
 
+    console.log(res?.error);
+
     if (res?.error) {
       return await NiceModal.show(ConfirmModal, {
-        message: "로그인 실패",
+        message: res?.error,
       });
     }
 
