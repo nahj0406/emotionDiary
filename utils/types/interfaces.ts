@@ -3,7 +3,7 @@ import { ObjectId } from "mongodb";
 export interface UserDB {
   _id: ObjectId
   name: string
-  nickname: string
+  nickName: string
   thumbnail: string
   email: string
   password: string
@@ -25,7 +25,7 @@ export interface postType {
 
 export interface SignupRequest {
   name: string;
-  nickname: string;
+  nickName: string;
   email: string;
   password: string;
 };

@@ -2,350 +2,587 @@
 
 import styles from "./infoSection.module.css";
 import pages from "../page.module.css";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import NiceModal from "@ebay/nice-modal-react";
 import ConfirmModal from "@/components/modals/ConfirmModal";
 import Image from "next/image";
-import BadWordsNext from 'bad-words-next';
-import en from 'bad-words-next/lib/en';
-import { sendVerified, verifiedCheck, signupSubmit } from "../services/requester";
+import {
+  createMailcode,
+  getVerifiedCode,
+  createSubmit,
+} from "../services/requester";
 import { normalize } from "@/utils/functions";
+import clsx from "clsx";
+import { BAD_WORDS, customWords } from "@/utils/badWords/badWords";
+import { signupVal } from "@/utils/validations/signup/infoValidation";
+
+type nickCheck = {
+  available: boolean;
+  message: string;
+}
 
 export default function InfoSection({
   setSteps,
 }: {
   setSteps: React.Dispatch<React.SetStateAction<string>>;
 }) {
-   const [badNames, setBadNames] = useState<boolean>(false);
-   const customWords = {
-      ...en,
-      words: [
-         ...en.words,
-         '시발', '씨발', '병신', '개새끼','미친놈', '미친년','존나',
-         '좆', '좇', '지랄', '염병','쌍놈','걸레','창녀','보지', '자지',
-         '후장','딸딸이','ㅅㅂ','ㅂㅅ','ㅈㄴ','ㅈㄹ','ㅊㄴ','새끼','허벌',
-         '섹스','씨발놈','씨발롬','시발롬','시발놈',"시발련",'시발년','애미','애비','후장',
-         'ㄴㅇㅁ','ㄴㄱ',
-      ],
-   };
+  const formRef = useRef<HTMLFormElement>(null);
+  const [nickRes, setNickRes] = useState<nickCheck | null>(null);
+  const [nickSafeValue, setNickSafeValue] = useState<string>();
+  const [isMissMatch, SetIsMissMatch] = useState<boolean>(false);
+  const [verified_mail, setVerified_mail] = useState<boolean>(false);
+  const [verifiedCode, setVerifiedCode] = useState<string>("");
+  const [mailRetry, setMailRetry] = useState<boolean>(false);
+  const [verificationDB_Id, setVerificationDB_Id] = useState<string>("");
+  const [verifiedDate, setVerifiedDate] = useState<Date | null>(null);
+  const [remain_Count, setRemain_Count] = useState<string>("");
+  const [mailPassOK, setMailPassOk] = useState<boolean>(false);
 
-   const filter = new BadWordsNext({
-      data: customWords,
-   });
+  const [inputs, setInputs] = useState({
+    name: {
+      value: "",
+      bad_content: false,
+      lengthErr: false,
+      typeNumber: false,
+    },
+    nickName: {
+      value: "",
+      bad_content: false,
+      lengthErr: false,
+      duplicate: false,
+      typeNumber: false,
+    },
+    password: {
+      value: "",
+      bad_content: false,
+      lengthErr: false,
+    },
+    pwCheck: {
+      value: "",
+      bad_content: false,
+      lengthErr: false,
+    },
+  });
 
-   const badNameFilter = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const txt = e.target.value;
-      const normalized = normalize(txt);
-      if(filter.check(normalized)) {
-         setBadNames(true)
-      } else {
-         setBadNames(false)
-      }
+  const [showPw, setShowPw] = useState({
+    password: false,
+    pwCheck: false,
+  });
 
-      console.log(txt);
-   }
-
-   console.log(badNames);
-   
-   const formRef = useRef<HTMLFormElement>(null);
-   const [verified_code, setVerified_code] = useState<boolean>(false);
-   const [codeValue, setcodeValue] = useState<string>("");
-   const [warnings, setWarnings] = useState({
-      name: false,
-      nickname: false,
-   });
-   const [showPw, setShowPw] = useState({
-      password: false,
-      pw_check: false,
-   });
-   const [pwTxt, setPwTxt] = useState({
-      password: "",
-      pw_check: "",
-   });
-
-   // 비밀번호 일치 확인
-   const isMismatch =
-      pwTxt.password &&
-      pwTxt.pw_check &&
-      pwTxt.password !== pwTxt.pw_check;
-
-   const stringFilter = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // input onchange 필터
+  const safeInput_changer = (e: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value } = e.target;
 
-      const hasSpecial = /[!@#$%^&*]/.test(value);
+      const result = 
+         [signupVal.pw.key, signupVal.pwCheck.key].includes(name)
+            ? value.replace(/[^a-zA-Z0-9!@#$%^&*]/g, "")
+            : value.replace(/[\s!@#$%^&*()+=\[\]{};:'",<>/?\\|`~_-]/g, "");
+      
+      // 숫자로만 이루어진 이름 차단
+      const isOnlyNumber = /^\d+$/.test(value);
 
-      setWarnings((prev) => ({
+      // 닉네임 지워지면 재중복처리하도록 수정
+      if (name === signupVal.nickName.key) {
+         if(value !== nickSafeValue) {
+            setNickRes(null);
+         }
+      }
+
+      // 욕설 필터링
+      const normalized = normalize(value);
+      const isBadContent =
+      BAD_WORDS.check(normalized) ||
+      customWords.words.some((w) => normalized.includes(w));
+
+      setInputs((prev) => ({
          ...prev,
-         [name]: hasSpecial,
+         [name]: {
+            value: result,
+            typeNumber: isOnlyNumber,
+            bad_content: isBadContent,
+         },
       }));
-   };
+  };
 
-   const inputCodeChanger = (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (e.target.value) {
-         setcodeValue(e.target.value);
+   // 문자열 길이 체크
+   const lengthCheck_handler = (
+      e: React.FocusEvent<HTMLInputElement>,
+      minLength: number,
+      maxLength: number,
+   ) => {
+
+      const {name, value } = e.target;
+
+      const errBoolean = 
+         (value.length < minLength || value.length > maxLength) 
+         && value.length !== 0;
+
+      setInputs((prev) => {
+         const key = name as keyof typeof prev;
+
+         return {
+            ...prev,
+            [key]: {
+               ...prev[key],
+               lengthErr: errBoolean,
+            }
+         }
+      })
+   }
+
+  // 닉네임 중복 체크
+  const nickNameDuplicate_Handler = async () => {
+      const result = inputs.nickName.value;
+
+      if (result === "") {
+         return NiceModal.show(ConfirmModal, {
+            message: "닉네임이 입력되지 않았습니다.",
+            autoClose: 1000,
+         });
       }
-   };
 
-   // 인증 이메일 요청 api
-   const send_verified = async () => {
-      if (!formRef.current) return;
+      try {
+         const data = await fetch(
+            "/api/auth/user/nickname_duplication?nickname=" + result
+         ).then((r) => r.json());
 
-      const formData = new FormData(formRef.current);
-      const email = formData.get("email") as string;
+         setNickRes(data);
 
-      if (!email) {
+         if (data?.available) {
+            setNickSafeValue(result);
+         }
+
+      } catch (error) {
+         console.error(error);
+
          NiceModal.show(ConfirmModal, {
-         message: "이메일을 제대로 입력해 주세요",
-         autoClose: 1000,
+            message: "중복 확인 중 오류가 발생했습니다.",
+            autoClose: 1000,
          });
-         return;
-      }
-
-      try {
-         await sendVerified(email)
-
-         setVerified_code(true);
-      } catch (err) {
-         await NiceModal.show(ConfirmModal, {
-         message: "이미 가입된 이메일입니다.",
-         autoClose: 1000,
-         });
-         console.log(err);
       }
    };
 
-   // 이메일 인증코드 확인 api
-   const verified_codeHandler = async () => {
-      const code = codeValue;
-      if (!code) return;
 
-      const formData = new FormData(formRef.current!);
-      const email = formData.get("email") as string;
+  // 메일인증 verificationDb id 조회해서 만료시간 요청
+  useEffect(() => {
+    if (verificationDB_Id) {
+      fetch("/api/auth/user/mail_verification?id=" + verificationDB_Id)
+        .then((r) => r.json())
+        .then((result) => {
+          // result를 인증카운트시간에 넣고서 카운트 돌리면 끝!
+          setVerifiedDate(result.expiresAt);
+        });
+    }
+  }, [verificationDB_Id]);
 
-      try {
-         await verifiedCheck({email, code})
-      } catch (err) {
-         await NiceModal.show(ConfirmModal, {
-            message: "일시적 에러가 발생했습니다.",
+  // 만료시간 카운트다운
+  useEffect(() => {
+    if (verifiedDate === null) return;
+
+    const expire = new Date(verifiedDate).getTime();
+
+    const timer = setInterval(() => {
+      const now = Date.now();
+      const diff = Math.floor((expire - now) / 1000);
+
+      if (diff <= 0) {
+        setRemain_Count("종료");
+        clearTimeout(timer);
+
+        return;
+      }
+
+      const minutes = Math.floor(diff / 60);
+
+      const seconds = diff % 60;
+
+      if (minutes <= 0) {
+        setRemain_Count(`${seconds}초`);
+      } else {
+        setRemain_Count(`${minutes}분 ${seconds}초`);
+      }
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [verifiedDate]);
+
+  useEffect(() => {
+    // 메일 재인증 시도 시간차 걸기
+    if (mailRetry) {
+      const timer = setTimeout(() => {
+        setMailRetry(false);
+      }, 10000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [mailRetry]);
+
+  // 인증 이메일 요청 api
+  const createMailcode_handler = async () => {
+    if (!formRef.current) return;
+
+    const formData = new FormData(formRef.current);
+    const email = formData.get("email") as string;
+
+    if (!email) {
+      NiceModal.show(ConfirmModal, {
+        message: "이메일을 제대로 입력해 주세요",
+        autoClose: 1000,
+      });
+      return;
+    }
+
+    try {
+      const mail_id = await createMailcode(email);
+      setVerified_mail(true);
+      setMailRetry(true);
+      setVerificationDB_Id(mail_id);
+      NiceModal.show(ConfirmModal, {
+        message: "인증코드가 전송되었습니다.",
+        autoClose: 500,
+      });
+
+      console.log("인증 id", verificationDB_Id);
+    } catch (err) {
+      if (err instanceof Error) {
+        if (err.message === "DUPLICATION_MAIL") {
+          await NiceModal.show(ConfirmModal, {
+            message: "이미 가입된 이메일입니다.",
             autoClose: 1000,
-         });
-         console.log(err);
+          });
+          console.log(err);
+        }
       }
-   };
+    }
+  };
 
-   // 최종 요청
-   const handleSubmit = async (e: React.MouseEvent) => {
-      e.preventDefault();
+  // 인증메일 코드 getVerifiedCode_handler 전달용
+  const mailcodePoster = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.value) {
+      setVerifiedCode(e.target.value);
+    }
+  };
 
-      if (!formRef.current) return;
+  // 이메일 인증코드 확인 api
+  const getVerifiedCode_handler = async () => {
+    const code = verifiedCode;
+    if (!code) return;
 
-      const formData = new FormData(formRef.current);
+    const formData = new FormData(formRef.current!);
+    const email = formData.get("email") as string;
 
-      const data = {
-         name: formData.get("name") as string,
-         nickname: formData.get("nickname") as string,
-         email: formData.get("email") as string,
-         password: formData.get("password") as string,
-      };
+    try {
+      const result = await getVerifiedCode({ email, code });
+      setMailPassOk(result);
+    } catch (err) {
+      if (err instanceof Error) {
+        if (err.message === "INCORRECT_CODE") {
+          if (verifiedDate && new Date(verifiedDate).getTime() < Date.now()) {
+            await NiceModal.show(ConfirmModal, {
+              message: "인증코드가 만료되었습니다.",
+              autoClose: 1000,
+            });
+          } else {
+            await NiceModal.show(ConfirmModal, {
+              message: "코드가 올바르지 않습니다.",
+              autoClose: 1000,
+            });
+          }
+          console.log("에러내용", err);
+        }
 
-      // 이름, 닉네임 특수문자 처리
-      if (warnings.name || warnings.nickname) {
-         return NiceModal.show(ConfirmModal, {
-            message: "이름, 닉네임에 특수문자를 포함할 수 없습니다.",
-         });
-      }
-
-      if (badNames) { // 이름 비속어 처리
-         return NiceModal.show(ConfirmModal, {
-            message: "사용할 수 없는 이름입니다.",
+        if (err.message === "EXPIRATION_CODE") {
+          await NiceModal.show(ConfirmModal, {
+            message: "인증코드가 만료되었습니다.",
             autoClose: 1000,
-         });
+          });
+          console.log("에러내용", err);
+        }
       }
+    }
+  };
 
-      // 공백 필터링
-      const hasEmpty = Object.values(data).some((v) => !v.trim());
-      if (hasEmpty) {
-         return NiceModal.show(ConfirmModal, {
-            message: "필수입력란을 전부 입력해 주세요",
-            autoClose: 1000,
-         });
-      }
+  // 최종 요청
+  const createSubmit_handler = async (e: React.MouseEvent) => {
+    e.preventDefault();
 
-      if (isMismatch) {
-         return NiceModal.show(ConfirmModal, {
-            message: "비밀번호가 일치하지 않습니다.",
-            autoClose: 1000,
-         });
-      }
+    if (!formRef.current) return;
 
-      try {
-         await signupSubmit(data)
-         setSteps("COMPLETE");
+    const formData = new FormData(formRef.current);
 
-      } catch (err) {
-         await NiceModal.show(ConfirmModal, {
-            message: "일시적 에러가 발생했습니다.",
-            autoClose: 1000,
-         });
-         console.log(err);
-      }
-   };
+    const data = {
+      name: formData.get(signupVal.name.key) as string,
+      nickName: formData.get(signupVal.nickName.key) as string,
+      email: formData.get(signupVal.email.key) as string,
+      password: formData.get(signupVal.pwCheck.key) as string,
+    };
 
-   return (
-      <div className={styles.container}>
-         <form ref={formRef} className={styles.form}>
-         <div className={styles.input_wrapper}>
-            <div className={styles.write_field}>
-               <span className={styles.essential}>이름</span>
-               <input
-                  name="name"
-                  type="text"
-                  onChange={(e)=> {stringFilter(e); badNameFilter(e);}}
-                  placeholder="이름"
-               />
-                  {warnings.name && <p>특수문자는 이름에 포함할 수 없습니다.</p>}
-                  {badNames && <p>사용할 수 없는 이름입니다.</p>}
+    if(nickRes === null) {
+      return NiceModal.show(ConfirmModal, {
+        message: "닉네임 중복체크를 진행해 주세요.",
+        autoClose: 1000,
+      });
+    }
+
+    if (isMissMatch || inputs.pwCheck.value.length < 0) {
+      return NiceModal.show(ConfirmModal, {
+        message: "비밀번호가 일치하지 않습니다.",
+        autoClose: 1000,
+      });
+    }
+
+    try {
+      await createSubmit(data);
+      setSteps("COMPLETE");
+
+    } catch (err) {
+      const message =
+         err instanceof Error ? err.message : "알 수 없는 오류";
+
+      await NiceModal.show(ConfirmModal, {
+        message: message,
+        autoClose: 1000,
+      });
+      
+      console.log(err);
+    }
+  };
+
+  return (
+    <div className={styles.container}>
+      <form ref={formRef} className={styles.form}>
+        <div className={styles.input_wrapper}>
+          <div className={styles.write_field}>
+            <span className={styles.essential}>이름</span>
+            <input
+              name={signupVal.name.key}
+              type="text"
+              value={inputs.name.value}
+              onChange={(e) => {
+                safeInput_changer(e);
+              }}
+              min={signupVal.name.min}
+              max={signupVal.name.max}
+              onBlur={(e)=> lengthCheck_handler(e, signupVal.name.min, signupVal.name.max)}
+              placeholder={`이름(${signupVal.name.min}글자 이상, ${signupVal.name.max}이하)`}
+            />
+            {inputs.name.bad_content && <p>사용할 수 없는 이름입니다.</p>}
+            {inputs.name.typeNumber && <p>숫자로만 작성된 이름은 사용할 수 없습니다.</p>}
+            {
+               inputs.name.lengthErr && 
+                  <p>{`${signupVal.name.min}글자 이상, ${signupVal.name.max}이하로 작성해 주세요.`}</p>
+            }
+          </div>
+
+          <div className={styles.write_field}>
+            <span className={styles.essential}>닉네임</span>
+            <input
+               name={signupVal.nickName.key}
+               type="text"
+               value={inputs.nickName.value}
+               onChange={(e) => {
+                  safeInput_changer(e);
+               }}
+               min={signupVal.nickName.min}
+               max={signupVal.nickName.max}
+               onBlur={(e)=> {
+                  lengthCheck_handler(e, signupVal.nickName.min, signupVal.nickName.max)
+               }}
+              placeholder={`닉네임(${signupVal.nickName.min}글자 이상, ${signupVal.nickName.max}이하)`}
+            />
+            {inputs.nickName.bad_content && <p>사용할 수 없는 이름입니다.</p>}
+            {inputs.nickName.typeNumber && <p>숫자로만 작성된 이름은 사용할 수 없습니다.</p>}
+            {nickRes?.available ? <p>{nickRes?.message}</p> : <p>{nickRes?.message}</p>}
+            {
+               inputs.nickName.lengthErr && 
+                  <p>{`${signupVal.nickName.min}글자 이상, ${signupVal.nickName.max}이하로 작성해 주세요.`}</p>
+            }
+            <button
+              type="button"
+              className={clsx(pages.ctf_btn, {
+                 [pages.disabled]: 
+                 inputs.nickName.lengthErr || inputs.nickName.typeNumber,
+               })}
+              onClick={nickNameDuplicate_Handler}
+               disabled={
+                  inputs.nickName.lengthErr || 
+                  inputs.nickName.typeNumber
+               }
+            >
+              중복 확인
+            </button>
+          </div>
+
+          <div className={styles.write_field}>
+            <span className={styles.essential}>이메일</span>
+            <div className={styles.unit_box}>
+              <input
+                name={signupVal.email.key}
+                type="email"
+                onInput={(e) => {
+                  e.currentTarget.value = e.currentTarget.value.replace(
+                    /\s/g,
+                    "",
+                  );
+                }}
+                placeholder="이메일을 적어주세요."
+              />
+              {!mailPassOK && (
+                <button
+                  className={clsx(pages.ctf_btn, {
+                    [pages.disabled]: mailRetry,
+                  })}
+                  disabled={mailRetry}
+                  onClick={() => createMailcode_handler()}
+                  type="button"
+                >
+                  이메일 인증하기
+                </button>
+              )}
             </div>
-
-            <div className={styles.write_field}>
-               <span className={styles.essential}>닉네임</span>
-               <input
-                  name="nickname"
-                  type="text"
-                  onChange={(e)=> {stringFilter(e); badNameFilter(e);}}
-                  placeholder="닉네임"
-               />
-                  {warnings.nickname && <p>특수문자는 이름에 포함할 수 없습니다.</p>}
-                  {badNames && <p>사용할 수 없는 이름입니다.</p>}
-            </div>
-
-            <div className={styles.write_field}>
-               <span className={styles.essential}>이메일</span>
-               <div className={styles.unit_box}>
-                  <input name="email" type="email" placeholder="이메일" />
-                  <button
-                     className={pages.ctf_btn}
-                     onClick={() => send_verified()}
-                     type="button"
-                  >
-                     이메일 인증하기
-                  </button>
-               </div>
-               {verified_code && (
-               <div className={styles.write_field}>
+            {verified_mail &&
+              (!mailPassOK ? (
+                <div className={styles.write_field}>
                   <p>
-                     이메일로 인증메일을 전송했습니다. 확인 후 인증번호를 입력해
-                     주세요.
+                    이메일로 인증메일을 전송했습니다. 확인 후 인증번호를 입력해
+                    주세요.
                   </p>
 
                   <div className={styles.unit_box}>
-                     <input
-                        name="email"
-                        type="text"
-                        onChange={(e) => inputCodeChanger(e)}
-                        placeholder="인증번호를 입력해 주세요."
-                     />
-                     <div className={styles.verifed_count}></div>
-                     <button
-                        className={pages.ctf_btn}
-                        onClick={() => verified_codeHandler()}
-                        type="button"
-                     >
-                        인증 완료
-                     </button>
+                    <input
+                      name="email"
+                      type="text"
+                      onChange={(e) => mailcodePoster(e)}
+                      placeholder="인증번호를 입력해 주세요."
+                    />
+                    <div className={styles.verifed_count}>{remain_Count}</div>
+                    <button
+                      className={pages.ctf_btn}
+                      onClick={() => getVerifiedCode_handler()}
+                      type="button"
+                    >
+                      인증 완료
+                    </button>
                   </div>
-               </div>
-               )}
-            </div>
+                </div>
+              ) : (
+                <div>메일 인증이 완료되었습니다!</div>
+              ))}
+          </div>
 
-            <div className={styles.write_field}>
-               <span className={styles.essential}>비밀번호 입력</span>
-                  <div className={styles.pw_box}>
-                  <div className={styles.pw_input}>
-                     <input
-                        name="password"
-                        type={showPw.password ? "text" : "password"}
-                        placeholder="비밀번호를 입력해 주세요."
-                        onBlur={(e) =>
-                        setPwTxt((prev) => ({
+          <div className={styles.write_field}>
+            <span className={styles.essential}>비밀번호 입력</span>
+            <div className={styles.pw_box}>
+              <div className={styles.pw_input}>
+                <input
+                  name={signupVal.pw.key}
+                  type={showPw.password ? "text" : "password"}
+                  value={inputs.password.value}
+                  placeholder={`(${signupVal.pw.min}글자 이상, ${signupVal.pw.max}이하)`}
+                  min={signupVal.pw.min}
+                  max={signupVal.pw.max}
+                  onBlur={(e) => {
+                        setInputs((prev) => ({
                            ...prev,
-                           password: e.target.value,
-                        }))
-                        }
-                     />
-                     <button
-                        type="button"
-                        onClick={() =>
-                        setShowPw((prev) => ({
-                           ...prev,
-                           password: !prev.password,
-                        }))
-                        }
-                     >
-                        {showPw.password ? (
-                        <Image
-                           width={26}
-                           height={14}
-                           src={"/img/pw_eye_show.svg"}
-                           alt={"dk"}
-                        />
-                        ) : (
-                        <Image
-                           width={26}
-                           height={14}
-                           src={"/img/pw_eye.svg"}
-                           alt={"dk"}
-                        />
-                        )}
-                     </button>
-                  </div>
-                  <div className={styles.pw_input}>
-                     <input
-                        name="pw_check"
-                        type={showPw.pw_check ? "text" : "password"}
-                        placeholder="비밀번호를 다시 입력해 주세요."
-                        onBlur={(e) => {
-                        setPwTxt((prev) => ({
-                           ...prev,
-                           pw_check: e.target.value,
+                           password: {
+                              ...prev.password,
+                              value: e.target.value,
+                           },
                         }));
-                        }}
-                     />
-                     <button
-                        type="button"
-                        onClick={() =>
-                        setShowPw((prev) => ({
-                           ...prev,
-                           pw_check: !prev.pw_check,
-                        }))
-                        }
-                     >
-                        {showPw.pw_check ? (
-                        <Image
-                           width={26}
-                           height={14}
-                           src={"/img/pw_eye_show.svg"}
-                           alt={"dk"}
-                        />
-                        ) : (
-                        <Image
-                           width={26}
-                           height={14}
-                           src={"/img/pw_eye.svg"}
-                           alt={"dk"}
-                        />
-                        )}
-                     </button>
-                  </div>
-                  {isMismatch && <p>비밀번호가 일치하지 않습니다.</p>}
-               </div>
+                        lengthCheck_handler(e, signupVal.pw.min, signupVal.pw.max);
+                     }
+                  }
+                  onChange={(e) => safeInput_changer(e)}
+                />
+               <PwShow_Button
+                  type={'password'}
+                  showPw={showPw.password}
+                  setShowPw={setShowPw}
+               />
+               {
+                  inputs.password.lengthErr && 
+                     <p>{`${signupVal.pw.min}글자 이상, ${signupVal.pw.max}이하로 작성해 주세요.`}</p>
+               }
+              </div>
+              <div className={styles.pw_input}>
+                <input
+                  name={signupVal.pwCheck.key}
+                  type={showPw.pwCheck ? "text" : "password"}
+                  value={inputs.pwCheck.value}
+                  placeholder="비밀번호를 다시 입력해 주세요."
+                  onBlur={(e) => {
+                     setInputs((prev) => ({
+                        ...prev,
+                        pwCheck: {
+                           ...prev.pwCheck,
+                           value: e.target.value,
+                        },
+                     }));
+                     SetIsMissMatch(inputs.password.value !== inputs.pwCheck.value);
+                  }}
+                  onChange={(e) => safeInput_changer(e)}
+                />
+                  <PwShow_Button
+                     type={'pwCheck'}
+                    showPw={showPw.pwCheck}
+                    setShowPw={setShowPw}
+                  />
+              </div>
+              {isMissMatch && <p>비밀번호가 일치하지 않습니다.</p>}
             </div>
-         </div>
+          </div>
+        </div>
 
-         <button type="submit" onClick={(e) => handleSubmit(e)}>
-            회원가입 요청
-         </button>
-         </form>
-      </div>
-   );
+        <button type="submit" onClick={(e) => createSubmit_handler(e)}>
+          회원가입 요청
+        </button>
+      </form>
+    </div>
+  );
+}
+
+type ShowPwType = {
+  password: boolean
+  pwCheck: boolean
+}
+
+function PwShow_Button({
+  type,
+  showPw,
+  setShowPw,
+}: {
+  type: keyof ShowPwType
+  showPw: boolean
+  setShowPw: React.Dispatch<
+    React.SetStateAction<ShowPwType>
+  >
+}) {
+  return (
+    <button
+      type="button"
+      onClick={() =>
+        setShowPw((prev) => ({
+          ...prev,
+
+          [type]: !prev[type],
+        }))
+      }
+    >
+      {showPw ? (
+        <Image
+          width={26}
+          height={14}
+          src={"/img/pw_eye_show.svg"}
+          alt="show"
+        />
+      ) : (
+        <Image
+          width={26}
+          height={14}
+          src={"/img/pw_eye.svg"}
+          alt="hide"
+        />
+      )}
+    </button>
+  )
 }

@@ -1,7 +1,7 @@
 import { SignupRequest } from "@/utils/types/interfaces";
 
-export async function sendVerified (email: string) {
-   const res = await fetch("/api/auth/send-verification", {
+export async function createMailcode (email: string) {
+   const res = await fetch("/api/auth/get_verificationMail", {
       method: "POST",
       headers: {
          "Content-Type": "application/json",
@@ -15,11 +15,13 @@ export async function sendVerified (email: string) {
       console.log("서버 응답:", result);
       throw new Error(result.message || "에러");
    }
+
+   return result.verificationId;
 }
 
 
-export async function verifiedCheck ({email, code}:{email: string, code: string}) {
-   const res = await fetch("/api/auth/verify-email", {
+export async function getVerifiedCode ({email, code}:{email: string, code: string}) {
+   const res = await fetch("/api/auth/verify-mailCheck", {
       method: "POST",
       headers: {
          "Content-Type": "application/json",
@@ -33,10 +35,12 @@ export async function verifiedCheck ({email, code}:{email: string, code: string}
       console.log("❌ 서버 응답:", result); // 🔥 핵심
       throw new Error(result.message || "에러");
    }
+
+   return result;
 }
 
 
-export async function signupSubmit (data: SignupRequest) {
+export async function createSubmit (data: SignupRequest) {
    const res = await fetch("/api/auth/signup", {
       method: "POST",
       headers: {

@@ -20,3 +20,8 @@
    border: 1px solid #ccc;
    border-radius: 5px;
 }
+
+button.disabled {
+   cursor:not-allowed;
+   color: #555;
+}

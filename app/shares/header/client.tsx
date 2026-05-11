@@ -23,7 +23,7 @@ export function SignWrapper({user}:{user:WithId<UserDB> | null}) {
    const [sideOpen, setSideOpen] = useState<boolean>(false);
    const { data: sesstion, status } = useSession();
 
-   console.log('유저정보', sesstion);
+   // console.log('유저정보', sesstion);
 
    if(status === 'loading') return <p>로딩중...</p>
 
