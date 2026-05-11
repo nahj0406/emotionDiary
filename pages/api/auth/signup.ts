@@ -1,5 +1,8 @@
+import { BAD_WORDS, customWords } from "@/utils/badWords/badWords";
 import connectDB from "@/utils/database";
 import { ROLE } from "@/utils/exports";
+import { normalize } from "@/utils/functions";
+import { signupVal } from "@/utils/validations/signup/infoValidation";
 import bcrypt from "bcrypt";
 import type { NextApiRequest, NextApiResponse } from "next";
 
@@ -9,10 +12,12 @@ export default async function handler(
 ) {
   if (req.method === "POST") {
     try {
-      const { nickname, name, email, password } = req.body;
+      const { nickName, name, email, password } = req.body;
 
-      if (!nickname || !name || !email || !password) {
-        return res.status(400).json("필수 내용이 입력되지 않았습니다.");
+      if (!nickName || !name || !email || !password) {
+        return res.status(400).json({
+         message: "필수 내용이 입력되지 않았습니다."
+        });
       }
 
       const db = (await connectDB).db("community");
@@ -36,13 +41,79 @@ export default async function handler(
            message: "이미 가입된 이메일입니다.",
          });
       }
+
+      // 닉네임 중복 체크
+      const nickCheck = await db.collection('user_cred').findOne({nickname: nickName});
+      if(nickCheck) {
+         return res.status(400).json({
+            message: '중복된 닉네임은 사용할 수 없습니다.'
+         })
+      }
+
+      // 이름, 닉네임 작성길이 체크
+      const nameLengthErr =
+         name.length < signupVal.name.min ||
+         name.length > signupVal.name.max;
+
+      const nicknameLengthErr =
+         name.length < signupVal.nickName.min ||
+         name.length > signupVal.nickName.max;
+
+      const passwordLengthErr =
+         password.length < signupVal.pw.min ||
+         password.length > signupVal.pw.max;
+
+      if(nameLengthErr || nicknameLengthErr) {
+         return res.status(400).json({
+            message: '이름, 닉네임의 최소, 최대 작성 길이를 지켜주세요.'
+         })
+      }
+
+      if(passwordLengthErr) {
+         return res.status(400).json({
+            message: '비밀번호의 최소, 최대 길이를 지켜주세요.'
+         })
+      }
+
+      const numberTxtCheck = (text: string) => {
+         const isOnlyNumber = /^\d+$/.test(text);
+         return isOnlyNumber
+      }
+
+      const numberName = numberTxtCheck(name);
+      const numberNick = numberTxtCheck(nickName);
+
+      if(numberName || numberNick) {
+         return res.status(400).json({
+            message: '숫자로만 된 이름은 사용할 수 없습니다.'
+         })
+      }
+
+      // 비속어 체크
+      const badWordsCheck = (text: string) => {
+         const normalized = normalize(text);
+         return (
+            BAD_WORDS.check(normalized) ||
+            customWords.words.some((w) => normalized.includes(w))
+         )
+      }
+      const isBadName = badWordsCheck(name);
+      const isBadNick = badWordsCheck(nickName);
+
+      if(isBadName || isBadNick) {
+         return res.status(400).json({
+            message: '이름, 닉네임에 사용할 수 없는 단어가 포함되어 있습니다.'
+         })
+      }
+
+      
       
       // 비밀번호 암호화
       const hash = await bcrypt.hash(req.body.password, 10);
 
       // 최종 데이터 송신
       await db.collection("user_cred").insertOne({
-         nickname,
+         nickname: nickName,
          name,
          email,
          password: hash,
