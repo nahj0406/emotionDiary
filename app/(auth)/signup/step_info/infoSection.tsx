@@ -22,9 +22,9 @@ type nickCheck = {
 }
 
 export default function InfoSection({
-  setSteps,
+  setStep,
 }: {
-  setSteps: React.Dispatch<React.SetStateAction<string>>;
+  setStep: React.Dispatch<React.SetStateAction<string | null>>;
 }) {
   const formRef = useRef<HTMLFormElement>(null);
   const [nickRes, setNickRes] = useState<nickCheck | null>(null);
@@ -333,7 +333,7 @@ export default function InfoSection({
 
     try {
       await createSubmit(data);
-      setSteps("COMPLETE");
+      setStep("COMPLETE");
 
     } catch (err) {
       const message =

@@ -10,9 +10,9 @@ import NiceModal from "@ebay/nice-modal-react";
 import ConfirmModal from "@/components/modals/ConfirmModal";
 
 export default function AgreeSection({
-  setSteps,
+  setStep,
 }: {
-  setSteps: React.Dispatch<React.SetStateAction<string>>;
+  setStep: React.Dispatch<React.SetStateAction<string | null>>;
 }) {
    const [checks, setChecks] = useState<string[]>([]);
    const ITEMS = ["agree", "privacy"];
@@ -36,7 +36,7 @@ export default function AgreeSection({
 
    const stepHandler = () => {
       if (checks.includes("agree") && checks.includes("privacy")) {
-         setSteps("INFO");
+         setStep("INFO");
       } else {
          NiceModal.show(ConfirmModal, {
          message: "필수 약관에 모두 동의해 주세요.",
