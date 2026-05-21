@@ -52,7 +52,7 @@ export const authOptions: NextAuthOptions = {
             // ✅ 핵심: NextAuth User 형태로 변환
             return {
                id: user._id.toString(),
-               nickname: user.email,
+               nickName: user.nickName ?? null,
                name: user.name ?? null,
                email: user.email,
             };
@@ -69,21 +69,21 @@ export const authOptions: NextAuthOptions = {
    callbacks: {
       //4. jwt 만들 때 실행되는 코드
       //user변수는 DB의 유저정보담겨있고 token.user에 뭐 저장하면 jwt에 들어갑니다.
-      jwt: async ({ token, user }) => {
+      async jwt({ token, user }) {
          if (user) {
-            token.user = {
-               id: user.id,
-               nickname: user.nickname,
-               name: user.name,
-               email: user.email,
-            };
+            token.id = user.id;
+            token.nickName = user.nickName;
          }
+
          return token;
       },
 
-      //5. 유저 세션이 조회될 때 마다 실행되는 코드
-      session: async ({ session, token }) => {
-         session.user = token.user!;
+      async session({ session, token }) {
+         if (session.user) {
+            session.user.id = token.id as string;
+            session.user.nickName = token.nickName as string;
+         }
+
          return session;
       },
    },

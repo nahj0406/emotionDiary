@@ -1,22 +1,41 @@
 'use client'
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AgreeSection from "./step_agree/agreeSection";
 import InfoSection from "./step_info/infoSection";
 import CompleteSection from "./step_complete/completeSection";
 
 export default function SignUp() {
 
-   const [steps, setSteps] = useState('AGREE');
-   const ITEMS = ['']
+   const [step, setStep] = useState<string | null>(null);
+
+   useEffect(() => {
+      const saved =
+         sessionStorage.getItem("signUpStep") || "AGREE";
+
+      setStep(saved);
+
+      return ()=> {
+         sessionStorage.removeItem('signUpStep');
+      }
+   }, []);
+
+   useEffect(() => {
+      if (step) {
+         sessionStorage.setItem("signUpStep", step);
+      }
+   }, [step]);
+
+   if (!step) return null;
+
 
    return (
       <section className="containerV1">
-         {steps === 'AGREE' && <AgreeSection setSteps={setSteps} />}
+         {step === 'AGREE' && <AgreeSection setStep={setStep} />}
 
-         {steps === 'INFO' && <InfoSection setSteps={setSteps} />}
+         {step === 'INFO' && <InfoSection setStep={setStep} />}
 
-         {steps === 'COMPLETE' && <CompleteSection />}
+         {step === 'COMPLETE' && <CompleteSection />}
       </section>
    )
 }

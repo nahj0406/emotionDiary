@@ -7,6 +7,24 @@
    color: #333;
 }
 
+.serach_list {
+   display: grid;
+   grid-template-columns: repeat(6, 1fr);
+   /* flex-wrap: wrap; */
+   gap: 30px;
+}
+
+.serach_list > article {
+   min-width: 0;
+}
+
+.serach_list img {
+   /* aspect-ratio: 2/3; */
+   object-fit: cover;
+}
+
+
+
 .form {
    display: flex;
    flex-direction: column;

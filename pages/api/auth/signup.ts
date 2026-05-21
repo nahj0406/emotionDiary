@@ -43,7 +43,7 @@ export default async function handler(
       }
 
       // 닉네임 중복 체크
-      const nickCheck = await db.collection('user_cred').findOne({nickname: nickName});
+      const nickCheck = await db.collection('user_cred').findOne({nickName: nickName});
       if(nickCheck) {
          return res.status(400).json({
             message: '중복된 닉네임은 사용할 수 없습니다.'
@@ -113,7 +113,7 @@ export default async function handler(
 
       // 최종 데이터 송신
       await db.collection("user_cred").insertOne({
-         nickname: nickName,
+         nickName: nickName,
          name,
          email,
          password: hash,

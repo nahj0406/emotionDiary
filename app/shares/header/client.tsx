@@ -1,15 +1,16 @@
 'use client'
 
 import Link from "next/link";
-import styles from './header.module.css'
-import { usePathname } from "next/navigation";
+import styles from './header.module.css';
+import { usePathname, useSearchParams } from "next/navigation";
 import clsx from "clsx";
 import SideBar from '../sideBar/sideBar';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSession } from "next-auth/react";
 import { UserDB } from "@/utils/types/interfaces";
 import { WithId } from "mongodb";
 import { signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export const MenuLink = ({href, children}:{href: string, children: React.ReactNode;}) => {
    const pathname = usePathname();
@@ -22,8 +23,23 @@ export const MenuLink = ({href, children}:{href: string, children: React.ReactNo
 export function SignWrapper({user}:{user:WithId<UserDB> | null}) {
    const [sideOpen, setSideOpen] = useState<boolean>(false);
    const { data: sesstion, status } = useSession();
+   const router = useRouter();
 
-   // console.log('유저정보', sesstion);
+   const searchParams = useSearchParams();
+   const isAuthRequired = searchParams?.get('auth') === 'required';
+
+   useEffect(() => {
+      if (!isAuthRequired) return
+
+      setSideOpen(true);
+
+      // 처리 후 URL 정리
+      router.replace('/')
+   }, [isAuthRequired, router])
+
+   // console.log(sideOpen);
+
+   
 
    if(status === 'loading') return <p>로딩중...</p>
 
@@ -40,7 +56,7 @@ export function SignWrapper({user}:{user:WithId<UserDB> | null}) {
                         : <img src="img/user_unknown.png" alt="no-img" />
                      }
                   </Link>
-                  <button onClick={()=> signOut()} className={styles.button} type='button'>로그아웃</button>
+                  <button onClick={()=> {signOut(); router.push('/');}} className={styles.button} type='button'>로그아웃</button>
                </>
                :
                <button onClick={()=> setSideOpen(true)} className={styles.button} type='button'>로그인</button>
