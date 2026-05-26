@@ -16,7 +16,7 @@ export default function Comment ({post_id}:{post_id:string}) {
 
    return (
       <article className={styles.comment_box}>
-         <h5>댓글</h5>
+         <h5>댓글 </h5>
          <ul className={styles.list}>
             {
                data.length > 0 ?
@@ -33,7 +33,8 @@ export default function Comment ({post_id}:{post_id:string}) {
          </ul>
 
          <div className={styles.write_box}>
-            
+            <textarea name="comment" id="comment" placeholder='욕설, 비방 등은 자제해 주세요.' />
+            <button type='button'>작성하기</button>
          </div>
       </article>
    )

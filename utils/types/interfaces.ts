@@ -9,6 +9,9 @@ export interface UserDB {
   password: string
   emailVerified: boolean
   createAt: Date
+  post: {
+   recommend: string[]
+  }
 }
 
 export interface PostDB {
@@ -23,6 +26,7 @@ export interface PostDB {
    bookPublisher: string,
    bookLink: string,
   }
+  recommend: number,
   createdAt: Date
 }
 
@@ -69,4 +73,9 @@ export type GoogleBookItem = {
          amount: number;
       };
   };
+};
+
+export type ClientPost = {
+  _id: string;
+  recommend: number;
 };

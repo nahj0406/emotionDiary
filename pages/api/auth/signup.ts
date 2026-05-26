@@ -113,12 +113,14 @@ export default async function handler(
 
       // 최종 데이터 송신
       await db.collection("user_cred").insertOne({
-         nickName: nickName,
          name,
+         nickName: nickName,
+         thumbnail: '',
          email,
          password: hash,
          emailVerified: true,
          createdAt: new Date(),
+         post: {recommend: []},
          role: ROLE.USER,
       });
 

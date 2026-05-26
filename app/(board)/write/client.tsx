@@ -73,6 +73,7 @@ export default function WriteFrame() {
 
    useEffect(()=> {
       if(bookData) {
+         // eslint-disable-next-line react-hooks/set-state-in-effect
          setBkinputs({
             bookTitle: bookData?.title ?? '',
             bookImage: bookData?.image ?? '',
@@ -183,10 +184,16 @@ export default function WriteFrame() {
             );
          }
 
-         await NiceModal.show(ConfirmModal, {
+         const result = await res.json();
+
+         console.log(result);
+
+         NiceModal.show(ConfirmModal, {
             message: "글이 등록되었습니다.",
             autoClose: 1000,
          });
+
+         router.push(`/list/${result.id}`);
 
       } catch (err) {
          const message =
