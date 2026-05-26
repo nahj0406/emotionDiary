@@ -4,7 +4,7 @@ import NiceModal from "@ebay/nice-modal-react";
 import styles from "./login.module.css";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import ConfirmModal from "@/components/modals/ConfirmModal";
 
@@ -12,6 +12,7 @@ export default function Login() {
    const [email, setEmail] = useState("");
    const [password, setPassword] = useState("");
    const router = useRouter();
+   const searchParams = useSearchParams();
 
    const handleLogin = async () => {
       const res = await signIn("credentials", {
@@ -20,15 +21,14 @@ export default function Login() {
          redirect: false,
       });
 
-      //  console.log(res?.error);
+      const callbackUrl = searchParams?.get('callbackUrl') || '/';
+      router.push(callbackUrl);
 
       if (res?.error) {
          return await NiceModal.show(ConfirmModal, {
             message: res?.error,
          });
       }
-
-      router.push("/");
    };
 
    return (

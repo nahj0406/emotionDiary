@@ -17,6 +17,8 @@ export default async function Mypage() {
       userInfo = await db.collection<UserDB>('user_cred').findOne({_id: new ObjectId(session?.user?.id)});
    }
 
+   console.log(session)
+
    const safeUser = userInfo
       ? JSON.parse(JSON.stringify(userInfo))
       : null;

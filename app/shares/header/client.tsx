@@ -30,11 +30,11 @@ export function SignWrapper({user}:{user:WithId<UserDB> | null}) {
 
    useEffect(() => {
       if (!isAuthRequired) return
-
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSideOpen(true);
 
       // 처리 후 URL 정리
-      router.replace('/')
+      // router.replace('/')
    }, [isAuthRequired, router])
 
    // console.log(sideOpen);

@@ -1,17 +1,22 @@
 .header {
-  position: sticky;
+  position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  background: #ccc;
-  padding: 20px 15px;
+  width: fit-content;
+  height: 100dvh;
+  background: #F0E1C9;
+  padding: 15px 20px;
   display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: space-between;
   z-index: 1000;
 }
 
 .header .outer {
   display: flex;
+  flex-direction: column;
+  width: fit-content;
   gap: 15px;
 }
 

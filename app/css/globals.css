@@ -16,7 +16,7 @@
     color: #000;
     word-wrap: break-word;
     word-break: keep-all;
-    /* overflow: hidden; */
+    overflow-x: hidden;
   }
 
   h1,
