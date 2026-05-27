@@ -1,15 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import styles from "./agreeSection.module.css";
-import pages from "../page.module.css";
-import { CheckInput } from "@/components/input/checkbox/checkInput";
-import SubmitBtn from "@/components/button/submitBtn/submit_btn";
+import styles from "./agree.module.css";
+import pages from "../../page.module.css";
+import { CheckInput } from "@/components/ui/input/checkbox/checkInput";
+import SubmitBtn from "@/components/ui/button/submitBtn/submit_btn";
 import { useRouter } from "next/navigation";
 import NiceModal from "@ebay/nice-modal-react";
 import ConfirmModal from "@/components/modals/ConfirmModal";
 
-export default function AgreeSection({
+export default function Agree({
   setStep,
 }: {
   setStep: React.Dispatch<React.SetStateAction<string | null>>;

@@ -1,7 +1,7 @@
 'use client'
 
 import styles from './page.module.css'
-import { UserDB } from "@/utils/types/interfaces";
+import { UserDB } from "@/types/interfaces";
 import { WithId } from "mongodb";
 import Link from 'next/link';
 

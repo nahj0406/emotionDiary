@@ -1,4 +1,4 @@
-import { UserDB } from "@/utils/types/interfaces";
+import { UserDB } from "@/types/interfaces";
 import { WithId } from "mongodb";
 import styles from './page.module.css'
 import { signupVal } from "@/utils/validations/signup/infoValidation";

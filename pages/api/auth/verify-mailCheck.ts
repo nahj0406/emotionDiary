@@ -1,4 +1,4 @@
-import connectDB from '@/utils/database';
+import connectDB from '@/lib/mongoDB/database';
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {

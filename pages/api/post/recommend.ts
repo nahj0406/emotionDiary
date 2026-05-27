@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { ObjectId } from 'mongodb';
-import connectDB from '@/utils/database';
+import connectDB from '@/lib/mongoDB/database';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../auth/[...nextauth]';
-import { UserDB } from '@/utils/types/interfaces';
+import { UserDB } from '@/types/interfaces';
 
 export default async function handler(
   req: NextApiRequest,

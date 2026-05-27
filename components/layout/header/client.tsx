@@ -7,7 +7,7 @@ import clsx from "clsx";
 import SideBar from '../sideBar/sideBar';
 import { useEffect, useState } from 'react';
 import { useSession } from "next-auth/react";
-import { UserDB } from "@/utils/types/interfaces";
+import { UserDB } from "@/types/interfaces";
 import { WithId } from "mongodb";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";

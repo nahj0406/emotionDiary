@@ -1,14 +1,26 @@
 'use client'
+import { useRouter } from 'next/navigation'
+import styles from './css/page.module.css'
+import { postType } from "@/types/interfaces"
 
-import SubmitBtn from "@/components/button/submitBtn/submit_btn";
-import { useRouter } from "next/navigation"
 
-export const BackBtn = () => {
+
+export default function MainList ({list}:{list: postType[]}) {
    const router = useRouter();
 
    return (
-      <SubmitBtn onClick={()=> router.back()} content={'뒤로 가기'} />
+      <div className={styles.list}>
+         {list.map((post: postType, i:number) => {
+
+            const content = post.content.replace(/<[^>]*>/g, ''); // 텍스트 html 태그 제거
+
+            return (
+               <div className={styles.post} key={`${post._id}_${i+1}`}>
+                  <h3 onClick={()=> router.push(`/list/${post._id}`)}>{post.title}</h3>
+                  <p>{content}</p>
+               </div>
+            )
+         })}
+      </div>
    )
 }
-
-BackBtn.displayName = 'BackBtn'

@@ -1,4 +1,4 @@
-import { SignupRequest } from "@/utils/types/interfaces";
+import { SignupRequest } from "@/types/interfaces";
 
 export async function createMailcode (email: string) {
    const res = await fetch("/api/auth/get_verificationMail", {

@@ -1,9 +1,9 @@
 'use client'
 
 import { useEffect, useState } from "react";
-import AgreeSection from "./step_agree/agreeSection";
-import InfoSection from "./step_info/infoSection";
-import CompleteSection from "./step_complete/completeSection";
+import Agree from "./steps/Agree/agree";
+import InfoEnter from "./steps/InfoEnter/infoEnter";
+import Complete from "./steps/Complete/complete";
 
 export default function SignUp() {
 
@@ -12,7 +12,8 @@ export default function SignUp() {
    useEffect(() => {
       const saved =
          sessionStorage.getItem("signUpStep") || "AGREE";
-
+         
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setStep(saved);
 
       return ()=> {
@@ -31,11 +32,11 @@ export default function SignUp() {
 
    return (
       <section className="containerV1">
-         {step === 'AGREE' && <AgreeSection setStep={setStep} />}
+         {step === 'AGREE' && <Agree setStep={setStep} />}
 
-         {step === 'INFO' && <InfoSection setStep={setStep} />}
+         {step === 'INFO' && <InfoEnter setStep={setStep} />}
 
-         {step === 'COMPLETE' && <CompleteSection />}
+         {step === 'COMPLETE' && <Complete />}
       </section>
    )
 }

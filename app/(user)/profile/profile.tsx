@@ -1,5 +1,5 @@
 'use client'
-import { UserDB } from '@/utils/types/interfaces';
+import { UserDB } from '@/types/interfaces';
 import styles from './profile.module.css'
 import { signOut } from "next-auth/react";
 import Link from 'next/link';

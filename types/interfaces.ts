@@ -26,6 +26,9 @@ export interface PostDB {
    bookPublisher: string,
    bookLink: string,
   }
+  user: {
+   id: string;
+  }
   recommend: number,
   createdAt: Date
 }
@@ -34,6 +37,21 @@ export interface postType {
    _id: string;
    title: string;
    content: string;
+   imageUrl: string;
+   recommend: number;
+   createdAt: Date | string;
+   userId: string;
+}
+
+export interface CommentType {
+   _id: ObjectId;
+   postId: ObjectId;
+   nickName: string;
+   content: string;
+   recommend: number;
+   parentCommentId: string | null;
+   depth: number;
+   createdAt: Date;
 }
 
 export interface SignupRequest {

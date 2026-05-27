@@ -1,6 +1,6 @@
 import styles from './page.module.css'
-import connectDB from "@/utils/database"
-import { PostDB } from "@/utils/types/interfaces";
+import connectDB from "@/lib/mongoDB/database"
+import { PostDB, CommentType, UserDB } from "@/types/interfaces";
 import { ObjectId } from 'mongodb';
 import { ContentBox, Recommend } from './client';
 import clsx from 'clsx';
@@ -17,7 +17,12 @@ export default async function View ({ params }: { params : Promise<{post_id : st
    const result = await db.collection<PostDB>('post').findOne({
       _id: new ObjectId(post_id)
    })
+
+   const comment_list = await db.collection<CommentType>('comments').find({postId: result?._id}).toArray();
+
    const session = await getServerSession(authOptions);
+
+   const userInfo = await db.collection<UserDB>('user_cred').findOne({_id: new ObjectId(result?.user.id)});
 
    if (result === null) {
       return <div>데이터를 불러오지 못했습니다.</div>;
@@ -34,6 +39,7 @@ export default async function View ({ params }: { params : Promise<{post_id : st
    return (
       <section className={clsx(styles.view_container, 'containerV1')}>
          <h2 className={styles.title}>{result?.title}</h2>
+         <p>작성자: {userInfo?.nickName}</p>
          <p>작성일: {createdAt}</p>
 
          {
@@ -52,7 +58,7 @@ export default async function View ({ params }: { params : Promise<{post_id : st
             <ContentBox contentDB={{ content: result.content }} />
          </article>
 
-         <Comment post_id={post_id} />
+         <Comment post_id={post_id} comment_list={comment_list} />
       </section>
    )
 }

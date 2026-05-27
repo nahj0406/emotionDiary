@@ -1,4 +1,4 @@
-import connectDB from "@/utils/database";
+import connectDB from "@/lib/mongoDB/database";
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";

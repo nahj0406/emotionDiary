@@ -1,7 +1,7 @@
 import styles from './header.module.css'
 import { MenuLink, SignWrapper } from './client'
-import connectDB from '@/utils/database'
-import { UserDB } from '@/utils/types/interfaces';
+import connectDB from '@/lib/mongoDB/database'
+import { UserDB } from '@/types/interfaces';
 import { getServerSession } from 'next-auth';
 import { ObjectId } from 'mongodb';
 

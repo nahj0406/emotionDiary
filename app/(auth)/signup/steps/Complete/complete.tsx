@@ -1,12 +1,10 @@
 'use client'
 
-import SubmitBtn from "@/components/button/submitBtn/submit_btn"
-import pages from "../page.module.css";
-import NiceModal from "@ebay/nice-modal-react";
-import ConfirmModal from '@/components/modals/ConfirmModal';
+import SubmitBtn from "@/components/ui/button/submitBtn/submit_btn"
+import pages from "../../page.module.css";
 import { useRouter } from "next/navigation";
 
-export default function CompleteSection() {
+export default function Complete() {
 
    const router = useRouter();
 

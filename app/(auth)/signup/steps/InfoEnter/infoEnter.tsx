@@ -1,7 +1,7 @@
 "use client";
 
-import styles from "./infoSection.module.css";
-import pages from "../page.module.css";
+import styles from "./infoEnter.module.css";
+import pages from "../../page.module.css";
 import { useEffect, useRef, useState } from "react";
 import NiceModal from "@ebay/nice-modal-react";
 import ConfirmModal from "@/components/modals/ConfirmModal";
@@ -10,10 +10,10 @@ import {
   createMailcode,
   getVerifiedCode,
   createSubmit,
-} from "../services/requester";
+} from "../../services/requester";
 import { normalize } from "@/utils/functions";
 import clsx from "clsx";
-import { BAD_WORDS, customWords } from "@/utils/badWords/badWords";
+import { BAD_WORDS, customWords } from "@/lib/badWords/badWords";
 import { signupVal } from "@/utils/validations/signup/infoValidation";
 
 type nickCheck = {
@@ -21,7 +21,7 @@ type nickCheck = {
   message: string;
 }
 
-export default function InfoSection({
+export default function InfoEnter({
   setStep,
 }: {
   setStep: React.Dispatch<React.SetStateAction<string | null>>;
