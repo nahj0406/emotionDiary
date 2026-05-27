@@ -1,7 +1,7 @@
 
 import clsx from 'clsx'
-import { BackBtn } from './client'
-import styles from './page.module.css'
+import { BackBtn } from './not-foundClient'
+import styles from './css/page.module.css'
 
 export default function NotFound () {
 

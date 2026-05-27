@@ -3,8 +3,8 @@ import clsx from 'clsx'
 import styles from './page.module.css'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/pages/api/auth/[...nextauth]'
-import connectDB from '@/utils/database';
-import { UserDB } from '@/utils/types/interfaces';
+import connectDB from '@/lib/mongoDB/database';
+import { UserDB } from '@/types/interfaces';
 import { ObjectId } from 'mongodb';
 import { EditFrame } from './client'
 

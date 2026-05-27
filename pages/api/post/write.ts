@@ -1,10 +1,10 @@
-import connectDB from "@/utils/database";
+import connectDB from "@/lib/mongoDB/database";
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { IncomingForm, Fields, Files } from 'formidable';
 import cloudinary from "@/lib/cloudinary";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]";
-import { UserDB } from "@/utils/types/interfaces";
+import { UserDB } from "@/types/interfaces";
 import { ObjectId } from "mongodb";
 
 export const config = {
@@ -133,18 +133,18 @@ export default async function handler (
          authOptions
       );
 
-      let userInfo = null;
+      // let userInfo = null;
 
       const db = (await connectDB).db('community');
 
-      if(session?.user.id) {
+      // if(session?.user.id) {
 
-         userInfo = await db
-            .collection<UserDB>('user_cred')
-            .findOne({
-               _id: new ObjectId(session.user.id)
-            });
-      }
+      //    userInfo = await db
+      //       .collection<UserDB>('user_cred')
+      //       .findOne({
+      //          _id: new ObjectId(session.user.id)
+      //       });
+      // }
 
       // 게시글 저장
       const result = await db.collection('post').insertOne({
@@ -160,7 +160,7 @@ export default async function handler (
          },
 
          user: {
-            nickName: userInfo?.nickName ?? '',
+            id: session?.user.id,
          },
 
          imageUrl,

@@ -1,13 +1,13 @@
 'use client'
-import SubmitBtn from "@/components/button/submitBtn/submit_btn"
+import SubmitBtn from "@/components/ui/button/submitBtn/submit_btn"
 import { useRouter } from "next/navigation"
 import styles from './page.module.css'
-import TiptapEditor from "@/components/Editor/Tiptap";
+import TiptapEditor from "@/components/post/write/Editor/Tiptap";
 import clsx from "clsx";
 import { ChangeEvent, useEffect, useRef, useState } from "react"
 import ConfirmModal from '@/components/modals/ConfirmModal';
 import NiceModal from "@ebay/nice-modal-react";
-import { useTiptapEditor } from "@/components/Editor/useTiptap"
+import { useTiptapEditor } from "@/components/post/write/Editor/useTiptap"
 import Link from "next/link";
 
 export interface Book {

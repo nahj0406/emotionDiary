@@ -7,7 +7,7 @@ import { useEffect, useRef } from "react";
 import { Dispatch, SetStateAction } from "react";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { UserDB } from "@/utils/types/interfaces";
+import { UserDB } from "@/types/interfaces";
 // import { WithId } from "mongodb";
 
 export default function SideBar({

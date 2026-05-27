@@ -1,5 +1,5 @@
-import { BAD_WORDS, customWords } from "@/utils/badWords/badWords";
-import connectDB from "@/utils/database";
+import { BAD_WORDS, customWords } from "@/lib/badWords/badWords";
+import connectDB from "@/lib/mongoDB/database";
 import { ROLE } from "@/utils/exports";
 import { normalize } from "@/utils/functions";
 import { signupVal } from "@/utils/validations/signup/infoValidation";

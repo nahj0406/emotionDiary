@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { poppins, pretendard, paperlogy } from "./fonts";
+import { poppins, pretendard, paperlogy } from "./assets/fonts";
 import "./css/globals.css";
 import "./css/styles.css";
-import styles from './page.module.css'
-import Header from "./shares/header/header";
+import styles from './css/page.module.css'
+import Header from "../components/layout/header/header";
 import ModalProvider from "./layout_client";
 
 const geistSans = Geist({

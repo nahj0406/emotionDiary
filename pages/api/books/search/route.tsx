@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { GoogleBookItem, NaverBookItem } from "@/utils/types/interfaces";
+import { GoogleBookItem, NaverBookItem } from "@/types/interfaces";
 
 type GoogleBooksResponse = {
    items?: GoogleBookItem[];
