@@ -1,6 +1,6 @@
 import styles from './header.module.css'
 import { MenuLink, SignWrapper } from './client'
-import connectDB from '@/lib/mongoDB/database'
+import connectDB from '@/lib/mongoDB/database/database'
 import { UserDB } from '@/types/interfaces';
 import { getServerSession } from 'next-auth';
 import { ObjectId } from 'mongodb';
@@ -14,7 +14,7 @@ export default async function Header() {
   if(session?.user?.id) {
     const client = await connectDB;
     const db = client.db('community');
-    userInfo = await db.collection<UserDB>('user_cred').findOne({_id: new ObjectId(session?.user?.id)});
+    userInfo = await db.collection<UserDB>('user').findOne({_id: new ObjectId(session?.user?.id)});
   }
 
   const safeUser = userInfo

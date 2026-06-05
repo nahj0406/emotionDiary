@@ -1,11 +1,9 @@
-import connectDB from "@/lib/mongoDB/database";
+import connectDB from "@/lib/mongoDB/database/database";
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { IncomingForm, Fields, Files } from 'formidable';
-import cloudinary from "@/lib/cloudinary";
+import cloudinary from "@/lib/external_storage/cloudinary";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]";
-import { UserDB } from "@/types/interfaces";
-import { ObjectId } from "mongodb";
 
 export const config = {
    api: {
@@ -82,17 +80,48 @@ export default async function handler (
             ? fields.bookLink[0]
             : fields.bookLink ?? '';
 
+      const primaryCatId =
+         Array.isArray(fields.primaryCatId)
+            ? fields.primaryCatId[0]
+            : fields.primaryCatId ?? '';
+
+      const secondaryCatId =
+         Array.isArray(fields.secondaryCatId)
+            ? fields.secondaryCatId[0]
+            : fields.secondaryCatId ?? '';
+
+      const tagsRaw = 
+         Array.isArray(fields.tags)
+            ? fields.tags[0]
+            : fields.tags ?? `[]`;
+
+      const tags = JSON.parse(tagsRaw)
+
       if (
          !title ||
          !content ||
          !bookTitle ||
          !bookAuthor ||
          !bookPublisher ||
-         !bookLink
+         !bookLink ||
+         !primaryCatId ||
+         !tags
       ) {
          return res.status(400).json({
             message: '필수 내용이 입력되지 않았습니다.',
          });
+      }
+
+      if(!Array.isArray(tags)) {
+         return res.status(400).json({
+            message: '성향 태그가 배열 타입이 아닙니다. \n 배열 타입으로 수정해 주세요.'
+         })
+      }
+
+      if(tags.length === 0 || tags.length > 3) {
+         return res.status(400).json({
+            message: '성향은 최소 1개, 최대 3개를 넘기면 안됩니다.'
+         })
       }
 
       const bookImage =
@@ -100,11 +129,11 @@ export default async function handler (
             ? fields.bookImage[0]
             : fields.bookImage ?? '';
 
-      let imageUrl = '';
+      let thumbnail = '';
       let publicId = '';
 
       if(bookImage) {
-         imageUrl = bookImage;
+         thumbnail = bookImage;
       }
 
       const uploadedFile =
@@ -122,7 +151,7 @@ export default async function handler (
             }
          );
 
-         imageUrl = uploaded.secure_url;
+         thumbnail = uploaded.secure_url;
          publicId = uploaded.public_id;
       }
 
@@ -140,7 +169,7 @@ export default async function handler (
       // if(session?.user.id) {
 
       //    userInfo = await db
-      //       .collection<UserDB>('user_cred')
+      //       .collection<UserDB>('user')
       //       .findOne({
       //          _id: new ObjectId(session.user.id)
       //       });
@@ -163,10 +192,16 @@ export default async function handler (
             id: session?.user.id,
          },
 
-         imageUrl,
+         thumbnail,
          publicId,
-
+         recommend: 0,
+         views: 0,
          createdAt: new Date(),
+         category : {
+            primary: primaryCatId,
+            secondary: secondaryCatId,
+         },
+         tags,
       });
 
       //응답 종료

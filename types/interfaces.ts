@@ -1,5 +1,16 @@
 import { ObjectId } from "mongodb";
 
+// DB: 몽고 db 데이터
+// DTO: 몽고 db 데이터를 클라이언트에서 사용할 때 쓰는 타입
+
+// auth
+export interface SignupRequest {
+  name: string;
+  nickName: string;
+  email: string;
+  password: string;
+};
+
 export interface UserDB {
   _id: ObjectId
   name: string
@@ -9,41 +20,101 @@ export interface UserDB {
   password: string
   emailVerified: boolean
   createAt: Date
+  tags: string[]
   post: {
    recommend: string[]
   }
 }
 
-export interface PostDB {
-  _id: ObjectId
-  title: string
-  content: string
-  imageUrl: string
-  books: {
-   bookTitle: string,
-   uploadBookImg: string,
-   bookAuthor: string,
-   bookPublisher: string,
-   bookLink: string,
-  }
-  user: {
-   id: string;
-  }
-  recommend: number,
-  createdAt: Date
+// category, tag
+export interface CategoryDB {
+   _id: ObjectId
+   name: string
+   slug: string
 }
 
-export interface postType {
+export interface CategoryDTO {
+  _id: string;
+  name: string;
+  slug: string;
+}
+
+
+export interface TagDB {
+   _id: ObjectId
+   name: string
+   slug: string
+}
+
+export interface TagDTO {
+  _id: string;
+  name: string;
+  slug: string;
+}
+
+
+// list
+export interface PostDB {
+   _id: ObjectId
+   title: string
+   content: string
+   thumbnail: string
+   books: {
+      bookTitle: string,
+      uploadBookImg: string,
+      bookAuthor: string,
+      bookPublisher: string,
+      bookLink: string,
+   }
+   user: {
+      id: ObjectId;
+   }
+   recommend: number
+   views: number
+   createdAt: Date
+   category: {
+      primary: string,
+      secondary: string,
+   }
+   tags: string[]
+}
+
+export interface PostDTO {
+   _id: ObjectId;
+   title: string;
+   content: string;
+   thumbnail: string;
+   recommend: number;
+   createdAt: Date | string;
+   userId: ObjectId;
+   category: {
+      primary: string,
+      secondary: string,
+   }
+   tags: string[]
+}
+
+export interface PostCardDTO {
    _id: string;
    title: string;
    content: string;
-   imageUrl: string;
+   thumbnail: string;
    recommend: number;
-   createdAt: Date | string;
-   userId: string;
+   createdAt: string;
+   // userId: string;
+
+   user: PostUserDTO | null;
 }
 
-export interface CommentType {
+export interface PostUserDTO {
+   // _id: string;
+   nickName: string;
+   thumbnail: string;
+}
+
+
+// view
+export interface CommentDB {
    _id: ObjectId;
    postId: ObjectId;
    nickName: string;
@@ -54,13 +125,17 @@ export interface CommentType {
    createdAt: Date;
 }
 
-export interface SignupRequest {
-  name: string;
-  nickName: string;
-  email: string;
-  password: string;
+export type recommendPostDTO = {
+  _id: string;
+  recommend: number;
 };
 
+
+// write
+
+
+
+// naver, google api
 export interface NaverBookItem {
   title: string;
   image: string;
@@ -91,9 +166,4 @@ export type GoogleBookItem = {
          amount: number;
       };
   };
-};
-
-export type ClientPost = {
-  _id: string;
-  recommend: number;
 };

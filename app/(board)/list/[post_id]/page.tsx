@@ -1,12 +1,14 @@
 import styles from './page.module.css'
-import connectDB from "@/lib/mongoDB/database"
-import { PostDB, CommentType, UserDB } from "@/types/interfaces";
+import connectDB from "@/lib/mongoDB/database/database"
+import { PostDB, CommentDB, UserDB } from "@/types/interfaces";
 import { ObjectId } from 'mongodb';
 import { ContentBox, Recommend } from './client';
 import clsx from 'clsx';
 import Comment from './comment/comment';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
+import getCategories from '@/lib/mongoDB/getCategories';
+import getTags from '@/lib/mongoDB/getTags';
 
 
 export default async function View ({ params }: { params : Promise<{post_id : string}> }) {
@@ -18,11 +20,23 @@ export default async function View ({ params }: { params : Promise<{post_id : st
       _id: new ObjectId(post_id)
    })
 
-   const comment_list = await db.collection<CommentType>('comments').find({postId: result?._id}).toArray();
+   const views = await db.collection<PostDB>('post').findOneAndUpdate(
+      {_id: new ObjectId(post_id)},
+      {$inc: {views: 1}},
+      {returnDocument: 'after'}
+   );
 
+   const comment_list = await db.collection<CommentDB>('comments').find({postId: result?._id}).toArray();
    const session = await getServerSession(authOptions);
+   const userInfo = await db.collection<UserDB>('user').findOne({_id: new ObjectId(result?.user.id)});
 
-   const userInfo = await db.collection<UserDB>('user_cred').findOne({_id: new ObjectId(result?.user.id)});
+   const category = await getCategories();
+   const tags = await getTags();
+
+   const findNameById = (
+      items: { _id: string; name: string }[],
+      id: string
+      ) => items.find(item => item._id === id)?.name ?? '';
 
    if (result === null) {
       return <div>데이터를 불러오지 못했습니다.</div>;
@@ -41,10 +55,18 @@ export default async function View ({ params }: { params : Promise<{post_id : st
          <h2 className={styles.title}>{result?.title}</h2>
          <p>작성자: {userInfo?.nickName}</p>
          <p>작성일: {createdAt}</p>
+         <p>장르: {findNameById(category, result.category.primary)}/{findNameById(category, result.category.secondary)}</p>
+         <p>
+            성향: {
+               result.tags
+                  .map(item => findNameById(tags, item))
+                  .join('/ ')
+            }
+         </p>
 
          {
-            result?.imageUrl &&
-            <img src={result.imageUrl} alt="ddd" width={200} />
+            result?.thumbnail &&
+            <img src={result.thumbnail} alt="ddd" width={200} />
          }
 
          <p>책 제목: {book?.bookTitle}</p>

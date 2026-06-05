@@ -2,7 +2,7 @@
 
 import {forwardRef, useEffect, useRef, useState } from 'react';
 import styles from './comment.module.css'
-import { CommentType } from '@/types/interfaces';
+import { CommentDB } from '@/types/interfaces';
 
 
 const CommentWrite = ({post_id}: {post_id : string}) => {
@@ -33,7 +33,7 @@ const CommentWrite = ({post_id}: {post_id : string}) => {
 CommentWrite.displayName = "CommentWrite";
 
 
-export default function Comment ({post_id, comment_list}:{post_id: string; comment_list: CommentType[]}) {
+export default function Comment ({post_id, comment_list}:{post_id: string; comment_list: CommentDB[]}) {
    
    const [list, setList] = useState(comment_list);
 

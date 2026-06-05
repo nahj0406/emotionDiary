@@ -1,0 +1,44 @@
+
+
+.postCard {
+   position: relative;
+   width: 100%;
+   aspect-ratio: 2/2.82558;
+   border: 1px solid #e6e6e6;
+   overflow: hidden;
+   cursor: pointer;
+}
+
+.thumbnail {position: relative; z-index: 2; object-fit: cover;}
+
+.thumbnail_txt {
+   position: absolute; z-index: 2;
+   bottom: 0; left: 0;
+   width: 100%;
+   background: #ccc;
+   display: flex;
+   flex-direction: column;
+   gap: 20px;
+   padding: 10px;
+}
+
+.thumbnail_txt > h3 {
+   font-size: 20px;
+   display: inline-block;
+   white-space: nowrap;
+   overflow: hidden;
+   line-clamp: 1;
+   text-overflow: ellipsis;
+}
+
+.thumbnail_txt .postInfo {
+   display: flex;
+   gap: 5px;
+   justify-content: space-between;
+}
+
+.thumbnail_txt .postInfo > div {
+   display: flex;
+   align-items: center;
+   gap: 7px; 
+}

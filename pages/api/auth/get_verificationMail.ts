@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import connectDB from '@/lib/mongoDB/database';
+import connectDB from '@/lib/mongoDB/database/database';
 import { Resend } from "resend";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -12,7 +12,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const db = (await connectDB).db('community');
 
       // ✅ 1. 먼저 중복 체크
-      const existing = await db.collection('user_cred').findOne({ email });
+      const existing = await db.collection('user').findOne({ email });
       if (existing) {
          return res.status(400).json({ message: 'DUPLICATION_MAIL' });
       }

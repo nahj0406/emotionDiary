@@ -9,6 +9,9 @@ import ConfirmModal from '@/components/modals/ConfirmModal';
 import NiceModal from "@ebay/nice-modal-react";
 import { useTiptapEditor } from "@/components/post/write/Editor/useTiptap"
 import Link from "next/link";
+import TagCheckBoxGroup from "@/components/ui/tab/tag/tagCheckBoxGroup";
+import { CategoryDTO, TagDTO } from "@/types/interfaces";
+import CatSelect from "@/components/ui/select/category/CatSelect";
 
 export interface Book {
   id: string;
@@ -22,12 +25,26 @@ export interface Book {
   source: string;
 }
 
-export default function WriteFrame() {
+type Props = {
+  initialTags: TagDTO[];
+  initialCat: CategoryDTO[];
+};
+
+export default function WriteFrame({initialTags, initialCat}: Props) {
 
    const [books, setBooks] = useState<Book[]>([]);
    const [bookKeyword, setBookKeyword] = useState<string>('');
    const [search, setSearch] = useState<string>('');
    const [bookData, setBookData] = useState<Book | null>(null);
+   const [tagKeys, setTagKeys] = useState<string[]>([]);
+   const [catKeys, setCatKeys] = useState({
+      primary: "",
+      secondary: "",
+   })
+
+   const secondCat = initialCat.filter(
+    (cat) => cat._id !== catKeys.primary
+  );
 
 
    useEffect(() => {
@@ -156,6 +173,11 @@ export default function WriteFrame() {
       formData.append('bookPublisher', bkInputs.bookPublisher);
       formData.append('bookAuthor', bkInputs.bookAuthor);
       formData.append('bookLink', bkInputs.bookLink);
+      formData.append('primaryCatId', catKeys.primary);
+      formData.append('secondaryCatId', catKeys.secondary);
+      formData.append('tags', JSON.stringify(tagKeys));
+
+
 
       if(bkInputs.bookImage) {
          formData.append('bookImage', bkInputs.bookImage);
@@ -209,7 +231,7 @@ export default function WriteFrame() {
 
    // console.log(books);
 
-   console.log(bookData)
+   // console.log(bookData)
 
    return (
       <section className={clsx(styles.layer_box, 'containerV1')}>
@@ -312,8 +334,46 @@ export default function WriteFrame() {
                   readOnly={!directly}
                   type="text" 
                   name="bookLink" 
-                  placeholder="책 구매처 링크를 입력하세요." 
+                  placeholder="책 구매처 링크를 입력하세요."
                />
+
+               <div>
+                  <span>대표 장르 선택</span>
+                  <CatSelect 
+                     array={initialCat} 
+                     value={catKeys.primary}
+                     onChange={(value)=> 
+                        setCatKeys((prev)=> ({
+                           ...prev,
+                           primary: value,
+                           secondary: prev.secondary === value ? "" : prev.secondary,
+                        }))
+                     }
+                     defaultOption={'대표 장르를 선택해 주세요.'} 
+                  />
+               </div>
+
+               <div>
+                  <span>보조 장르 선택</span>
+                  <CatSelect 
+                     array={secondCat} 
+                     value={catKeys.secondary}
+                     onChange={(value)=> 
+                        setCatKeys((prev)=> ({
+                           ...prev,
+                           secondary: value,
+                        }))
+                     }
+                     disabled={!catKeys.primary}
+                     defaultOption={'보조 장르를 선택해 주세요.'} 
+                  />
+               </div>
+
+               <div>
+                  <span>성향 선택</span>
+                  <TagCheckBoxGroup tagKeys={tagKeys} setTagKeys={setTagKeys} list={initialTags} />
+               </div>
+
                <TiptapEditor editor={editor}></TiptapEditor>
             </div>
 

@@ -1,4 +1,4 @@
-import connectDB from "@/lib/mongoDB/database";
+import connectDB from "@/lib/mongoDB/database/database";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -12,7 +12,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
          })
       }
 
-      const result = await db.collection('user_cred').findOne({
+      const result = await db.collection('user').findOne({
          nickname: nickname
       });
 

@@ -1,0 +1,42 @@
+.tag_list {
+   display: flex;
+   gap: 10px;
+   flex-wrap: wrap;
+}
+
+.tagItem {
+   position: relative;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   gap: 5px;
+   width: fit-content;
+   cursor: pointer;
+}
+
+.tagItem input {
+   position: absolute;
+   top: 0;
+   left: 0;
+   opacity: 0;
+   visibility: hidden;
+}
+
+.emotion {
+   border-radius: 50%;
+   width: 30px;
+   height: 30px;
+}
+
+.dark {background: #161616;}
+.novelty {background: #6af5ff;}
+.lively {background: #f3ff4c;}
+.emotional {background: #45ffb8;}
+.sweet {background: #ff8af5;}
+.comedy {background: #ff7b00;}
+.madness {background: #b71bff;}
+.cruelty {background: #ff3535;}
+.sorrow {background: #2a38ff;}
+.healing {background: #27e660;}
+
+.tagItem > input:checked ~ .emotion {border: 2px solid #ccc;}

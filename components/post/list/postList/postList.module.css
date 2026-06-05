@@ -1,0 +1,8 @@
+.list {
+   width: 100%;
+   display: grid;
+   grid-template-columns: repeat(5, 1fr);
+   gap: 20px;
+}
+
+.list > * {min-width: 0;}
