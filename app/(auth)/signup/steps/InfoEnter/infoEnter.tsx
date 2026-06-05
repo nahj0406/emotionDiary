@@ -15,6 +15,8 @@ import { normalize } from "@/utils/functions";
 import clsx from "clsx";
 import { BAD_WORDS, customWords } from "@/lib/badWords/badWords";
 import { signupVal } from "@/utils/validations/signup/infoValidation";
+import { TagDTO } from "@/types/interfaces";
+import TagCheckBoxGroup from "@/components/ui/tab/tag/tagCheckBoxGroup";
 
 type nickCheck = {
   available: boolean;
@@ -23,8 +25,10 @@ type nickCheck = {
 
 export default function InfoEnter({
   setStep,
+  tags,
 }: {
   setStep: React.Dispatch<React.SetStateAction<string | null>>;
+  tags: TagDTO[];
 }) {
   const formRef = useRef<HTMLFormElement>(null);
   const [nickRes, setNickRes] = useState<nickCheck | null>(null);
@@ -37,6 +41,7 @@ export default function InfoEnter({
   const [verifiedDate, setVerifiedDate] = useState<Date | null>(null);
   const [remain_Count, setRemain_Count] = useState<string>("");
   const [mailPassOK, setMailPassOk] = useState<boolean>(false);
+  const [tagKeys, setTagKeys] = useState<string[]>([]);
 
   const [inputs, setInputs] = useState({
     name: {
@@ -302,6 +307,8 @@ export default function InfoEnter({
     }
   };
 
+  
+
   // 최종 요청
   const createSubmit_handler = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -313,6 +320,7 @@ export default function InfoEnter({
     const data = {
       name: formData.get(signupVal.name.key) as string,
       nickName: formData.get(signupVal.nickName.key) as string,
+      tags: tagKeys,
       email: formData.get(signupVal.email.key) as string,
       password: formData.get(signupVal.pwCheck.key) as string,
     };
@@ -322,6 +330,13 @@ export default function InfoEnter({
         message: "닉네임 중복체크를 진행해 주세요.",
         autoClose: 1000,
       });
+    }
+
+    if(tagKeys.length === 0) {
+      return NiceModal.show(ConfirmModal, {
+         message: "성향을 최소 1개 선택해 주세요. \n 추천 리스트에 반영을 위해 필수적입니다.",
+         autoClose: 1000,
+      })
     }
 
     if (isMissMatch || inputs.pwCheck.value.length < 0) {
@@ -347,6 +362,10 @@ export default function InfoEnter({
       console.log(err);
     }
   };
+
+  useEffect(()=> {
+   console.log(tagKeys);
+  }, [tagKeys])
 
   return (
     <div className={styles.container}>
@@ -411,6 +430,11 @@ export default function InfoEnter({
             >
               중복 확인
             </button>
+          </div>
+
+          <div className={styles.write_field}>
+            <span className={styles.essential}>독서 성향 선택</span>
+            <TagCheckBoxGroup tagKeys={tagKeys} setTagKeys={setTagKeys} list={tags} />
           </div>
 
           <div className={styles.write_field}>

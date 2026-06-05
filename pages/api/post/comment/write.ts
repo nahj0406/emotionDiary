@@ -1,4 +1,4 @@
-import connectDB from "@/lib/mongoDB/database";
+import connectDB from "@/lib/mongoDB/database/database";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../auth/[...nextauth]";
@@ -28,7 +28,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
    let depth = 0;
 
    if(session?.user.id) {
-      userInfo = await db.collection<UserDB>('user_cred').findOne({
+      userInfo = await db.collection<UserDB>('user').findOne({
          _id: new ObjectId(session.user.id)
       })
    }

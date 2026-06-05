@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { ObjectId } from 'mongodb';
-import connectDB from '@/lib/mongoDB/database';
+import connectDB from '@/lib/mongoDB/database/database';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../auth/[...nextauth]';
 import { UserDB } from '@/types/interfaces';
@@ -25,7 +25,7 @@ export default async function handler(
   }
 
   const userInfo = await db
-    .collection<UserDB>('user_cred')
+    .collection<UserDB>('user')
     .findOne({
       _id: new ObjectId(session.user.id),
     });
@@ -69,7 +69,7 @@ export default async function handler(
 
       // 현재 게시물 좋아요 여부 검사
       const alreadyLiked = await db
-        .collection<UserDB>('user_cred')
+        .collection<UserDB>('user')
         .findOne({
           _id: new ObjectId(session.user.id),
           'post.recommend': postId,
@@ -83,7 +83,7 @@ export default async function handler(
       if (alreadyLiked) {
         // 유저 좋아요 기록 제거
         await db
-          .collection('user_cred')
+          .collection('user')
           .updateOne(
             {
               _id: new ObjectId(
@@ -125,7 +125,7 @@ export default async function handler(
       // 좋아요 추가
       // =========================
       await db
-        .collection('user_cred')
+        .collection('user')
         .updateOne(
           {
             _id: new ObjectId(

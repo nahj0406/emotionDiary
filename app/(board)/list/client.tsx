@@ -2,15 +2,15 @@
 
 import { useRouter } from 'next/navigation'
 import styles from './page.module.css'
-import { postType } from "@/types/interfaces"
+import { PostDTO } from "@/types/interfaces"
 
-export function ListContainer({ result }: { result: postType[] }) {
+export function ListContainer({ result }: { result: PostDTO[] }) {
 
    const router = useRouter();
 
    return (
       <div className={styles.list}>
-         {result.map((post: postType, i:number) => {
+         {result.map((post: PostDTO, i:number) => {
 
             const content = post.content.replace(/<[^>]*>/g, ''); // 텍스트 html 태그 제거
 

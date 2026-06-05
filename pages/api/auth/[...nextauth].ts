@@ -1,4 +1,4 @@
-import connectDB from "@/lib/mongoDB/database";
+import connectDB from "@/lib/mongoDB/database/database";
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -28,7 +28,7 @@ export const authOptions: NextAuthOptions = {
 
             const db = (await connectDB).db("community");
 
-            const user = await db.collection("user_cred").findOne({
+            const user = await db.collection("user").findOne({
                email: credentials.email,
             });
 

@@ -1,5 +1,5 @@
 import { BAD_WORDS, customWords } from "@/lib/badWords/badWords";
-import connectDB from "@/lib/mongoDB/database";
+import connectDB from "@/lib/mongoDB/database/database";
 import { ROLE } from "@/utils/exports";
 import { normalize } from "@/utils/functions";
 import { signupVal } from "@/utils/validations/signup/infoValidation";
@@ -12,9 +12,9 @@ export default async function handler(
 ) {
   if (req.method === "POST") {
     try {
-      const { nickName, name, email, password } = req.body;
+      const { nickName, name, tags, email, password } = req.body;
 
-      if (!nickName || !name || !email || !password) {
+      if (!nickName || !name || !tags || !email || !password) {
         return res.status(400).json({
          message: "필수 내용이 입력되지 않았습니다."
         });
@@ -30,12 +30,12 @@ export default async function handler(
 
       if (!verified) {
         return res.status(400).json({
-          message: "이메일 인증이 필요합니다.",
+            message: "이메일 인증이 필요합니다.",
         });
       }
 
       // 메일 중복 확인
-      const existing = await db.collection("user_cred").findOne({ email });
+      const existing = await db.collection("user").findOne({ email });
       if (existing) {
          return res.status(400).json({
            message: "이미 가입된 이메일입니다.",
@@ -43,7 +43,7 @@ export default async function handler(
       }
 
       // 닉네임 중복 체크
-      const nickCheck = await db.collection('user_cred').findOne({nickName: nickName});
+      const nickCheck = await db.collection('user').findOne({nickName: nickName});
       if(nickCheck) {
          return res.status(400).json({
             message: '중복된 닉네임은 사용할 수 없습니다.'
@@ -72,6 +72,18 @@ export default async function handler(
       if(passwordLengthErr) {
          return res.status(400).json({
             message: '비밀번호의 최소, 최대 길이를 지켜주세요.'
+         })
+      }
+
+      if(!Array.isArray(tags)) {
+         return res.status(400).json({
+            message: '성향 태그가 배열 타입이 아닙니다. \n 배열 타입으로 수정해 주세요.'
+         })
+      }
+
+      if(tags.length === 0 || tags.length > 3) {
+         return res.status(400).json({
+            message: '성향은 최소 1개, 최대 3개를 넘기면 안됩니다.'
          })
       }
 
@@ -112,10 +124,11 @@ export default async function handler(
       const hash = await bcrypt.hash(req.body.password, 10);
 
       // 최종 데이터 송신
-      await db.collection("user_cred").insertOne({
+      await db.collection("user").insertOne({
          name,
          nickName: nickName,
          thumbnail: '',
+         tags,
          email,
          password: hash,
          emailVerified: true,

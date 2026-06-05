@@ -5,12 +5,14 @@ const url = `mongodb+srv://${process.env.MONGO_ID}:${process.env.MONGO_PW}@clust
 let connectDB : Promise<MongoClient>
 
 if (process.env.NODE_ENV === 'development') {
-  if (!global._mongo) {
-    global._mongo = new MongoClient(url).connect()
-  }
-  connectDB = global._mongo
+   if (!global._mongo) {
+      global._mongo = new MongoClient(url).connect()
+   }
+   
+   connectDB = global._mongo
+
 } else {
-  connectDB = new MongoClient(url).connect()
+   connectDB = new MongoClient(url).connect()
 }
 
 export default connectDB

@@ -1,3 +1,8 @@
+export const category = [
+   {name: '인문학'},
+]
+
+
 export const signupVal = {
    name : {
       key: 'name',

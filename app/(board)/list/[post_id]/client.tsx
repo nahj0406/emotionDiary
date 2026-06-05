@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import styles from './page.module.css'
 import DOMPurify from 'isomorphic-dompurify'; 
-import { ClientPost } from '@/types/interfaces';
+import { recommendPostDTO } from '@/types/interfaces';
 import { Session } from 'next-auth';
 import { useSessionChecker } from '@/hooks/useSessionChecker';
 // html 렌더링 할때 필요. 원래는 dompurify만 써도 되는데 이게 브라우저 전용이라
@@ -28,7 +28,7 @@ export function Recommend (
       postItem
    }:{
       session: Session | null; 
-      postItem: ClientPost;
+      postItem: recommendPostDTO;
    }
 ) {
    const [liked, setLiked] = useState<boolean>(false);
