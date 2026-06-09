@@ -28,6 +28,7 @@ export async function mergePosts(
       ...post,
 
       _id: post._id.toString(),
+      userId: post.userId.toString(),
 
       createdAt:
         post.createdAt instanceof Date
