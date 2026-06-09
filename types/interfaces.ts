@@ -5,25 +5,26 @@ import { ObjectId } from "mongodb";
 
 // auth
 export interface SignupRequest {
-  name: string;
-  nickName: string;
-  email: string;
-  password: string;
+   name: string;
+   nickName: string;
+   email: string;
+   password: string;
 };
 
 export interface UserDB {
-  _id: ObjectId
-  name: string
-  nickName: string
-  thumbnail: string
-  email: string
-  password: string
-  emailVerified: boolean
-  createAt: Date
-  tags: string[]
-  post: {
-   recommend: string[]
-  }
+   _id: ObjectId
+   name: string
+   nickName: string
+   thumbnail: string
+   email: string
+   password: string
+   emailVerified: boolean
+   createAt: Date
+   tags: string[]
+   post: {
+      recommend: string[]
+      recently: string[]
+   }
 }
 
 // category, tag
@@ -101,7 +102,14 @@ export interface PostCardDTO {
    thumbnail: string;
    recommend: number;
    createdAt: string;
-   // userId: string;
+   userId: string;
+
+   category: {
+      primary: string;
+      secondary: string;
+   };
+
+   tags: string[];
 
    user: PostUserDTO | null;
 }

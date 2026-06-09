@@ -1,0 +1,94 @@
+
+.infomation {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   gap: 30px;
+}
+.user_profile {
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+   gap: 10px;
+}
+
+.user_profile .thumbnail {
+   border: 2px solid #dedede;
+   border-radius: 50%;
+   width: 100px;
+   height: auto;
+}
+
+.user_profile .thumbnail img {
+   width: 100%; object-fit: cover;
+   height: auto;
+}
+
+.user_profile .name_box {
+   display: flex;
+   gap: 10px;
+   align-items: center;
+}
+
+.user_profile .name_box .nickName {
+   font-size: 25px;
+   font-weight: bold;
+}
+
+.user_profile .name_box .edit_btn {
+   width: 35px;
+   height: 35px;
+   border-radius: 5px;
+   background: #dedede;
+   padding: 5px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}
+
+.user_profile .name_box .edit_btn:hover {
+   background: #bebebe;
+}
+
+.user_profile .email {
+   padding: 5px 10px;
+   background: #ccc;
+   border-radius: 5px;
+   color: #fafafa;
+}
+
+
+.activity_wrapper {
+   display: flex;
+   flex-direction: column;
+   gap: 20px;
+   align-items: center;
+   width: 100%;
+}
+
+.activity_wrapper .active_tab {
+   display: grid;
+   grid-template-columns: repeat(3, 1fr);
+   width: 100%;
+   gap: 20px;
+}
+
+.activity_wrapper .active_tab .tabItem {
+   width: 100%;
+   font-size: 18px;
+   background: #cdcdcd;
+   padding: 10px 5px;
+   text-align: center;
+   border-radius: 10px;
+   cursor: pointer;
+}
+
+.activity_wrapper .active_tab .tabItem.active {
+   background: #1c1c1c;
+   color: #fff;
+}
+
+.list_wrppaer {
+   width: 100%;
+}

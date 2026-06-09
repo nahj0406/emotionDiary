@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react';
-import styles from './page.module.css'
+import styles from './page.module.css';
 import DOMPurify from 'isomorphic-dompurify'; 
 import { recommendPostDTO } from '@/types/interfaces';
 import { Session } from 'next-auth';
@@ -38,13 +38,33 @@ export function Recommend (
 
    useEffect(()=> {
       const checkLiked = async () => {
-         const res = await fetch('/api/post/recommend/?postId=' + postItem._id);
+         const res = await fetch('/api/post/list/view/recommend/?postId=' + postItem._id);
          const result = await res.json();
-         console.log(result);
          setLiked(result.liked);
       }
+
       checkLiked();
+
+      const Checkrecently = async () => {
+         const res = await fetch(
+            '/api/post/list/view/recently',
+            {
+               method: 'POST',
+               headers: {
+                  'Content-Type': 'application/json',
+               },
+               body: JSON.stringify({
+                  postId: postItem._id,
+               })
+            }
+         );
+         const result = await res.json();
+      }
+      Checkrecently();
+
    }, [postItem._id]);
+
+
 
    const post_good_handler = async () => {
 
@@ -61,7 +81,7 @@ export function Recommend (
             setCount(prev => prev -1)
          }
 
-         const res = await fetch('/api/post/recommend', {
+         const res = await fetch('/api/post/list/view/recommend', {
             method: 'POST',
             headers: {
             'Content-Type': 'application/json',

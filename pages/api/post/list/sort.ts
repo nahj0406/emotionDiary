@@ -123,9 +123,7 @@ export default async function handler (
       }
 
    } catch(err) {
-      if (err instanceof Error) {
-         console.error(err.message);
-      }
+      console.error(err);
 
       return res.status(500).json({
          error: '조회 실패'
