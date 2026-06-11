@@ -6,10 +6,21 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useEffect } from "react";
 
 export default NiceModal.create(
-   ({ message, autoClose = 7000 }: { message: string; autoClose?: number }) => {
+   ({ 
+      message, 
+      autoClose = 7000,
+      onClick,
+   }: { 
+      message: string; 
+      autoClose?: number;
+      onClick?: () => void;
+   }) => {
       const modal = useModal();
 
-      const handleClose = () => modal.hide();
+      const handleClose = () => {
+         modal.resolve(true);
+         modal.hide();
+      }
 
       useEffect(() => {
          if (autoClose > 0) {
@@ -54,7 +65,11 @@ export default NiceModal.create(
                      <button
                         onClick={() => {
                         // modal.resolve("Success!");
-                        handleClose();
+                           if(onClick) {
+                              onClick();
+                           } else {
+                              handleClose();
+                           }
                         }}
                      >
                         확인

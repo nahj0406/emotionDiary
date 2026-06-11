@@ -190,6 +190,7 @@ export default async function handler (
 
          user: {
             id: session?.user.id,
+            nickName: session?.user.nickName,
          },
 
          thumbnail,

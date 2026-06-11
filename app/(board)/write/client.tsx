@@ -221,7 +221,7 @@ export default function WriteFrame({initialTags, initialCat}: Props) {
          const message =
             err instanceof Error ? err.message : "알 수 없는 오류";
 
-         await NiceModal.show(ConfirmModal, {
+         NiceModal.show(ConfirmModal, {
             message: message,
             autoClose: 1000,
          });

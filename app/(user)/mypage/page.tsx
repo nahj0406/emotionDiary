@@ -33,7 +33,7 @@ export default async function Mypage() {
          ))
 
          myPosts = merged.filter((post => 
-            post.userId === session?.user.id
+            post.user?.id === session?.user.id
          ))
 
          recentlyPost = merged.filter((item => 

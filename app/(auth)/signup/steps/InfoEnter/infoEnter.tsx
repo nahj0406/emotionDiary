@@ -247,11 +247,11 @@ export default function InfoEnter({
         autoClose: 500,
       });
 
-      console.log("인증 id", verificationDB_Id);
+      // console.log("인증 id", verificationDB_Id);
     } catch (err) {
       if (err instanceof Error) {
         if (err.message === "DUPLICATION_MAIL") {
-          await NiceModal.show(ConfirmModal, {
+          NiceModal.show(ConfirmModal, {
             message: "이미 가입된 이메일입니다.",
             autoClose: 1000,
           });
@@ -283,12 +283,12 @@ export default function InfoEnter({
       if (err instanceof Error) {
         if (err.message === "INCORRECT_CODE") {
           if (verifiedDate && new Date(verifiedDate).getTime() < Date.now()) {
-            await NiceModal.show(ConfirmModal, {
+            NiceModal.show(ConfirmModal, {
               message: "인증코드가 만료되었습니다.",
               autoClose: 1000,
             });
           } else {
-            await NiceModal.show(ConfirmModal, {
+            NiceModal.show(ConfirmModal, {
               message: "코드가 올바르지 않습니다.",
               autoClose: 1000,
             });
@@ -297,7 +297,7 @@ export default function InfoEnter({
         }
 
         if (err.message === "EXPIRATION_CODE") {
-          await NiceModal.show(ConfirmModal, {
+          NiceModal.show(ConfirmModal, {
             message: "인증코드가 만료되었습니다.",
             autoClose: 1000,
           });
@@ -354,7 +354,7 @@ export default function InfoEnter({
       const message =
          err instanceof Error ? err.message : "알 수 없는 오류";
 
-      await NiceModal.show(ConfirmModal, {
+      NiceModal.show(ConfirmModal, {
         message: message,
         autoClose: 1000,
       });

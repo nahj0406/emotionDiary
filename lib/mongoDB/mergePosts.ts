@@ -10,8 +10,8 @@ export async function mergePosts(
   const db = client.db("community");
 
   const userIds = posts
-    .filter((post) => ObjectId.isValid(post.userId))
-    .map((post) => new ObjectId(post.userId));
+    .filter((post) => ObjectId.isValid(post.user.id))
+    .map((post) => new ObjectId(post.user.id));
 
   const users = await db.collection("user")
     .find({
@@ -21,14 +21,14 @@ export async function mergePosts(
 
   return posts.map((post) => {
     const user = users.find(
-      (user) => user._id.toString() === post.userId.toString()
+      (user) => user._id.toString() === post.user.id.toString()
     );
 
     return {
       ...post,
 
       _id: post._id.toString(),
-      userId: post.userId.toString(),
+      userId: post.user.id.toString(),
 
       createdAt:
         post.createdAt instanceof Date
@@ -37,6 +37,7 @@ export async function mergePosts(
 
       user: user
         ? {
+            id: user._id.toString(),
             nickName: user.nickName,
             thumbnail: user.thumbnail,
           }

@@ -69,6 +69,7 @@ export interface PostDB {
    }
    user: {
       id: ObjectId;
+      nickName: string,
    }
    recommend: number
    views: number
@@ -87,7 +88,11 @@ export interface PostDTO {
    thumbnail: string;
    recommend: number;
    createdAt: Date | string;
-   userId: ObjectId;
+   // userId: ObjectId;
+   user: {
+      id: ObjectId;
+      nickName: string;
+   }
    category: {
       primary: string,
       secondary: string,
@@ -102,8 +107,7 @@ export interface PostCardDTO {
    thumbnail: string;
    recommend: number;
    createdAt: string;
-   userId: string;
-
+   // userId: string;
    category: {
       primary: string;
       secondary: string;
@@ -115,7 +119,7 @@ export interface PostCardDTO {
 }
 
 export interface PostUserDTO {
-   // _id: string;
+   id: string;
    nickName: string;
    thumbnail: string;
 }
