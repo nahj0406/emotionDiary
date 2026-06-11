@@ -15,6 +15,7 @@ export default function Login() {
    const searchParams = useSearchParams();
 
    const handleLogin = async () => {
+
       const res = await signIn("credentials", {
          email,
          password,
@@ -25,7 +26,7 @@ export default function Login() {
       router.push(callbackUrl);
 
       if (res?.error) {
-         return await NiceModal.show(ConfirmModal, {
+         return NiceModal.show(ConfirmModal, {
             message: res?.error,
          });
       }

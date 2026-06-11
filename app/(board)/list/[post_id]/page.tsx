@@ -16,7 +16,7 @@ export default async function View ({ params }: { params : Promise<{post_id : st
    const client = await connectDB;
    const db = client.db('community');
    const { post_id } = await params;
-   const result = await db.collection<PostDB>('post').findOne({
+   const post = await db.collection<PostDB>('post').findOne({
       _id: new ObjectId(post_id)
    })
 
@@ -26,9 +26,9 @@ export default async function View ({ params }: { params : Promise<{post_id : st
       {returnDocument: 'after'}
    );
 
-   const comment_list = await db.collection<CommentDB>('comments').find({postId: result?._id}).toArray();
+   const comment_list = await db.collection<CommentDB>('comments').find({postId: post?._id}).toArray();
    const session = await getServerSession(authOptions);
-   const userInfo = await db.collection<UserDB>('user').findOne({_id: new ObjectId(result?.user.id)});
+   const userInfo = await db.collection<UserDB>('user').findOne({_id: new ObjectId(post?.user.id)});
 
    const category = await getCategories();
    const tags = await getTags();
@@ -38,35 +38,40 @@ export default async function View ({ params }: { params : Promise<{post_id : st
       id: string
       ) => items.find(item => item._id === id)?.name ?? '';
 
-   if (result === null) {
+   if (post === null) {
       return <div>데이터를 불러오지 못했습니다.</div>;
    }
 
-   if (!result) {
+   if (!post) {
       return <div>게시글이 없습니다.</div>;
    }
 
-   const book = result.books;
-   const createdAt = result.createdAt && 
-      new Date(result?.createdAt).toLocaleString('ko-KR');
+   const book = post.books;
+   const createdAt = post.createdAt && 
+      new Date(post?.createdAt).toLocaleString('ko-KR');
 
    return (
       <section className={clsx(styles.view_container, 'containerV1')}>
-         <h2 className={styles.title}>{result?.title}</h2>
-         <p>작성자: {userInfo?.nickName}</p>
+         <h2 className={styles.title}>{post?.title}</h2>
+         {
+            userInfo?.thumbnail
+               ? <img src={userInfo?.thumbnail} alt="유저 썸네일" />
+               : <img src={'/img/unknown.png'} width={20} alt="기본 이미지" />
+         }
+         <p>작성자: {post?.user.nickName}</p>
          <p>작성일: {createdAt}</p>
-         <p>장르: {findNameById(category, result.category.primary)}/{findNameById(category, result.category.secondary)}</p>
+         <p>장르: {findNameById(category, post.category.primary)}/{findNameById(category, post.category.secondary)}</p>
          <p>
             성향: {
-               result.tags
+               post.tags
                   .map(item => findNameById(tags, item))
                   .join('/ ')
             }
          </p>
 
          {
-            result?.thumbnail &&
-            <img src={result.thumbnail} alt="ddd" width={200} />
+            post?.thumbnail &&
+            <img src={post.thumbnail} alt="ddd" width={200} />
          }
 
          <p>책 제목: {book?.bookTitle}</p>
@@ -74,10 +79,10 @@ export default async function View ({ params }: { params : Promise<{post_id : st
          <p>저자: {book?.bookAuthor}</p>
          <p>구매처: {book?.bookLink}</p>
 
-         <Recommend session={session} postItem={{...result, _id: result._id.toString(),}}></Recommend>
+         <Recommend session={session} postItem={{...post, _id: post._id.toString(),}}></Recommend>
 
          <article className={styles.content_box}>
-            <ContentBox contentDB={{ content: result.content }} />
+            <ContentBox contentDB={{ content: post.content }} />
          </article>
 
          <Comment post_id={post_id} comment_list={comment_list} />

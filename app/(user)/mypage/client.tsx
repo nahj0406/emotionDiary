@@ -45,13 +45,14 @@ export function Infomation(
                <span className={styles.nickName}>
                   {user?.nickName}
                </span>
-               <Link href={'/infoEdit'} className={styles.edit_btn}>
+               <Link href={'/mypage/infoEdit'} className={styles.edit_btn}>
                   <img src={'img/user/edit_icon.png'} alt='edit' />
                </Link>
             </div>
             <span className={styles.email}>
                {user?.email}
             </span>
+            <Link href={'/mypage/withdrawal'} type='button'>회원 탈퇴</Link>
          </div>
 
          <div className={styles.activity_wrapper}>

@@ -32,6 +32,10 @@ export const authOptions: NextAuthOptions = {
                email: credentials.email,
             });
 
+            if(user?.status === 'withdrawn') {
+               throw new Error('탈퇴한 회원입니다.');
+            }
+
             if (!user) {
                throw new Error('존재하지 않는 이메일입니다.');
             }
