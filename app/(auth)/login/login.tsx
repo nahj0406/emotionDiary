@@ -64,6 +64,9 @@ export default function Login() {
             <button className={styles.submit} type="button" onClick={handleLogin}>
                로그인
             </button>
+            <Link href={"/findUser/findPw"} className={styles.signUp} type="button">
+               비밀번호 찾기
+            </Link>
             <Link href={"/signup"} className={styles.signUp} type="button">
                회원가입
             </Link>

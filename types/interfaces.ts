@@ -27,6 +27,21 @@ export interface UserDB {
    }
 }
 
+export type nickCheck = {
+  available: boolean;
+  message: string;
+}
+
+export type updateProfileType = {
+   thumbnail: File | null;
+   nickName: string;
+   tags: string[];
+   crtPw: string;
+   password: string;
+}
+
+
+// =====================================
 // category, tag
 export interface CategoryDB {
    _id: ObjectId

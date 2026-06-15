@@ -15,6 +15,8 @@ export default function TagCheckBoxGroup ({ list, tagKeys, setTagKeys }:Props) {
       <div className={styles.tag_list}>
          {
             list.map((tag: TagDTO, i: number) => {
+               const tagChecked = 
+                  tagKeys.includes(tag._id)
                return (
                   <label className={styles.tagItem} htmlFor={tag.slug} key={`${tag.slug}_${i}`}>
                      <input 
@@ -40,6 +42,7 @@ export default function TagCheckBoxGroup ({ list, tagKeys, setTagKeys }:Props) {
                            tagKeys.length >= 3 &&
                            !tagKeys.includes(tag._id.toString())
                         }
+                        checked={tagChecked}
                         // readOnly 리액트에선 input에 그냥 value 속성 달면 입력 필드로 알아서 체크박스 에러 날 수 있음. 
                         // 그래서 디폴트벨류 쓰거나 readOnly 해줘야 함.
                      />
