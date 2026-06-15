@@ -1,0 +1,62 @@
+
+.form {
+   width: 100%;
+   margin: 0 auto;
+}
+
+.input_wrapper {
+   display: grid;
+   gap: 25px;
+}
+
+.write_field {
+   display: flex;
+   flex-direction: column;
+   gap: 7px;
+}
+
+.write_field .pw_box {
+   display: inherit;
+   flex-direction: inherit;
+   gap: inherit;
+}
+
+.write_field .pw_box .pw_input {
+   position: relative;
+}
+
+.write_field .pw_box .pw_input button {
+   position: absolute;
+   z-index: 3;
+   top: 50%;
+   right: 10px;
+   transform: translateY(-50%);
+}
+
+.write_field span.essential {
+   position: relative;
+   display: inline-block;
+   width: fit-content;
+}
+
+.write_field span.essential::before {
+   content: '*';
+   position: absolute;
+   right: -10px;
+   top: 0;
+   color: #ff0000;
+}
+
+.write_field input {
+   border: 1px solid #ebebeb;
+   border-radius: 5px;
+   padding: 10px;
+   width: 100%;
+}
+
+
+/* 이메일 인증용 */
+.write_field .unit_box {
+   display: flex;
+   gap: 10px;
+}

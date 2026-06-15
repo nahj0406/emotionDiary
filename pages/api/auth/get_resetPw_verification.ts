@@ -11,10 +11,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       const db = (await connectDB).db('community');
 
-      // ✅ 1. 먼저 중복 체크
+      // ✅ 1. 먼저 메일이 있나 체크
       const existing = await db.collection('user').findOne({ email });
-      if (existing) {
-         return res.status(404).json({ message: 'DUPLICATION_MAIL' });
+      if (!existing) {
+         return res.status(404).json({ message: '가입된 이메일이 없습니다.' });
       }
 
       const code = Math.floor(100000 + Math.random() * 900000).toString();

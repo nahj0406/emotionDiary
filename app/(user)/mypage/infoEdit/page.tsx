@@ -7,6 +7,7 @@ import connectDB from '@/lib/mongoDB/database/database';
 import { UserDB } from '@/types/interfaces';
 import { ObjectId } from 'mongodb';
 import { EditFrame } from './client'
+import getTags from '@/lib/mongoDB/getTags';
 
 export default async function InfoEdit() {
 
@@ -19,13 +20,15 @@ export default async function InfoEdit() {
       userInfo = await db.collection<UserDB>('user').findOne({_id: new ObjectId(session?.user?.id)});
    }
 
+   const tags = await getTags();
+
    const safeUser = userInfo 
       ? JSON.parse(JSON.stringify(userInfo))
       : null;
 
    return (
       <section className={clsx(styles.infoEdit, 'containerV1')}>
-         <EditFrame user={safeUser} />
+         <EditFrame user={safeUser} tags={tags} />
       </section>
    )
 }

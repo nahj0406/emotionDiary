@@ -80,30 +80,33 @@ export default async function handler (
 
       switch (key) {
          case 'recommend':
-            if (!session?.user.id) return res.status(401).json({});
 
-            const userInfo = await getUserById(session?.user.id);
+            if(session?.user.id) {
+               const userInfo = await getUserById(session?.user.id);
 
-            sortList = await db.collection<PostDTO>('post').find({
-               tags: {
-                  $in: userInfo?.tags ?? []
-               }
-            }).toArray();
+               sortList = await db.collection<PostDTO>('post').find({
+                  tags: {
+                     $in: userInfo?.tags ?? []
+                  }
+               }).toArray();
 
-            const recommendList = await mergePosts(sortList);
+               const recommendList = await mergePosts(sortList);
 
-            const recommendIds = recommendList.map(
-               item => item._id.toString()
-            );
+               const recommendIds = recommendList.map(
+                  item => item._id.toString()
+               );
 
-            const filteredPopular = popularList.filter(
-               item => !recommendIds.includes(item._id.toString())
-            );
+               const filteredPopular = popularList.filter(
+                  item => !recommendIds.includes(item._id.toString())
+               );
 
-            result = [
-               ...recommendList,
-               ...filteredPopular,
-            ];
+               result = [
+                  ...recommendList,
+                  ...filteredPopular,
+               ];
+            } else {
+               result = await mergePosts(popularList);
+            }
 
             return res.status(200).json(result);
 

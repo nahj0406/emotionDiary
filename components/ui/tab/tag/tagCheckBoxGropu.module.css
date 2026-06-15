@@ -28,7 +28,7 @@
    height: 30px;
 }
 
-.dark {background: #161616;}
+.dark {background: #303030;}
 .novelty {background: #6af5ff;}
 .lively {background: #f3ff4c;}
 .emotional {background: #45ffb8;}
@@ -39,4 +39,4 @@
 .sorrow {background: #2a38ff;}
 .healing {background: #27e660;}
 
-.tagItem > input:checked ~ .emotion {border: 2px solid #ccc;}
+.tagItem > input:checked ~ .emotion {border: 2px solid #000;}

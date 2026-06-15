@@ -8,7 +8,7 @@ export async function getPosts() {
 
    const result = await db.collection<PostDB>("post").find().sort({ createdAt: -1 }).toArray();
 
-   console.log(result[5])
+   // console.log(result[5])
 
    return result.map(item => ({
       _id: item._id,
