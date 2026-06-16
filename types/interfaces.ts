@@ -89,6 +89,7 @@ export interface PostDB {
    recommend: number
    views: number
    createdAt: Date
+   updatedAt: Date
    category: {
       primary: string,
       secondary: string,
@@ -110,6 +111,7 @@ export interface PostDTO {
    }
    recommend: number;
    createdAt: string;
+   updatedAt: string;
    // userId: ObjectId;
    user: {
       id: string;

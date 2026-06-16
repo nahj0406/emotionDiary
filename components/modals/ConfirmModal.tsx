@@ -10,10 +10,12 @@ export default NiceModal.create(
       message, 
       autoClose = 7000,
       onClick,
+      closeBtn = false,
    }: { 
       message: string; 
       autoClose?: number;
       onClick?: () => void;
+      closeBtn?: boolean;
    }) => {
       const modal = useModal();
 
@@ -23,9 +25,11 @@ export default NiceModal.create(
       }
 
       useEffect(() => {
-         if (autoClose > 0) {
-            const timer = setTimeout(() => handleClose(), autoClose);
-            return () => clearTimeout(timer);
+         if(!closeBtn) {
+            if (autoClose > 0) {
+               const timer = setTimeout(() => handleClose(), autoClose);
+               return () => clearTimeout(timer);
+            }
          }
       }, [autoClose]);
 
@@ -74,6 +78,18 @@ export default NiceModal.create(
                      >
                         확인
                      </button>
+                     
+                     {
+                        closeBtn && 
+                           <button
+                              onClick={() => {
+                                 modal.resolve(false);
+                                 modal.hide();
+                              }}
+                           >
+                              취소
+                           </button>
+                     }
                   </div>
                </motion.div>
             </motion.div>

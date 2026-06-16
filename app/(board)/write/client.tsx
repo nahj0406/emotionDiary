@@ -373,7 +373,11 @@ export default function WriteFrame({initialTags, initialCat, edit}: Props) {
                            secondary: value,
                         }))
                      }
-                     disabled={!edit?.category.primary || !catKeys.primary}
+                     disabled={
+                        edit 
+                        ? !edit?.category.primary || !catKeys.primary
+                        : !catKeys.primary
+                     }
                      defaultOption={'보조 장르를 선택해 주세요.'} 
                   />
                </div>
