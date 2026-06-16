@@ -177,7 +177,6 @@ export default async function handler (
                   bookPublisher,
                   bookLink,
                },
-
                thumbnail,
                publicId,
                updatedAt: new Date(),

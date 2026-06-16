@@ -11,26 +11,47 @@ export default async function DELETE (req: NextApiRequest, res: NextApiResponse)
       return res.status(401).json({message: '메서드가 일치하지 않습니다.'})
    }
 
-   const { post } = req.query;
-   const postData = JSON.parse(post as string);
-
+   const { postId } = req.query;
    const session = await getServerSession(
       req,
       res,
       authOptions
    );
 
-   if(postData.userId !== session?.user.id) {
+   if(typeof postId !== 'string') {
+      return res.status(400).json({
+         message: '잘못된 요청입니다.'
+      })
+   }
+
+   if (!ObjectId.isValid(postId)) {
+      return res.status(400).json({
+         message: '올바르지 않은 게시글 ID입니다.'
+      });
+   }
+
+   if(!session?.user.id) {
+      return res.status(405).json({
+         message: '로그인 후 이용해 주세요.'
+      })
+   }
+
+   const db = (await connectDB).db('community');
+   const postInfo = await db.collection('post').findOne({
+      _id: new ObjectId(postId),
+   })
+
+   if(postInfo?.user.id.toString() !== session?.user.id) {
       return res.status(400).json({
          message: '게시글 작성자 본인이 아닙니다.'
       })
    }
 
-   const db = (await connectDB).db('community');
 
    try {
+
       const result = await db.collection('post').deleteOne({
-         _id: new ObjectId(postData._id),
+         _id: new ObjectId(postId),
       });
 
       if(result.deletedCount === 0) {
@@ -44,7 +65,7 @@ export default async function DELETE (req: NextApiRequest, res: NextApiResponse)
       })
 
    } catch (err) {
-      console.error(err);
+      console.error('api 에러', err);
 
       return res.status(500).json({
          message: '삭제 에러'

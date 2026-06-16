@@ -9,6 +9,9 @@ export function serializePost(post: PostDB) {
       thumbnail: post.thumbnail,
       recommend: post.recommend,
       createdAt: post.createdAt.toISOString(),
+      updatedAt: post.updatedAt
+         ? post.updatedAt.toISOString()
+         : '',
       books: {
          bookTitle: post.books.bookTitle,
          uploadBookImg: post.books.uploadBookImg,

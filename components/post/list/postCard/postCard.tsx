@@ -3,7 +3,7 @@ import styles from './postCard.module.css'
 import { PostCardDTO } from "@/types/interfaces"
 import Image from 'next/image';
 import { useRouter } from 'next/navigation'
-import deleteOne from '@/lib/mongoDB/deletePostOne';
+import { deletePostOne } from '@/utils/requester/requester';
 import NiceModal from '@ebay/nice-modal-react';
 import ConfirmModal from '@/components/modals/ConfirmModal';
 
@@ -11,9 +11,16 @@ export default function PostCard({item, editMode}: {item: PostCardDTO; editMode?
    const router = useRouter();
    const content = item.content.replace(/<[^>]*>/g, ''); // 텍스트 html 태그 제거
 
-   const handle_delete = async (post: PostCardDTO) => {
+   const handle_delete = async (postId: string) => {
+      const lastCheck = await NiceModal.show(ConfirmModal, {
+         message: '게시물을 삭제하시겠습니까?\n한번 삭제되면 복구가 불가능합니다.',
+         closeBtn: true,
+      })
+
+      if(!lastCheck) return
+
       try {
-         await deleteOne(post);
+         await deletePostOne(postId);
 
          NiceModal.show(ConfirmModal, {
             message: '게시물이 성공적으로 삭제되었습니다.',
@@ -61,7 +68,7 @@ export default function PostCard({item, editMode}: {item: PostCardDTO; editMode?
             editMode &&
             <div className={styles.edit_btns}>
                <button type='button' onClick={()=> router.push(`/write?edit=${item._id}`)}>수정</button>
-               <button type='button' onClick={()=> handle_delete(item)}>삭제</button>
+               <button type='button' onClick={()=> handle_delete(item._id)}>삭제</button>
             </div>
          }
       </article>

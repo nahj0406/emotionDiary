@@ -2,7 +2,7 @@ import styles from './page.module.css'
 import connectDB from "@/lib/mongoDB/database/database"
 import { PostDB, CommentDB, UserDB } from "@/types/interfaces";
 import { ObjectId } from 'mongodb';
-import { ContentBox, Recommend } from './client';
+import { ContentBox, DeleteBtn, Recommend } from './client';
 import clsx from 'clsx';
 import Comment from './comment/comment';
 import { getServerSession } from 'next-auth';
@@ -10,6 +10,7 @@ import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import getCategories from '@/lib/mongoDB/getCategories';
 import getTags from '@/lib/mongoDB/getTags';
 import Link from 'next/link';
+import { dateStringChanger } from '@/utils/dateStringChanger';
 
 
 export default async function View ({ params }: { params : Promise<{post_id : string}> }) {
@@ -49,14 +50,17 @@ export default async function View ({ params }: { params : Promise<{post_id : st
    }
 
    const book = post.books;
-   const createdAt = post.createdAt && 
-      new Date(post?.createdAt).toLocaleString('ko-KR');
+   const createdAt = dateStringChanger(post.createdAt);
+   const updatedAt = dateStringChanger(post.updatedAt);
 
    return (
       <section className={clsx(styles.view_container, 'containerV1')}>
          {
             session?.user.id === post.user.id.toString() &&
-               <Link href={`/write/${post_id}`}>수정</Link>
+               <>
+                  <Link href={`/write/${post_id}`}>수정</Link>
+                  <DeleteBtn postId={post_id} />
+               </>
          }
          <h2 className={styles.title}>{post?.title}</h2>
          {
@@ -66,6 +70,10 @@ export default async function View ({ params }: { params : Promise<{post_id : st
          }
          <p>작성자: {post?.user.nickName}</p>
          <p>작성일: {createdAt}</p>
+         {
+            post.updatedAt && 
+            <p>수정일: {updatedAt}</p>
+         }
          <p>장르: {findNameById(category, post.category.primary)}/{findNameById(category, post.category.secondary)}</p>
          <p>
             성향: {

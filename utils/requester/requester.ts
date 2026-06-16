@@ -1,5 +1,6 @@
-import { nickCheck } from "@/types/interfaces";
+import { nickCheck, PostDTO } from "@/types/interfaces";
 import { SignupRequest } from "@/types/interfaces";
+import { PostCardDTO } from "@/types/interfaces";
 
 export async function createMailcode (email: string) {
    const res = await fetch("/api/auth/get_verificationMail", {
@@ -120,6 +121,24 @@ export async function  updatePostSubmit (result: FormData) {
    })
 
    return res;
+}
+
+// 글 삭제
+export async function deletePostOne (postId: string) {
+   const res = await fetch(
+      `/api/post/delete?postId=${postId}`,
+      {
+         method: 'DELETE',
+      }
+   )
+
+   const data = await res.json();
+
+   if (!res.ok) {
+      throw new Error(data.message)
+   }
+
+   return data
 }
 
 
