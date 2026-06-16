@@ -16,7 +16,15 @@ export async function getPosts() {
       content: item.content,
       thumbnail: item.thumbnail,
       recommend: item.recommend,
+      views: item.views,
       createdAt: item.createdAt,
+      books: {
+         bookTitle: item.books.bookTitle,
+         uploadBookImg: item.books.uploadBookImg,
+         bookAuthor: item.books.bookAuthor,
+         bookPublisher: item.books.bookPublisher,
+         bookLink: item.books.bookLink,
+      },
       user: {
          id: item.user.id ?? "",
          nickName: item.user.nickName ?? "",

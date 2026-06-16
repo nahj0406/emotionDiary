@@ -57,6 +57,8 @@ export function EditFrame({user, tags}:{user: WithId<UserDB> | null, tags: TagDT
    const [nickSafeValue, setNickSafeValue] = useState<string>();
    const [file, setFile] = useState<File | null>(null);
    const [preview, setPreview] = useState<string>('');
+   const [userThumbnail, setUserThumbnail] = useState<string | undefined>(user?.thumbnail);
+   const [removeThumbnail, setRemoveThumbnail] = useState(false);
    const formRef = useRef<HTMLFormElement>(null);
    const [showPw, setShowPw] = useState({
       password: false,
@@ -177,7 +179,7 @@ export function EditFrame({user, tags}:{user: WithId<UserDB> | null, tags: TagDT
    }
 
    // 저장 전 취소
-   const handleRemoveThumbnail = () => {
+   const handleRemovePreview = () => {
       if(preview) {
          URL.revokeObjectURL(preview);
       }
@@ -186,17 +188,32 @@ export function EditFrame({user, tags}:{user: WithId<UserDB> | null, tags: TagDT
       setPreview('');
    }
 
-   const duplication_submit = () => {
-      return user?.nickName === inputs.nickName.value && 
-         user?.tags === tagKeys && !inputs.crtPw.value && !file;
+   const handleRemoveThumbnail = () => {
+      if(userThumbnail) {
+         setUserThumbnail('');
+          setRemoveThumbnail(true);
+      }
    }
 
+   const duplication_submit = () => {
+      return user?.nickName === inputs.nickName.value && 
+         user?.tags === tagKeys && 
+         !inputs.crtPw.value && 
+         !file &&
+         !removeThumbnail
+   }
+
+   // 최종 요청
    const updateSubmit_handler = async (e: React.MouseEvent) => {
       e.preventDefault();
 
       if(!formRef.current) return;
 
       const formData = new FormData(formRef.current);
+
+      if(removeThumbnail) {
+         formData.append('removeThumbnail', 'true');
+      }
 
       if (file) {
          formData.append('thumbnail', file);
@@ -272,14 +289,15 @@ export function EditFrame({user, tags}:{user: WithId<UserDB> | null, tags: TagDT
          <form ref={formRef} className={styles.form}>
             <figure className={styles.thumbnail}>
                {
-                  user?.thumbnail || preview ?
-                     <img src={preview ? preview : user?.thumbnail} alt='유저 썸네일' />
+                  userThumbnail || preview ?
+                     <img src={preview ? preview : userThumbnail} alt='유저 썸네일' />
                   : <img src={'img/user_unknown.png'} alt='no-img' />
                }
             </figure>
             <button type="button" onClick={()=> fileRef.current?.click()}>썸네일 변경</button>
             <input ref={fileRef} type="file" onChange={handleThumbnail} hidden />
-            {preview && <button type="button" onClick={handleRemoveThumbnail} >변경 취소</button>}
+            {preview && <button type="button" onClick={handleRemovePreview} >변경 취소</button>}
+            {userThumbnail && <button type="button" onClick={handleRemoveThumbnail} >썸네일 삭제</button>}
    
             <article className="itemBox">
                <div className={styles.write_field}>

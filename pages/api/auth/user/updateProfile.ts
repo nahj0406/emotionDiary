@@ -17,7 +17,7 @@ export default async function handler(
    req: NextApiRequest,
    res: NextApiResponse
 ) {
-   if (req.method !== "POST") {
+   if (req.method !== "PUT") {
       return res.status(405).json({
          message: "요청 메서드가 올바르지 않습니다.",
       });
@@ -48,6 +48,7 @@ export default async function handler(
 
    const tags = fields.tags ?? [];
    const thumbnail = files.thumbnail?.[0];
+   const removeThumbnail = fields.removeThumbnail?.[0] === 'true';
 
    const client = await connectDB;
    const db = client.db("community");
@@ -55,8 +56,6 @@ export default async function handler(
    const userInfo = await db.collection("user").findOne({
       _id: new ObjectId(session.user.id),
    });
-
-   console.log(files);
 
    if (!userInfo) {
       return res.status(404).json({
@@ -99,7 +98,7 @@ export default async function handler(
 
    const now = new Date();
 
-   if (userInfo.nickNameUpdatedAt) {
+   if (userInfo.nickNameUpdatedAt && nickName !== userInfo.nickName) {
       const diff =
          now.getTime() -
          userInfo.nickNameUpdatedAt.getTime();
@@ -128,7 +127,21 @@ export default async function handler(
          updateData.password = await bcrypt.hash(password, 10);
       }
 
+      if(removeThumbnail) {
+         if(userInfo.publicId) {
+            await cloudinary.uploader.destroy(userInfo.publicId);
+         }
+
+         updateData.thumbnail = '';
+         updateData.publicId = '';
+      }
+
       if (thumbnail) {
+
+         if (userInfo.publicId) {
+           await cloudinary.uploader.destroy(userInfo.publicId);
+         }
+
          const uploaded =
             await cloudinary.uploader.upload(
                thumbnail.filepath,
@@ -153,7 +166,7 @@ export default async function handler(
          },
          {
             $set: {
-               updateData,
+               ...updateData,
                nickNameUpdatedAt: new Date(),
             }
          }

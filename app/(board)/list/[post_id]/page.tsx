@@ -9,6 +9,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import getCategories from '@/lib/mongoDB/getCategories';
 import getTags from '@/lib/mongoDB/getTags';
+import Link from 'next/link';
 
 
 export default async function View ({ params }: { params : Promise<{post_id : string}> }) {
@@ -20,6 +21,7 @@ export default async function View ({ params }: { params : Promise<{post_id : st
       _id: new ObjectId(post_id)
    })
 
+   // 조회수 업데이트
    const views = await db.collection<PostDB>('post').findOneAndUpdate(
       {_id: new ObjectId(post_id)},
       {$inc: {views: 1}},
@@ -52,6 +54,10 @@ export default async function View ({ params }: { params : Promise<{post_id : st
 
    return (
       <section className={clsx(styles.view_container, 'containerV1')}>
+         {
+            session?.user.id === post.user.id.toString() &&
+               <Link href={`/write/${post_id}`}>수정</Link>
+         }
          <h2 className={styles.title}>{post?.title}</h2>
          {
             userInfo?.thumbnail

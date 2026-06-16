@@ -1,6 +1,6 @@
 
 import WriteFrame from './client';
-import styles from './page.module.css'
+import styles from './page.module.css';
 import clsx from "clsx";
 import getTags from "@/lib/mongoDB/getTags";
 import getCategories from '@/lib/mongoDB/getCategories';

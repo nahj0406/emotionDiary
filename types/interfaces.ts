@@ -97,15 +97,22 @@ export interface PostDB {
 }
 
 export interface PostDTO {
-   _id: ObjectId;
+   _id: string;
    title: string;
    content: string;
    thumbnail: string;
+   books: {
+      bookTitle: string,
+      uploadBookImg: string,
+      bookAuthor: string,
+      bookPublisher: string,
+      bookLink: string,
+   }
    recommend: number;
-   createdAt: Date | string;
+   createdAt: string;
    // userId: ObjectId;
    user: {
-      id: ObjectId;
+      id: string;
       nickName: string;
    }
    category: {

@@ -10,8 +10,9 @@ import NiceModal from "@ebay/nice-modal-react";
 import { useTiptapEditor } from "@/components/post/write/Editor/useTiptap"
 import Link from "next/link";
 import TagCheckBoxGroup from "@/components/ui/tab/tag/tagCheckBoxGroup";
-import { CategoryDTO, TagDTO } from "@/types/interfaces";
+import { CategoryDTO, PostDTO, TagDTO } from "@/types/interfaces";
 import CatSelect from "@/components/ui/select/category/CatSelect";
+import { createPostSubmit, updatePostSubmit } from "@/utils/requester/requester";
 
 export interface Book {
   id: string;
@@ -28,18 +29,19 @@ export interface Book {
 type Props = {
   initialTags: TagDTO[];
   initialCat: CategoryDTO[];
+  edit?: PostDTO | null;
 };
 
-export default function WriteFrame({initialTags, initialCat}: Props) {
+export default function WriteFrame({initialTags, initialCat, edit}: Props) {
 
    const [books, setBooks] = useState<Book[]>([]);
    const [bookKeyword, setBookKeyword] = useState<string>('');
    const [search, setSearch] = useState<string>('');
    const [bookData, setBookData] = useState<Book | null>(null);
-   const [tagKeys, setTagKeys] = useState<string[]>([]);
+   const [tagKeys, setTagKeys] = useState<string[]>(edit?.tags ?? []);
    const [catKeys, setCatKeys] = useState({
-      primary: "",
-      secondary: "",
+      primary: edit?.category.primary ?? "",
+      secondary: edit?.category.secondary ?? "",
    })
 
    const secondCat = initialCat.filter(
@@ -81,12 +83,13 @@ export default function WriteFrame({initialTags, initialCat}: Props) {
    const [preview, setPreview] = useState<string>('');
    const [directly, setDirectly] = useState<boolean>(false);
    const [bkInputs, setBkinputs] = useState({
-      bookTitle: '',
-      bookImage: '',
-      bookPublisher: '',
-      bookAuthor: '',
-      bookLink: '',
+      bookTitle: edit?.books.bookTitle ?? '',
+      bookImage: edit?.books.uploadBookImg ?? '',
+      bookPublisher: edit?.books.bookPublisher ?? '',
+      bookAuthor: edit?.books.bookAuthor ?? '',
+      bookLink: edit?.books.bookLink ?? '',
    })
+   // const [editCat, setEditCat] = useState<string>('');
 
    useEffect(()=> {
       if(bookData) {
@@ -124,7 +127,7 @@ export default function WriteFrame({initialTags, initialCat}: Props) {
    }
 
 
-   const editor = useTiptapEditor();
+   const editor = useTiptapEditor(edit?.content);
 
    const handleFileChange = (
       e: React.ChangeEvent<HTMLInputElement>
@@ -164,6 +167,10 @@ export default function WriteFrame({initialTags, initialCat}: Props) {
 
       const formData = new FormData();
 
+      if(edit) {
+         formData.append('_id', edit?._id);
+      }
+
       formData.append(
          'title', 
          String(new FormData(formRef.current).get('title'))
@@ -193,10 +200,15 @@ export default function WriteFrame({initialTags, initialCat}: Props) {
       }
 
       try {
-         const res = await fetch('/api/post/write', {
-            method: 'POST',
-            body: formData,
-         })
+         let res = null;
+
+         if(edit) {
+            // 글 수정
+            res = await updatePostSubmit(formData);
+         } else {
+            // 글 작성
+            res = await createPostSubmit(formData);
+         }
 
          if (!res.ok) {
             const data = await res.json();
@@ -208,10 +220,10 @@ export default function WriteFrame({initialTags, initialCat}: Props) {
 
          const result = await res.json();
 
-         console.log(result);
+         // console.log(result);
 
          NiceModal.show(ConfirmModal, {
-            message: "글이 등록되었습니다.",
+            message: result.message,
             autoClose: 1000,
          });
 
@@ -228,10 +240,6 @@ export default function WriteFrame({initialTags, initialCat}: Props) {
          console.error(err)
       }
    }
-
-   // console.log(books);
-
-   // console.log(bookData)
 
    return (
       <section className={clsx(styles.layer_box, 'containerV1')}>
@@ -286,7 +294,8 @@ export default function WriteFrame({initialTags, initialCat}: Props) {
          <form ref={formRef} className={styles.form}>
             <div className={styles.content}>
                <input 
-                  className={styles.input} 
+                  className={styles.input}
+                  defaultValue={edit?.title}
                   type="text" 
                   name="title" 
                   placeholder="제목을 입력해 주세요." 
@@ -319,10 +328,10 @@ export default function WriteFrame({initialTags, initialCat}: Props) {
                   placeholder="저자를 입력해 주세요." 
                />
                {
-                  (bookData?.image && !directly) && (
+                  (bkInputs.bookImage && !directly) && (
                      <img
-                        src={bookData.image}
-                        alt={bookData.title}
+                        src={bkInputs.bookImage}
+                        alt={bkInputs.bookTitle}
                         width={100}
                      />
                   )
@@ -340,7 +349,7 @@ export default function WriteFrame({initialTags, initialCat}: Props) {
                <div>
                   <span>대표 장르 선택</span>
                   <CatSelect 
-                     array={initialCat} 
+                     array={initialCat}
                      value={catKeys.primary}
                      onChange={(value)=> 
                         setCatKeys((prev)=> ({
@@ -364,7 +373,7 @@ export default function WriteFrame({initialTags, initialCat}: Props) {
                            secondary: value,
                         }))
                      }
-                     disabled={!catKeys.primary}
+                     disabled={!edit?.category.primary || !catKeys.primary}
                      defaultOption={'보조 장르를 선택해 주세요.'} 
                   />
                </div>
@@ -408,7 +417,7 @@ export default function WriteFrame({initialTags, initialCat}: Props) {
 
             <div className={styles.buttonBox}>
                <SubmitBtn content={'취소'} submit={false} onClick={()=> router.back()}/>
-               <SubmitBtn content={'작성 완료'} onClick={(e)=> {handleSubmit(e)}}/>
+               <SubmitBtn content={edit ? '수정 완료' : '작성 완료'} onClick={(e)=> {handleSubmit(e)}}/>
             </div>
          </form>
       </section>
