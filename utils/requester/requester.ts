@@ -1,6 +1,5 @@
 import { nickCheck } from "@/types/interfaces";
 import { SignupRequest } from "@/types/interfaces";
-import { updateProfileType } from "@/types/interfaces";
 
 export async function createMailcode (email: string) {
    const res = await fetch("/api/auth/get_verificationMail", {
@@ -86,7 +85,7 @@ type updatePw = {
 
 export async function updatePassword (data: updatePw) {
    const res = await fetch('/api/auth/user/findPwReset', {
-      method: 'POST',
+      method: 'PUT',
       headers: {
          'Content-Type': 'application/json'
       },
@@ -103,6 +102,25 @@ export async function updatePassword (data: updatePw) {
    return result
 }
 
+// 글 작성
+export async function createPostSubmit (result: FormData) {
+   const res = await fetch('/api/post/write', {
+      method: 'POST',
+      body: result,
+   })
+
+   return res;
+}
+
+// 글 수정
+export async function  updatePostSubmit (result: FormData) {
+   const res = await fetch('/api/post/update', {
+      method: 'PUT',
+      body: result,
+   })
+
+   return res;
+}
 
 
 // 닉네임 체크
@@ -117,7 +135,7 @@ export async function getCheckNickName (result: string) : Promise<nickCheck> {
 // 업데이트 프로필
 export async function updateProfile (formData: FormData) {
    const res = await fetch('/api/auth/user/updateProfile', {
-      method: 'POST',
+      method: 'PUT',
       body: formData,
    })
 

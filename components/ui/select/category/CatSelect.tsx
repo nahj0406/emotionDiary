@@ -16,6 +16,7 @@ export default function CatSelect({
    defaultOption,
    disabled
 }: Props) {
+
    return (
       <select 
          value={value}

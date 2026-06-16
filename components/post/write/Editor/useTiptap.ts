@@ -91,7 +91,7 @@ export const LineHeight = Extension.create({
   },
 })
 
-export const useTiptapEditor = () => {
+export const useTiptapEditor = (editContent: string | undefined) => {
   return useEditor({
     extensions: [
       StarterKit,
@@ -112,7 +112,7 @@ export const useTiptapEditor = () => {
         types: ['heading', 'paragraph'],
       }),
     ],
-    content: '<p>내용을 입력하세요</p>',
+    content: editContent ?? '<p>내용을 입력하세요</p>',
     immediatelyRender: false,
   })
 }

@@ -1,9 +1,9 @@
 import { ObjectId } from "mongodb";
 import connectDB from "@/lib/mongoDB/database/database";
-import { PostDTO, PostCardDTO } from "@/types/interfaces";
+import { PostDTO, PostDB, PostCardDTO } from "@/types/interfaces";
 
 export async function mergePosts(
-  posts: PostDTO[]
+  posts: PostDB[]
 ): Promise<PostCardDTO[]> {
 
   const client = await connectDB;

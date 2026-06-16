@@ -2,8 +2,7 @@ import connectDB from "@/lib/mongoDB/database/database";
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { IncomingForm, Fields, Files } from 'formidable';
 import cloudinary from "@/lib/external_storage/cloudinary";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../auth/[...nextauth]";
+import { ObjectId } from "mongodb";
 
 export const config = {
    api: {
@@ -39,7 +38,7 @@ export default async function handler (
    res: NextApiResponse
 ) {
 
-   if(req.method !== 'POST') {
+   if(req.method !== 'PUT') {
       return res.status(405).json({
          message: '메서드가 허용되지 않았습니다.'
       });
@@ -49,6 +48,11 @@ export default async function handler (
 
       // parse 완료까지 await
       const { fields, files } = await parseForm(req);
+
+      const postId =
+         Array.isArray(fields._id)
+            ? fields._id[0]
+            : fields._id;
 
       const title =
          Array.isArray(fields.title)
@@ -95,7 +99,7 @@ export default async function handler (
             ? fields.tags[0]
             : fields.tags ?? `[]`;
 
-      const tags = JSON.parse(tagsRaw)
+      const tags = JSON.parse(tagsRaw);
 
       if (
          !title ||
@@ -155,61 +159,42 @@ export default async function handler (
          publicId = uploaded.public_id;
       }
 
-      // 세션
-      const session = await getServerSession(
-         req,
-         res,
-         authOptions
-      );
-
-      // let userInfo = null;
-
       const db = (await connectDB).db('community');
 
-      // if(session?.user.id) {
-
-      //    userInfo = await db
-      //       .collection<UserDB>('user')
-      //       .findOne({
-      //          _id: new ObjectId(session.user.id)
-      //       });
-      // }
-
       // 게시글 저장
-      const result = await db.collection('post').insertOne({
-         title,
-         content,
-
-         books: {
-            bookTitle,
-            uploadBookImg: bookImage ?? '',
-            bookAuthor,
-            bookPublisher,
-            bookLink,
+      const result = await db.collection('post').updateOne(
+         {
+            _id: new ObjectId(postId),
          },
+         {
+            $set: {
+               title,
+               content,
+               books: {
+                  bookTitle,
+                  uploadBookImg: bookImage ?? '',
+                  bookAuthor,
+                  bookPublisher,
+                  bookLink,
+               },
 
-         user: {
-            id: session?.user.id,
-            nickName: session?.user.nickName,
-         },
-
-         thumbnail,
-         publicId,
-         recommend: 0,
-         views: 0,
-         createdAt: new Date(),
-         category : {
-            primary: primaryCatId,
-            secondary: secondaryCatId,
-         },
-         tags,
-      });
+               thumbnail,
+               publicId,
+               updatedAt: new Date(),
+               category : {
+                  primary: primaryCatId,
+                  secondary: secondaryCatId,
+               },
+               tags,
+            }
+         }
+      );
 
       //응답 종료
       return res.status(200).json({
          success: true,
-         id: result.insertedId,
-         message: '글이 등록되었습니다.',
+         id: postId,
+         message: '글이 수정되었습니다.',
       });
 
    } catch (err) {
