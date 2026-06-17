@@ -7,25 +7,25 @@ type Props = {
 }
 
 const TiptapEditor = ({ editor }: Props) => {
-  if (!editor) return null
+   if (!editor) return null
 
-  const addImage = () => {
-    const url = prompt('이미지 URL 입력')
-    if (url) {
-      editor.chain().focus().setImage({ src: url }).run()
-    }
-  }
+   // const addImage = () => {
+   //    const url = prompt('이미지 URL 입력')
+   //    if (url) {
+   //       editor.chain().focus().setImage({src: url,}).run();
+   //    }
+   // }
 
-  const setLink = () => {
-    const url = prompt('링크 URL')
-    if (url) {
-      editor.chain().focus().setLink({ href: url }).run()
-    }
-  }
+   const setLink = () => {
+      const url = prompt('링크 URL')
+      if (url) {
+         editor.chain().focus().setLink({ href: url }).run()
+      }
+   }
 
-  const insertSymbol = (symbol: string) => {
-    editor.chain().focus().insertContent(symbol).run()
-  }
+   const insertSymbol = (symbol: string) => {
+      editor.chain().focus().insertContent(symbol).run()
+   }
 
   return (
     <div className={styles.editor_wrapper}>
@@ -106,6 +106,7 @@ const TiptapEditor = ({ editor }: Props) => {
 
         {/* 링크 */}
         <button type='button' onClick={setLink}>링크</button>
+        <button type='button' onClick={()=> console.log(editor?.getHTML())}>링크dd</button>
 
         {/* 인용문 */}
         <button type='button' onClick={() => editor.chain().focus().toggleBlockquote().run()}>
@@ -117,8 +118,8 @@ const TiptapEditor = ({ editor }: Props) => {
           구분선
         </button>
 
-        {/* 이미지 */}
-        <button type='button' onClick={addImage}>외부이미지 삽입</button>
+        {/* 이미지 : 에디터에서 직접 드래그드롭, ctrl + v 넣는 걸로 대체 */}
+        {/* <button type='button' onClick={addImage}>외부이미지 삽입</button> */}
       </div>
 
       <EditorContent editor={editor} />

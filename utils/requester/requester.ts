@@ -167,3 +167,25 @@ export async function updateProfile (formData: FormData) {
 
    return data
 }
+
+
+export async function publicIdImageDelete (arr: string[]) {
+   const res = await fetch('/api/post/editor/delete', {
+      method: 'POST',
+      headers: {
+         'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+         publicIds: arr,
+      }),
+   })
+
+   const data = await res.json();
+
+   if(!res.ok) {
+      console.log('서버 응답:', data.message);
+      throw new Error(data.message || '에러');
+   }
+
+   return data
+}

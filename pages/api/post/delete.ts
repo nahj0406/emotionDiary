@@ -3,6 +3,8 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]";
 import { ObjectId } from "mongodb";
+import cloudinary from '@/lib/external_storage/cloudinary'
+import postImageDelete from "@/lib/cloudinary/postImageDelete";
 
 
 export default async function DELETE (req: NextApiRequest, res: NextApiResponse) {
@@ -41,6 +43,12 @@ export default async function DELETE (req: NextApiRequest, res: NextApiResponse)
       _id: new ObjectId(postId),
    })
 
+   if (!postInfo) {
+      return res.status(404).json({
+         message: '게시글이 존재하지 않습니다.'
+      })
+   }
+
    if(postInfo?.user.id.toString() !== session?.user.id) {
       return res.status(400).json({
          message: '게시글 작성자 본인이 아닙니다.'
@@ -50,6 +58,11 @@ export default async function DELETE (req: NextApiRequest, res: NextApiResponse)
 
    try {
 
+      // 게시물 내용에 있는 이미지들의 publicId 추출 삭제 함수
+      await postImageDelete(postInfo?.content);
+
+
+      // 게시물 삭제
       const result = await db.collection('post').deleteOne({
          _id: new ObjectId(postId),
       });
