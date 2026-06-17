@@ -21,3 +21,9 @@
 :global(.ProseMirror):focus {
    border-color: #666;
 }
+
+:global(.ProseMirror) a {
+  color: #2563eb;
+  text-decoration: underline;
+  cursor: pointer;
+}

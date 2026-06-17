@@ -12,7 +12,7 @@ import Link from "next/link";
 import TagCheckBoxGroup from "@/components/ui/tab/tag/tagCheckBoxGroup";
 import { CategoryDTO, PostDTO, TagDTO } from "@/types/interfaces";
 import CatSelect from "@/components/ui/select/category/CatSelect";
-import { createPostSubmit, updatePostSubmit } from "@/utils/requester/requester";
+import { createPostSubmit, publicIdImageDelete, updatePostSubmit } from "@/utils/requester/requester";
 
 export interface Book {
   id: string;
@@ -127,7 +127,25 @@ export default function WriteFrame({initialTags, initialCat, edit}: Props) {
    }
 
 
-   const editor = useTiptapEditor(edit?.content);
+   const uploadedImageIdsRef = useRef<string[]>([]);
+
+   const editor = useTiptapEditor({
+      editContent: edit?.content,
+      onUploadImage: publicId => {
+         uploadedImageIdsRef.current.push(publicId)
+      },
+   })
+
+   const extractPublicIds = (
+      html: string
+   ) => {
+      const matches = html.matchAll(
+         /data-public-id="([^"]+)"/g
+      )
+      
+      return Array.from(matches)
+         .map(match => match[1])
+   }
 
    const handleFileChange = (
       e: React.ChangeEvent<HTMLInputElement>
@@ -195,6 +213,12 @@ export default function WriteFrame({initialTags, initialCat, edit}: Props) {
          editor.getHTML()
       );
 
+      const contentValue = formData.get('content');
+
+      if (typeof contentValue !== 'string') {
+         throw new Error('content가 올바르지 않습니다.');
+      }
+
       if(file) {
          formData.append('file', file);
       }
@@ -204,9 +228,34 @@ export default function WriteFrame({initialTags, initialCat, edit}: Props) {
 
          if(edit) {
             // 글 수정
+            const oldIds = extractPublicIds(edit.content)
+
+            const newIds = extractPublicIds(contentValue)
+
+            const removedIds =
+               oldIds.filter(
+                  id => !newIds.includes(id)
+               )
+
+            if (uploadedImageIdsRef.current.length > 0) {
+               await publicIdImageDelete(removedIds);
+            }
+
             res = await updatePostSubmit(formData);
          } else {
             // 글 작성
+            
+            const contentPublicIds = extractPublicIds(contentValue);
+
+            const unusedPublicIds =
+               uploadedImageIdsRef.current.filter(
+                  id => !contentPublicIds.includes(id)
+               )
+            
+            if (uploadedImageIdsRef.current.length > 0) {
+               await publicIdImageDelete(unusedPublicIds);
+            }
+
             res = await createPostSubmit(formData);
          }
 
@@ -239,6 +288,24 @@ export default function WriteFrame({initialTags, initialCat, edit}: Props) {
          });
          console.error(err)
       }
+   }
+
+   const cancelWrite = async () => {
+      if (uploadedImageIdsRef.current.length > 0) {
+         await fetch('/api/post/editor/delete', {
+            method: 'POST',
+            headers: {
+               'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+               publicIds: uploadedImageIdsRef.current,
+            }),
+         })
+      }
+
+      uploadedImageIdsRef.current = []
+
+      router.back()
    }
 
    return (
@@ -420,7 +487,7 @@ export default function WriteFrame({initialTags, initialCat, edit}: Props) {
             </div>
 
             <div className={styles.buttonBox}>
-               <SubmitBtn content={'취소'} submit={false} onClick={()=> router.back()}/>
+               <SubmitBtn content={'취소'} submit={false} onClick={()=> cancelWrite()}/>
                <SubmitBtn content={edit ? '수정 완료' : '작성 완료'} onClick={(e)=> {handleSubmit(e)}}/>
             </div>
          </form>
