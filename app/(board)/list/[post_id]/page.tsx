@@ -1,6 +1,6 @@
 import styles from './page.module.css'
 import connectDB from "@/lib/mongoDB/database/database"
-import { PostDB, CommentDB, UserDB } from "@/types/interfaces";
+import { PostDB, CommentDB, UserDB, CommentDTO } from "@/types/interfaces";
 import { ObjectId } from 'mongodb';
 import { ContentBox, DeleteBtn, Recommend } from './client';
 import clsx from 'clsx';
@@ -29,7 +29,19 @@ export default async function View ({ params }: { params : Promise<{post_id : st
       {returnDocument: 'after'}
    );
 
-   const comment_list = await db.collection<CommentDB>('comments').find({postId: post?._id}).toArray();
+   const comment_result = await db.collection<CommentDB>('comments').find({postId: post?._id.toString()}).toArray();
+   const comment_list: CommentDTO[] = comment_result.map(comment => ({
+     ...comment,
+     _id: comment._id.toString(),
+     user: {
+      id: comment.user.id.toString(),
+      nickName: comment.user.nickName,
+     },
+     postId: comment.postId.toString(),
+     createdAt: comment.createdAt.toISOString(),
+     updatedAt: comment.updatedAt?.toISOString() ?? '',
+   }));
+
    const session = await getServerSession(authOptions);
    const userInfo = await db.collection<UserDB>('user').findOne({_id: new ObjectId(post?.user.id)});
 
