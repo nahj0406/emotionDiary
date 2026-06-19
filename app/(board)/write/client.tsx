@@ -38,16 +38,30 @@ export default function WriteFrame({initialTags, initialCat, edit}: Props) {
    const [bookKeyword, setBookKeyword] = useState<string>('');
    const [search, setSearch] = useState<string>('');
    const [bookData, setBookData] = useState<Book | null>(null);
+   const [bkInputs, setBkinputs] = useState({
+      bookTitle: edit?.books.bookTitle ?? '',
+      bookImage: edit?.books.uploadBookImg ?? '',
+      bookPublisher: edit?.books.bookPublisher ?? '',
+      bookAuthor: edit?.books.bookAuthor ?? '',
+      bookLink: edit?.books.bookLink ?? '',
+   })
+
+   const formRef = useRef<HTMLFormElement>(null);
+   const [directly, setDirectly] = useState<boolean>(false);
+   const [file, setFile] = useState<File | null>(null);
+   const [preview, setPreview] = useState<string>('');
+   
    const [tagKeys, setTagKeys] = useState<string[]>(edit?.tags ?? []);
    const [catKeys, setCatKeys] = useState({
       primary: edit?.category.primary ?? "",
       secondary: edit?.category.secondary ?? "",
    })
-
+   
    const secondCat = initialCat.filter(
-    (cat) => cat._id !== catKeys.primary
-  );
-
+      (cat) => cat._id !== catKeys.primary
+   );
+   const router = useRouter();
+   
 
    useEffect(() => {
       if (!search.trim()) return;
@@ -76,20 +90,6 @@ export default function WriteFrame({initialTags, initialCat, edit}: Props) {
 
       fetchBooks();
    }, [search]);
-
-   const router = useRouter();
-   const formRef = useRef<HTMLFormElement>(null);
-   const [file, setFile] = useState<File | null>(null);
-   const [preview, setPreview] = useState<string>('');
-   const [directly, setDirectly] = useState<boolean>(false);
-   const [bkInputs, setBkinputs] = useState({
-      bookTitle: edit?.books.bookTitle ?? '',
-      bookImage: edit?.books.uploadBookImg ?? '',
-      bookPublisher: edit?.books.bookPublisher ?? '',
-      bookAuthor: edit?.books.bookAuthor ?? '',
-      bookLink: edit?.books.bookLink ?? '',
-   })
-   // const [editCat, setEditCat] = useState<string>('');
 
    useEffect(()=> {
       if(bookData) {
@@ -146,6 +146,8 @@ export default function WriteFrame({initialTags, initialCat, edit}: Props) {
       return Array.from(matches)
          .map(match => match[1])
    }
+
+   
 
    const handleFileChange = (
       e: React.ChangeEvent<HTMLInputElement>
@@ -394,15 +396,48 @@ export default function WriteFrame({initialTags, initialCat, edit}: Props) {
                   name="bookAuthor" 
                   placeholder="저자를 입력해 주세요." 
                />
-               {
-                  (bkInputs.bookImage && !directly) && (
-                     <img
-                        src={bkInputs.bookImage}
-                        alt={bkInputs.bookTitle}
-                        width={100}
-                     />
-                  )
-               }
+               
+               {(bkInputs.bookImage && !directly) && (
+                  <img
+                     src={bkInputs.bookImage}
+                     alt={bkInputs.bookTitle}
+                     width={100}
+                  />
+               )}
+
+               {(bkInputs.bookImage && !directly) && (
+                  <img
+                     src={bkInputs.bookImage}
+                     alt={bkInputs.bookTitle}
+                     width={100}
+                  />
+               )}
+
+               {directly && (
+                  <>
+                     <div className={styles.imageUploader}>
+                        <input 
+                           className={styles.input}
+                           type="file" accept="image/*" 
+                           onChange={handleFileChange}
+                           placeholder="이미지를 업로드 해주세요." 
+                        />
+                     </div>
+                     {preview && (
+                        <div>
+                           <img
+                              src={preview}
+                              alt="preview"
+                              width={200}
+                           />
+
+                           <button type="button" onClick={handleRemoveImage}>
+                              삭제
+                           </button>
+                        </div>
+                     )}
+                  </>
+               )}
                <input 
                   className={styles.input}
                   value={bkInputs.bookLink}
@@ -455,35 +490,6 @@ export default function WriteFrame({initialTags, initialCat, edit}: Props) {
                </div>
 
                <TiptapEditor editor={editor}></TiptapEditor>
-            </div>
-
-            <div className={styles.imageUploader}>
-               <input 
-                  className={styles.input}
-                  type="file" accept="image/*" 
-                  onChange={handleFileChange}
-                  placeholder="이미지를 업로드 해주세요." 
-               />
-               {
-                  preview && (
-                     <div>
-
-                        <img
-                           src={preview}
-                           alt="preview"
-                           width={200}
-                        />
-
-                        <button
-                           type="button"
-                           onClick={handleRemoveImage}
-                        >
-                           삭제
-                        </button>
-
-                     </div>
-                  )
-               }
             </div>
 
             <div className={styles.buttonBox}>

@@ -5,8 +5,6 @@ import { authOptions } from "../../auth/[...nextauth]";
 import { ObjectId } from "mongodb";
 import { UserDB } from "@/types/interfaces";
 
-// 댓글 내용, 유저 닉네임, 좋아요
-
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 
    if(req.method !== 'POST') {
@@ -24,8 +22,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
    const postId = req.body.postId;
    const db = (await connectDB).db('community');
    const session = await getServerSession(req, res, authOptions);
-   let parentId = null;
-   let depth = 0;
+   const parentCommentId = req.body.parentId ?? null;
+   const depth = req.body.depth;
+
+   if (!session?.user?.id) {
+      return res.status(401).json({
+         message: '로그인이 필요합니다.'
+      });
+   }
 
    if(session?.user.id) {
       userInfo = await db.collection<UserDB>('user').findOne({
@@ -33,23 +37,35 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       })
    }
 
-   if (req.body.parentId !== null && req.body.depth) {
-      parentId = req.body.parentId;
-      depth = req.body.depth + 1
-   }
+   const now = new Date();
 
    try {
       const result = await db.collection('comments').insertOne({
          postId,
-         nickName: userInfo?.nickName,
+         user: {
+            id: userInfo?._id,
+            nickName: userInfo?.nickName,
+         },
          content,
-         parentId,
+         parentCommentId: parentCommentId,
          createdAt: new Date(),
          depth,
       })
 
       return res.status(200).json({
          success: true,
+         comment: {
+            _id: result.insertedId.toString(),
+            postId,
+            user: {
+               id: session.user.id,
+               nickName: userInfo?.nickName,
+            },
+            content,
+            parentCommentId,
+            depth,
+            createdAt: now.toISOString(),
+         }
       })
 
    } catch (err) {

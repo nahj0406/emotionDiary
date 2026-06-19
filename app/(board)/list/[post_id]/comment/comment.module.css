@@ -1,8 +1,52 @@
-.comment_box {}
+.comment_box {
+   border: 1px solid #ccc;
+   padding: 15px;
+}
+
+.comment_box > h5 {
+   font-size: 20px;
+   margin-bottom: 20px;
+}
+
+.list {
+   display: grid;
+   grid-template-columns: 1fr;
+   gap: 20px;
+   padding-bottom: 20px;
+}
+
+.list .item {
+   padding-left: calc(var(--depth) * 10px);
+}
+
+.list > .item {
+   border-bottom: 1px solid #333;
+   padding-bottom: 20px;
+}
+
+.list > .item .item {
+   border-bottom: 1px solid #eee;
+   display: flex;
+   flex-direction: column;
+   gap: 10px;
+   width: 100%;
+   background: #ccc;
+   padding-bottom: 20px;
+}
+
+.list .item .cmt_header {
+   display: flex;
+   gap: 15px;
+}
+
+.list .item .cmt_header .unit {
+   display: flex;
+   gap: 5px;
+}
 
 .write_box {
    width: 100%;
-   padding: 20px 0 100px;
+   padding: 20px 0;
    display: flex;
    align-items: stretch;
    gap: 10px;

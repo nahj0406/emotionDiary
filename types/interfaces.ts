@@ -152,13 +152,34 @@ export interface PostUserDTO {
 // view
 export interface CommentDB {
    _id: ObjectId;
-   postId: ObjectId;
-   nickName: string;
+   postId: string;
+   user: {
+      id: ObjectId;
+      nickName: string;
+   }
    content: string;
    recommend: number;
    parentCommentId: string | null;
    depth: number;
    createdAt: Date;
+   updatedAt: Date;
+   isDeleted: boolean;
+}
+
+export interface CommentDTO {
+   _id: string;
+   postId: string;
+   user: {
+      id: string;
+      nickName: string;
+   }
+   content: string;
+   recommend: number;
+   parentCommentId: string | null;
+   depth: number;
+   createdAt: string;
+   updatedAt: string;
+   isDeleted: boolean;
 }
 
 export type recommendPostDTO = {
