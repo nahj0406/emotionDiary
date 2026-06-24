@@ -111,7 +111,7 @@ export default async function View ({ params }: { params : Promise<{post_id : st
             <ContentBox contentDB={{ content: post.content }} />
          </article>
 
-         <Comment post_id={post_id} comment_list={comment_list} />
+         <Comment post_id={post_id} comment_list={comment_list} session={session} />
       </section>
    )
 }

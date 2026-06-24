@@ -75,10 +75,10 @@ export function DeleteBtn ({postId}:{postId: string}) {
 
 export function Recommend (
    {
-      session, 
+      session,
       postItem
    }:{
-      session: Session | null; 
+      session: Session | null;
       postItem: recommendPostDTO;
    }
 ) {
@@ -135,7 +135,7 @@ export function Recommend (
          const res = await fetch('/api/post/list/view/recommend', {
             method: 'POST',
             headers: {
-            'Content-Type': 'application/json',
+               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
                id: postItem._id,

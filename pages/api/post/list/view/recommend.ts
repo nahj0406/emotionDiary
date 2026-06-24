@@ -37,7 +37,7 @@ export default async function handler(
   }
 
   // =========================
-  // GET
+  // GET : 마이페이지 조회용
   // =========================
   if (req.method === 'GET') {
     try {
@@ -61,7 +61,7 @@ export default async function handler(
   }
 
   // =========================
-  // POST
+  // POST : 좋아요 등록용
   // =========================
   if (req.method === 'POST') {
     try {
@@ -81,44 +81,44 @@ export default async function handler(
       // 좋아요 취소
       // =========================
       if (alreadyLiked) {
-        // 유저 좋아요 기록 제거
-        await db
-          .collection('user')
-          .updateOne(
-            {
-              _id: new ObjectId(
-                session.user.id
-              ),
-            },
-            {
-              $pull: {
-                'post.recommend': postId,
-              },
-            }
-          );
+         // 유저 좋아요 기록 제거
+         await db
+            .collection('user')
+            .updateOne(
+               {
+                  _id: new ObjectId(
+                     session.user.id
+                  ),
+               },
+               {
+                  $pull: {
+                     'post.recommend': postId,
+                  },
+               }
+            );
 
-        // 게시글 좋아요 -1
-        result = await db
-          .collection('post')
-          .findOneAndUpdate(
-            {
-              _id: new ObjectId(postId),
-            },
-            {
-              $inc: {
-                recommend: -1,
-              },
-            },
-            {
-              returnDocument: 'after',
-            }
-          );
+         // 게시글 좋아요 -1
+         result = await db
+            .collection('post')
+            .findOneAndUpdate(
+               {
+                  _id: new ObjectId(postId),
+               },
+               {
+                  $inc: {
+                     recommend: -1,
+                  },
+               },
+               {
+                  returnDocument: 'after',
+               }
+            );
 
-        return res.status(200).json({
-          liked: false,
-          recommend:
-            result?.value?.recommend || 0,
-        });
+         return res.status(200).json({
+            liked: false,
+            recommend:
+               result?.value?.recommend || 0,
+         });
       }
 
       // =========================
