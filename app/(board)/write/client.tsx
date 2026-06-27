@@ -5,7 +5,7 @@ import styles from './page.module.css'
 import TiptapEditor from "@/components/post/write/Editor/Tiptap";
 import clsx from "clsx";
 import { ChangeEvent, useEffect, useRef, useState } from "react"
-import ConfirmModal from '@/components/modals/ConfirmModal';
+import ConfirmModal from '@/components/modals/confirmModal/ConfirmModal';
 import NiceModal from "@ebay/nice-modal-react";
 import { useTiptapEditor } from "@/components/post/write/Editor/useTiptap"
 import Link from "next/link";

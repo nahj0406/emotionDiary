@@ -4,7 +4,7 @@ import { useEmailVerfication } from "@/hooks/useEmailVerfication"
 import styles from './page.module.css'
 import clsx from "clsx";
 import NiceModal from "@ebay/nice-modal-react";
-import ConfirmModal from "@/components/modals/ConfirmModal";
+import ConfirmModal from "@/components/modals/confirmModal/ConfirmModal";
 import { useRef, useState } from "react";
 import Image from "next/image";
 import { signupVal } from "@/utils/validations/signup/infoValidation";

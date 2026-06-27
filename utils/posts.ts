@@ -18,6 +18,7 @@ export async function getPosts() {
       recommend: item.recommend,
       views: item.views,
       createdAt: item.createdAt,
+      updatedAt: item.updatedAt,
       books: {
          bookTitle: item.books.bookTitle,
          uploadBookImg: item.books.uploadBookImg,

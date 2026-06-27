@@ -7,7 +7,7 @@ import { CheckInput } from "@/components/ui/input/checkbox/checkInput";
 import SubmitBtn from "@/components/ui/button/submitBtn/submit_btn";
 import { useRouter } from "next/navigation";
 import NiceModal from "@ebay/nice-modal-react";
-import ConfirmModal from "@/components/modals/ConfirmModal";
+import ConfirmModal from "@/components/modals/confirmModal/ConfirmModal";
 
 export default function Agree({
   setStep,

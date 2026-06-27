@@ -16,7 +16,7 @@ const SubmitBtn = forwardRef<HTMLButtonElement, Props>(
         // type={submit ? 'submit' : 'button'}
         type='button'
         onClick={onClick}
-        className={clsx(styles.button, {[styles.cancel]:!submit})}
+        className={clsx(styles.submit, {[styles.cancel]:!submit})}
       >
         {content}
       </button>

@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation'
 import { deletePostOne } from '@/utils/requester/requester';
 import NiceModal from '@ebay/nice-modal-react';
-import ConfirmModal from '@/components/modals/ConfirmModal';
+import ConfirmModal from '@/components/modals/confirmModal/ConfirmModal';
 
 export default function PostCard({item, editMode}: {item: PostCardDTO; editMode?: boolean}) {
    const router = useRouter();

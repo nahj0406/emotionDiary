@@ -1,32 +1,58 @@
 .header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: fit-content;
-  height: 100dvh;
-  background: #F0E1C9;
-  padding: 15px 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  z-index: 1000;
+   position: fixed;
+   top: 0;
+   left: 0;
+   width: fit-content;
+   height: 100dvh;
+   background: #FAFAFA;
+   border-right: 1px solid #E6E6E6;
+   padding: 40px 12px;
+   display: flex;
+   flex-direction: column;
+   z-index: 1000;
 }
 
 .header .outer {
-  display: flex;
-  flex-direction: column;
-  width: fit-content;
-  gap: 15px;
+   padding-top: 120px;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   width: 100%;
+   gap: 30px;
 }
 
 .header .outer > a {
-  font-size: 16px;
-  font-weight: 500;
-  transition: all 0.3s;
+   padding: 10px 0;
+   position: relative;
+   transition: all 0.3s;
+   width: 100%;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   color: #000;
+}
+.header .outer > a > * {
+   position: relative;
+   z-index: 2;
+}
+
+.header .outer > a::before {
+   content: '';
+   position: absolute;
+   z-index: 1;
+   width: 0;
+   right: -12px;
+   height: 100%;
+   background: #2B2B2B;
+   border-radius: 10px 0px 0px 10px;
+   transition: 0.3s;
 }
 
 .header .outer > a:hover,
 .header .outer > a.active {
-  color: crimson;
+   color: #fff;
+}
+.header .outer > a:hover::before,
+.header .outer > a.active::before {
+   width: 129.5%;
 }

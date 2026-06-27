@@ -1,15 +1,21 @@
 'use client'
 
 import styles from './css/page.module.css'
-import { PostCardDTO } from "@/types/interfaces"
+import { PostCardDTO, UserDB } from "@/types/interfaces"
 import PostList from "@/components/post/list/postList/postList";
 import SearchBar from '@/components/ui/search/searchBar/searchBar';
 import { useState } from 'react';
 import clsx from 'clsx';
+import { useRouter } from 'next/navigation';
+import NiceModal from '@ebay/nice-modal-react';
+import Login from './(auth)/login/login';
+import AuthModal from '@/components/modals/AuthModal/AuthModal';
+import SvgIcon from '@/components/ui/svg/icon/svgIcon';
+import { signOut } from "next-auth/react";
 
 
 
-export default function MainList ({initialPosts}:{initialPosts: PostCardDTO[]}) {
+export default function MainList ({initialPosts, user}:{initialPosts: PostCardDTO[]; user: UserDB | null}) {
    
    const [list, setList] = useState(initialPosts);
    const tabs = [
@@ -20,6 +26,7 @@ export default function MainList ({initialPosts}:{initialPosts: PostCardDTO[]}) 
    const [tabActive, setTabActive] = useState<string>('recommend');
    const [sort, setSort] = useState<string>('');
    const [loading, setLoading] = useState<boolean>(false);
+   const router = useRouter();
 
    const sort_Change_handler = async (type: string) => {
       try {
@@ -46,33 +53,67 @@ export default function MainList ({initialPosts}:{initialPosts: PostCardDTO[]}) 
    }
 
    return (
-      <div className={styles.list_layer}>
-         <ul className={styles.list_tab}>
-            {
-               tabs.map((item, i)=> {
-                  return (
-                     <li 
-                        key={`${item.key}_${i}`} 
-                        onClick={()=> {
-                           sort_Change_handler(item.key);
-                           setTabActive(item.key);
-                        }}
-                        className={clsx({[styles.active]:tabActive == item.key})}
-                     >
-                        {item.name}
-                     </li>
-                  )
-               })
-            }
-         </ul>
-         
-         <SearchBar sort={sort} setList={setList}></SearchBar>
+      <>
+         <div className={styles.top_bar}>
+            <div className={styles.search_box}>
+               <SearchBar sort={sort} setList={setList} />
+      
+               <ul className={styles.list_tab}>
+                  {
+                     tabs.map((item, i)=> {
+                        return (
+                           <li 
+                              key={`${item.key}_${i}`} 
+                              onClick={()=> {
+                                 sort_Change_handler(item.key);
+                                 setTabActive(item.key);
+                              }}
+                              className={clsx({[styles.active]:tabActive == item.key})}
+                           >
+                              {item.name}
+                           </li>
+                        )
+                     })
+                  }
+               </ul>
+            </div>
+
+            <div className={styles.login_box}>
+               <figure 
+                  className={styles.user_thumbnail}
+                  onClick={()=> {
+                     if(user) {
+                        router.push('/mypage');
+                     } else {
+                        NiceModal.show(AuthModal, {
+                           content: ({close}) => {
+                              return (
+                                 <Login modalClose={close}></Login>
+                              )
+                           },
+                        })
+                     }
+                  }}
+               >
+                  {
+                     user 
+                        ? <img src={user.thumbnail ? user.thumbnail : '/img/unknown.png'} alt="유저 썸네일" />
+                        : <img src="/img/user_unknown.png" alt="유저_썸네일 없음" />
+                  }
+               </figure>
+               <div className={styles.more_btn}>
+                  <SvgIcon name={'arrow_bottom'} />
+                  <button onClick={()=> {signOut(); router.push('/');}} className={styles.button} type='button'>로그아웃</button>
+               </div>
+            </div>
+         </div>
+
          {
             list.length === 0 && (<div>일치하는 검색어가 없습니다.</div>)
          }
          {
             !loading ? <PostList list={list} /> : <div>로딩중...</div>
          }
-      </div>
+      </>
    )
 }

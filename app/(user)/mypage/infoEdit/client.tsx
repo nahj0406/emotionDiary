@@ -10,7 +10,7 @@ import TagCheckBoxGroup from "@/components/ui/tab/tag/tagCheckBoxGroup";
 import Image from "next/image";
 import { badWord_check, inputReplaceFilter, stringLengthBoolean } from "@/utils/functions";
 import NiceModal from "@ebay/nice-modal-react";
-import ConfirmModal from "@/components/modals/ConfirmModal";
+import ConfirmModal from "@/components/modals/confirmModal/ConfirmModal";
 import { getCheckNickName, updateProfile } from "@/utils/requester/requester";
 import { useRouter } from "next/navigation";
 

@@ -1,113 +1,113 @@
 @media all {
-  * {
-    margin: 0;
-    padding: 0;
-    outline: none;
-    box-sizing: border-box;
-  }
+   * {
+      margin: 0;
+      padding: 0;
+      outline: none;
+      box-sizing: border-box;
+   }
 
-  html {
-    font-size: 14px;
-  }
+   html {
+      font-size: 14px;
+   }
 
-  body {
-    line-height: 1;
-    font-weight: 400;
-    color: #000;
-    word-wrap: break-word;
-    word-break: keep-all;
-    overflow-x: hidden;
-  }
+   body {
+      line-height: 1;
+      font-weight: 400;
+      color: #000;
+      word-wrap: break-word;
+      word-break: keep-all;
+      overflow-x: hidden;
+   }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    margin: 0;
-    line-height: 1;
-    font-size: 1em;
-  }
+   h1,
+   h2,
+   h3,
+   h4,
+   h5,
+   h6 {
+      margin: 0;
+      line-height: 1;
+      font-size: 1em;
+   }
 
-  ul,
-  ol {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
+   ul,
+   ol {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+   }
 
-  a {
-    outline: 0;
-    text-decoration: none;
-    color: inherit;
-  }
+   a {
+      outline: 0;
+      text-decoration: none;
+      color: inherit;
+   }
 
-  a:focus {
-    outline: none;
-  }
+   a:focus {
+      outline: none;
+   }
 
-  figure,
-  dl,
-  dd,
-  input[type="radio"],
-  input[type="checkbox"] {
-    margin: 0;
-    padding: 0;
-  }
+   figure,
+   dl,
+   dd,
+   input[type="radio"],
+   input[type="checkbox"] {
+      margin: 0;
+      padding: 0;
+   }
 
-  img {
-    border: none;
-    outline: none;
-    max-width: 100%;
-  }
+   img {
+      border: none;
+      outline: none;
+      max-width: 100%;
+   }
 
-  p {
-    margin: 0;
-    padding: 0;
-    word-wrap: break-word;
-    word-break: keep-all;
-  }
+   p {
+      margin: 0;
+      padding: 0;
+      word-wrap: break-word;
+      word-break: keep-all;
+   }
 
-  button,
-  input,
-  submit {
-    border: none;
-    background: none;
-  }
+   button,
+   input,
+   submit {
+      border: none;
+      background: none;
+   }
 
-  input::-ms-reveal {
-    display: none;
-  }
+   input::-ms-reveal {
+      display: none;
+   }
 
-  dt {
-    font-weight: normal;
-  }
+   dt {
+      font-weight: normal;
+   }
 
-  ::placeholder {
-  }
-  input:-webkit-autofill,
-  input:-webkit-autofill:hover,
-  input:-webkit-autofill:focus,
-  input:-webkit-autofill:active {
-    transition: background-color 5000s ease-in-out 0s;
-    -webkit-transition: background-color 9999s ease-out;
-    box-shadow: none !important;
-    -webkit-text-fill-color: none !important;
-  }
+   ::placeholder {
+   }
+   input:-webkit-autofill,
+   input:-webkit-autofill:hover,
+   input:-webkit-autofill:focus,
+   input:-webkit-autofill:active {
+      transition: background-color 5000s ease-in-out 0s;
+      -webkit-transition: background-color 9999s ease-out;
+      box-shadow: none !important;
+      -webkit-text-fill-color: none !important;
+   }
 
-  button {
-    cursor: pointer;
-  }
+   button {
+      cursor: pointer;
+   }
 
-  button,
-  input,
-  textarea,
-  select {
-    font-family: var(--font-pretendard) !important;
-  }
+   button,
+   input,
+   textarea,
+   select {
+      font-family: var(--font-pretendard) !important;
+   }
 
-  :root {
-    --main-color: #d82a38;
-  }
+   :root {
+      --main-color: #5B4FF7;
+   }
 }

@@ -1,19 +1,24 @@
-.button {
-   padding: 10px 7px;
-   font-size: 15px;
-   border: 1px solid #666;
-   border-radius: 5px;
+.submit {
+   padding: 12px 7px;
+   font-size: 18px;
+   font-weight: 500;
+   background: var(--main-color);
+   border: 1px solid var(--main-color);
+   border-radius: 15px;
    cursor: pointer;
    transition: all 0.3s;
    text-align: center;
+   width: 100%;
+   color: #fff;
 }
 
-.button:hover {
-   background: crimson;
+.submit:hover {
+   filter: brightness(0.8);
 }
 
 .cancel {
    background: #ccc;
+   border: 1px solid #666;
 }
 
 .cancel:hover {
