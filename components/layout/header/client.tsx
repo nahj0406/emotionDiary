@@ -11,12 +11,55 @@ import { UserDB } from "@/types/interfaces";
 import { WithId } from "mongodb";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import SvgIcon from '@/components/ui/svg/icon/svgIcon';
 
-export const MenuLink = ({href, children}:{href: string, children: React.ReactNode;}) => {
+export const MenuLink = ({
+   href, 
+   children,
+}:{
+   href: string 
+   children: React.ReactNode;
+}) => {
    const pathname = usePathname();
    const isActive = pathname === href;
    return (
-      <Link className={clsx({[styles.active]:isActive})} href={href}>{children}</Link>
+      <Link 
+         className={clsx({[styles.active]:isActive})} 
+         href={href}
+      >
+         {children}
+      </Link>
+   )
+}
+
+export const MenuOuter = () => {
+
+   return (
+      <nav className={styles.outer}>
+         <MenuLink href={'/'}>
+            <SvgIcon name={'menu_home'} />
+         </MenuLink>
+
+         <MenuLink href={'/write'}>
+            <SvgIcon name={'menu_write'} />
+         </MenuLink>
+
+         <MenuLink href={'/mypage?tab=bookMark'}>
+            <SvgIcon name={'menu_bookMark'} />
+         </MenuLink>
+
+         <MenuLink href={'/mypage?tab=recommend'}>
+            <SvgIcon name={'menu_recommend'} />
+         </MenuLink>
+
+         <MenuLink href={'/mypage?tab=recently'}>
+            <SvgIcon name={'menu_recently'} />
+         </MenuLink>
+
+         {/* <MenuLink href={'/mypage'}>
+            <SvgIcon name={'menu_recently'} />
+         </MenuLink> */}
+      </nav>
    )
 }
 

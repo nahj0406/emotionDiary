@@ -1,6 +1,6 @@
 'use client'
 
-import ConfirmModal from '@/components/modals/ConfirmModal';
+import ConfirmModal from '@/components/modals/confirmModal/ConfirmModal';
 import NiceModal from '@ebay/nice-modal-react';
 import { Session } from 'next-auth';
 import { usePathname, useRouter } from 'next/navigation';

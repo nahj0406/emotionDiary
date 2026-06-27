@@ -4,7 +4,7 @@ import styles from "./infoEnter.module.css";
 import pages from "../../page.module.css";
 import { useEffect, useRef, useState } from "react";
 import NiceModal from "@ebay/nice-modal-react";
-import ConfirmModal from "@/components/modals/ConfirmModal";
+import ConfirmModal from "@/components/modals/confirmModal/ConfirmModal";
 import Image from "next/image";
 import {
   createMailcode,

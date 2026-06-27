@@ -16,7 +16,7 @@ import OrderedList from '@tiptap/extension-ordered-list'
 import { Extension } from '@tiptap/core'
 import { useRef } from 'react'
 import NiceModal from '@ebay/nice-modal-react'
-import ConfirmModal from '@/components/modals/ConfirmModal'
+import ConfirmModal from '@/components/modals/confirmModal/ConfirmModal'
 
 export const CustomImage = Image.extend({
   addAttributes() {

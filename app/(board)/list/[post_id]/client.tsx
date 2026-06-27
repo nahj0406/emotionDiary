@@ -7,7 +7,7 @@ import { Session } from 'next-auth';
 import { useSessionChecker } from '@/hooks/useSessionChecker';
 import { deletePostOne } from '@/utils/requester/requester';
 import NiceModal from '@ebay/nice-modal-react';
-import ConfirmModal from '@/components/modals/ConfirmModal';
+import ConfirmModal from '@/components/modals/confirmModal/ConfirmModal';
 import { useRouter } from 'next/navigation';
 // html 렌더링 할때 필요. 원래는 dompurify만 써도 되는데 이게 브라우저 전용이라
 // next.js는 서버환경도 같이 하다 보니 에러가 나서 둘 다 적용 가능한 isomorphic-dompurify 이걸로 바꿈

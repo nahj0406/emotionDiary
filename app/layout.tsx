@@ -4,8 +4,8 @@ import { poppins, pretendard, paperlogy } from "./assets/fonts";
 import "./css/globals.css";
 import "./css/styles.css";
 import styles from './css/page.module.css'
-import Header from "../components/layout/header/header";
 import ModalProvider from "./layout_client";
+import Header from "../components/layout/header/header";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,9 +31,8 @@ export default function RootLayout({
     <html lang="ko" className={`${geistSans.variable} ${geistMono.variable}`}>
       <body className={`${pretendard.className} ${poppins.variable} ${paperlogy.variable} antialiased`}>
         <ModalProvider>
-          <Header />
-          
           <div className={styles.wrapper}>
+            <Header />
             {children}
           </div>
         </ModalProvider>

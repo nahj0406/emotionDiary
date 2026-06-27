@@ -1,11 +1,48 @@
 
 .wrapper {
-  padding-top: 30px;
-  padding-left: 200px;
-  padding-right: 23px;
+   position: relative;
 }
 
-.list_layer .list_tab {
+.main {
+   width: 100%;
+   padding: 40px 20px 40px 100px;
+}
+
+.top_bar {
+   width: 100%;
+   position: sticky;
+   display: flex;
+   justify-content: space-between;
+   align-items: start;
+   gap: 20px;
+}
+
+.top_bar .login_box {
+   display: flex;
+   align-items: center;
+   gap: 14px;
+}
+
+.top_bar .login_box .user_thumbnail {
+   width: 45px;
+   height: 45px;
+   border-radius: 50%;
+   border: 2px solid #ededed;
+   cursor: pointer;
+   transition: all 0.3s;
+}
+
+.top_bar .login_box .user_thumbnail:hover {
+   border-color: var(--main-color);
+}
+
+.top_bar .login_box .more_btn {
+   color: #505050;
+   width: 16px;
+   cursor: pointer;
+}
+
+/* .list_layer .list_tab {
    display: flex; gap: 10px;
    margin-bottom: 20px;
 }
@@ -20,7 +57,7 @@
 .list_layer .list_tab > li.active {
    background: #000;
    color: #fff;
-}
+} */
 
 /* not-found */
 

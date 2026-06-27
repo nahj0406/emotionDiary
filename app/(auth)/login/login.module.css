@@ -1,48 +1,91 @@
 .login {
    display: flex;
    flex-direction: column;
-   gap: 15px;
+   align-items: center;
 }
+
+.logo {
+   margin-bottom: 35px;
+}
+
+/* input 상자 */
 
 .input_box {
+   width: 100%;
    display: flex;
    flex-direction: column;
-   gap: 5px;
+   gap: 20px;
+   align-items: start;
 }
 
-.input_box > span {
-   font-size: 14px;
-   color: #fff;
-   font-weight: 500;
-}
-
-.input_box > input {
-   border: 1px solid #fff;
-   background: rgba(255,255,255,0.9);
-   color: #111;
-   font-size: 16px;
-   padding: 10px;
-   border-radius: 5px;
-}
-
-.input_box > input::placeholder {
-   color: #555;
-}
-
-.button_box {
-   margin-top: 20px;
+.input_standard {
    display: flex;
    flex-direction: column;
    gap: 10px;
-}
-
-.button_box button {
    width: 100%;
-   padding: 13px 10px;
-   text-align: center;
-   font-size: 16px;
-   border-radius: 5px;
+   align-items: start;
 }
 
-.button_box button.submit {background: crimson;}
-.button_box button.signUp {background: rgb(223, 122, 142);}
+.input_standard > span {
+   font-size: 14px;
+   color: #000;
+   font-weight: 500;
+   margin-left: 5px;
+}
+
+.input_standard > input {
+   border: 1px solid #91918C;
+   background: #fff;
+   color: #000;
+   font-size: 16px;
+   padding: 13px 15px;
+   border-radius: 15px;
+   width: 100%;
+}
+
+.input_standard > input::placeholder {
+   color: #91918C;
+}
+
+/* 비밀번호 버튼 */
+.find_pw {
+   color: #FE0000;
+   font-size: 14px;
+   cursor: pointer;
+   align-self: start;
+   margin-top: 15px;
+}
+
+.find_pw:hover {
+   text-decoration: underline;
+}
+
+.progress_box {
+   margin-top: 25px;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   gap: 10px;
+   width: 100%;
+   gap: 50px;
+}
+
+.signup {
+   display: flex;
+   gap: 7px;
+   font-size: 16px;
+   line-height: 1.2;
+   font-weight: 600;
+   width: fit-content;
+}
+
+.signup p {color: #000;}
+
+.signup a {
+   color: var(--main-color);
+   text-decoration: underline;
+}
+
+.signup a:hover {
+   filter: brightness(0.8);
+}

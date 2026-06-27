@@ -4,7 +4,7 @@ import { UserDB } from '@/types/interfaces'
 import styles from './page.module.css'
 import SubmitBtn from '@/components/ui/button/submitBtn/submit_btn'
 import NiceModal from '@ebay/nice-modal-react'
-import ConfirmModal from '@/components/modals/ConfirmModal'
+import ConfirmModal from '@/components/modals/confirmModal/ConfirmModal'
 import { signOut } from "next-auth/react";
 import { useState, SetStateAction } from 'react'
 

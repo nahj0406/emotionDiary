@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import styles from "./comment.module.css";
 import { CommentDTO, recommendPostDTO } from "@/types/interfaces";
 import NiceModal from "@ebay/nice-modal-react";
-import ConfirmModal from "@/components/modals/ConfirmModal";
+import ConfirmModal from "@/components/modals/confirmModal/ConfirmModal";
 import { useSessionChecker } from "@/hooks/useSessionChecker";
 import { Session } from "next-auth";
 
