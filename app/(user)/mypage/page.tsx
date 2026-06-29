@@ -16,6 +16,7 @@ export default async function Mypage() {
 
    let userInfo: UserDB | null  = null;
    let recommendPosts: PostCardDTO[] = [];
+   let bookmarkPosts: PostCardDTO[] = [];
    let myPosts: PostCardDTO[] = [];
    let recentlyPost: PostCardDTO[] = [];
 
@@ -28,8 +29,15 @@ export default async function Mypage() {
          const recommendIds = userInfo.post.recommend;
          const recentlyIds = userInfo.post.recently;
 
+         const bookmarkdDocks = await db.collection('post_bookmark').find({userId: session?.user?.id}).toArray();
+         const bookmarkIds = new Set(bookmarkdDocks.map(bookmark => bookmark.postId));
+
          recommendPosts = merged.filter((post => 
             recommendIds.includes(post._id.toString())
+         ))
+
+         bookmarkPosts = merged.filter((post => 
+            bookmarkIds.has(post._id.toString())
          ))
 
          myPosts = merged.filter((post => 
@@ -52,7 +60,8 @@ export default async function Mypage() {
 
          <Infomation 
             user={safeUser} 
-            recommendPosts={recommendPosts} 
+            recommendPosts={recommendPosts}
+            bookmarkPosts={bookmarkPosts}
             myPosts={myPosts}
             recentlyPost={recentlyPost}
          />

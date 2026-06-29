@@ -37,7 +37,7 @@ export default async function handler(
   }
 
   // =========================
-  // GET : 마이페이지 조회용
+  // GET : 좋아요 확인용
   // =========================
   if (req.method === 'GET') {
     try {

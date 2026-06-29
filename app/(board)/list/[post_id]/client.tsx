@@ -83,6 +83,7 @@ export function Recommend (
    }
 ) {
    const [liked, setLiked] = useState<boolean>(false);
+   const [bookmark, setBookmark] = useState<boolean>(false);
    const [count, setCount] = useState<number>(postItem?.recommend || 0);
    const [loading, setLoading] = useState<boolean>(false);
    const { checkSession } = useSessionChecker(session);
@@ -95,6 +96,14 @@ export function Recommend (
       }
 
       checkLiked();
+
+      const checkBookmark = async () => {
+         const res = await fetch('/api/post/list/view/bookmark/?postId=' + postItem._id);
+         const result = await res.json();
+         setBookmark(result.bookmark);
+      }
+
+      checkBookmark();
 
       const Checkrecently = async () => {
          const res = await fetch(
@@ -153,10 +162,45 @@ export function Recommend (
 
    }
 
+
+   const post_bookmark_handler = async () => {
+
+      if (!checkSession()) return; // 로그인 안하면 버튼 비활성 처리
+
+      if(loading) return
+
+      setLoading(true);
+
+      try {
+
+         const res = await fetch('/api/post/list/view/bookmark', {
+            method: 'POST',
+            headers: {
+               'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+               id: postItem._id,
+            })
+         });
+
+         const result = await res.json();
+
+         setBookmark(result.bookmark);
+
+      } finally {
+         setLoading(false);
+      }
+
+   }
+
    return (
       <div className={styles.good_box}>
          <button disabled={loading} onClick={post_good_handler} className={styles.recommend_btn}>
             {liked ? '❤️' : '🤍'} 좋아요 {count}
+         </button>
+
+         <button disabled={loading} onClick={post_bookmark_handler} className={styles.recommend_btn}>
+            {bookmark ? '❤️' : '🤍'} 저장됨
          </button>
       </div>
    )

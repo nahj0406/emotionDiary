@@ -12,6 +12,7 @@ import Login from './(auth)/login/login';
 import AuthModal from '@/components/modals/AuthModal/AuthModal';
 import SvgIcon from '@/components/ui/svg/icon/svgIcon';
 import { signOut } from "next-auth/react";
+import { FindPw } from './(auth)/findUser/findPw/client';
 
 
 
@@ -86,10 +87,32 @@ export default function MainList ({initialPosts, user}:{initialPosts: PostCardDT
                         router.push('/mypage');
                      } else {
                         NiceModal.show(AuthModal, {
-                           content: ({close}) => {
-                              return (
-                                 <Login modalClose={close}></Login>
-                              )
+                           content: ({close, page, setPage}) => {
+                              switch (page) {
+                                 case 'login':
+                                    return (
+                                    <Login 
+                                       modalClose={close}
+                                       setPage={setPage}
+                                    />
+                                 )
+
+                                 case 'findPw':
+                                    return (
+                                       <FindPw 
+                                          setPage={setPage}
+                                       />
+                                 )
+
+                                 case 'signIn':
+                                    return (
+                                       // <FindPw 
+                                       //    modalClose={close}
+                                       //    setPage={setPage}
+                                       // />
+                                       <div>11</div>
+                                 )
+                              }
                            },
                         })
                      }

@@ -40,6 +40,8 @@ export type updateProfileType = {
    password: string;
 }
 
+export type AuthModalPage = | 'login' | 'findPw' | 'signIn';
+
 
 // =====================================
 // category, tag

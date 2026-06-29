@@ -19,7 +19,7 @@
 
    width: 100%;
    max-width: 450px;
-   min-height: 530px;
+   /* min-height: 350px; */
    overflow: hidden;
    text-align: center;
    position: relative;

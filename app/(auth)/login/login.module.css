@@ -81,11 +81,12 @@
 
 .signup p {color: #000;}
 
-.signup a {
+.signup span {
    color: var(--main-color);
    text-decoration: underline;
+   cursor: pointer;
 }
 
-.signup a:hover {
+.signup span:hover {
    filter: brightness(0.8);
 }
