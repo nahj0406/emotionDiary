@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import styles from "./comment.module.css";
-import { CommentDTO, recommendPostDTO } from "@/types/interfaces";
+import { CommentDTO, recommendPostDTO, UserDB } from "@/types/interfaces";
 import NiceModal from "@ebay/nice-modal-react";
 import ConfirmModal from "@/components/modals/confirmModal/ConfirmModal";
 import { useSessionChecker } from "@/hooks/useSessionChecker";
@@ -149,6 +149,7 @@ function CommentItem({
    onUpdateComment,
    onDeleteComment,
    checkSession,
+   session,
 }: {
    item: CommentDTO;
    post_id: string;
@@ -160,6 +161,7 @@ function CommentItem({
       updatedComment?: CommentDTO
    ) => void;
    checkSession: ()=> boolean;
+   session: Session | null;
 }) {
    const createdAt = new Date(item?.createdAt).toLocaleString("ko-KR");
    const children = comments.filter(
@@ -282,10 +284,12 @@ function CommentItem({
                </button>
                {!item?.isDeleted && 
                   <>
-                     <div className={styles.btn_group}>
-                        <button type="button" onClick={()=> {setUpdate(item); setOnWrite(prev=> !prev);}}>수정</button>
-                        <button type="button" onClick={deleteComment_handler}>삭제</button>
-                     </div>
+                     {session?.user.id === item.user.id && 
+                        <div className={styles.btn_group}>
+                           <button type="button" onClick={()=> {setUpdate(item); setOnWrite(prev=> !prev);}}>수정</button>
+                           <button type="button" onClick={deleteComment_handler}>삭제</button>
+                        </div>
+                     }
                      <button type="button" onClick={()=> setOnWrite(prev=> !prev)}>댓글 쓰기</button>
                   </>
                }
@@ -322,6 +326,7 @@ function CommentItem({
                   onUpdateComment={onUpdateComment}
                   onDeleteComment={onDeleteComment}
                   checkSession={checkSession}
+                  session={session}
                />
             );
          })}
@@ -412,6 +417,7 @@ export default function Comment({
                      onUpdateComment={handleUpdateComment}
                      onDeleteComment={handleDeleteComment}
                      checkSession={checkSession}
+                     session={session}
                   />
                   );
                })

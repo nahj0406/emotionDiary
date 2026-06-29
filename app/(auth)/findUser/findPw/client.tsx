@@ -10,22 +10,46 @@ import Image from "next/image";
 import { signupVal } from "@/utils/validations/signup/infoValidation";
 import { badWord_check, inputReplaceFilter, stringLengthBoolean } from "@/utils/functions";
 import {updatePassword} from "@/utils/requester/requester";
-import { useRouter } from "next/navigation";
+import MainLogoIcon from "@/components/ui/svg/mainLogo/mainLogo";
+import SubmitBtn from "@/components/ui/button/submitBtn/submit_btn";
+import { AuthModalPage } from "@/types/interfaces";
+import CheckBtn from "@/components/ui/button/checkBtn/check_btn";
 
 
-export function ClientLayer () {
+export function FindPw ({
+   setPage,
+}:{
+   setPage?: React.Dispatch<React.SetStateAction<AuthModalPage>>;
+}) {
 
    // 이메일 
    const [checkMail, setCheckMail] = useState<boolean>(false);
    const [okMail, setOkMail] = useState<string>('');
+   const [completed, setCompleted] = useState<boolean>(false);
    
    return (
-      <div>
+      <div className={styles.find_pw}>
+         <div className={styles.title_box}>
+            <MainLogoIcon width="72px" textHidden={true} />
+            <h4>
+               {!checkMail && '이메일 인증'}
+               {(checkMail && okMail && !completed) && '새 비밀번호 입력'}
+               {completed && '비밀번호 변경 완료'}
+            </h4>
+            <p>
+               {!checkMail && '가입한 이메일 인증을 먼저 진행해 주세요.'}
+               {(checkMail && okMail && !completed) && '기존 비밀번호와 다른 새 비밀번호를 입력해 주세요.'}
+               {completed && '새 비밀번호로 로그인 해주세요.'}
+            </p>
+         </div>
+
          {/* 비번 재설전 전에 이메일 인증 */}
-         {!checkMail && <Mail_verification setCheckMail={setCheckMail} setOkMail={setOkMail} />}
+         {!checkMail && <Mail_verification setPage={setPage} setCheckMail={setCheckMail} setOkMail={setOkMail} />}
 
          {/* 이메일 인증 후 비번 재설정 */}
-         {(checkMail && okMail) && <ResetPwForm okMail={okMail} />}
+         {(checkMail && okMail && !completed) && <ResetPwForm okMail={okMail} setCompleted={setCompleted} />}
+
+         {completed && <ChangeCompleted setPage={setPage} />}
       </div>
    )
 }
@@ -34,9 +58,11 @@ export function ClientLayer () {
 export function Mail_verification ({
    setCheckMail,
    setOkMail,
+   setPage,
 }:{
    setCheckMail: React.Dispatch<React.SetStateAction<boolean>>;
    setOkMail: React.Dispatch<React.SetStateAction<string>>;
+   setPage: React.Dispatch<React.SetStateAction<AuthModalPage>> | undefined
 }) {
    const formRef = useRef<HTMLFormElement>(null);
 
@@ -70,10 +96,10 @@ export function Mail_verification ({
       try {
          await sendCode(email);
 
-         NiceModal.show(ConfirmModal, {
-            message: "인증코드가 전송되었습니다.",
-            autoClose: 500,
-         });
+         // NiceModal.show(ConfirmModal, {
+         //    message: "인증코드가 전송되었습니다.",
+         //    autoClose: 500,
+         // });
 
       } catch (err) {
          if (err instanceof Error) {
@@ -98,9 +124,9 @@ export function Mail_verification ({
          const reuslt = await verfiyCode(email);
 
          if(reuslt) {
-            await NiceModal.show(ConfirmModal, {
-               message: '인증이 완료되었습니다.',
-            })
+            // await NiceModal.show(ConfirmModal, {
+            //    message: '인증이 완료되었습니다.',
+            // })
 
             setCheckMail(reuslt);
             setOkMail(email);
@@ -143,72 +169,76 @@ export function Mail_verification ({
 
    return (
       <form ref={formRef} className={styles.form}>
-         <div className={styles.write_field}>
-            <span className={styles.essential}>이메일</span>
-            <div className={styles.unit_box}>
-               <input
-                  name={'email'}
-                  type="email"
-                  onInput={(e) => {
-                     e.currentTarget.value = e.currentTarget.value.replace(
-                     /\s/g,
-                     "",
-                     );
-                  }}
-                  placeholder="이메일을 적어주세요."
-               />
-               {!mailPassOK && (
-                  <button
-                     className={clsx(styles.ctf_btn, {
-                     [styles.disabled]: mailRetry,
-                     })}
-                     disabled={mailRetry}
-                     onClick={() => createMailcode_handler()}
-                     type="button"
-                  >
-                     이메일 인증하기
-                  </button>
-               )}
-            </div>
-            {verified_mail &&
-            (!mailPassOK ? (
-               <div className={styles.write_field}>
-                  <p>
-                  이메일로 인증메일을 전송했습니다. 확인 후 인증번호를 입력해
-                  주세요.
-                  </p>
-   
-                  <div className={styles.unit_box}>
+         <article className={styles.input_box}>
+            <div className={styles.input_standard}>
+               <span>이메일</span>
+               <div className={styles.input_request}>
                   <input
-                     name="email"
-                     type="text"
-                     onChange={(e) => mailcodePoster(e)}
-                     placeholder="인증번호를 입력해 주세요."
+                     name={'email'}
+                     type="email"
+                     onInput={(e) => {
+                        e.currentTarget.value = e.currentTarget.value.replace(
+                        /\s/g,
+                        "",
+                        );
+                     }}
+                     placeholder="이메일을 적어주세요."
                   />
-                  <div className={styles.verifed_count}>{remain_Count}</div>
-                  <button
-                     className={styles.ctf_btn}
-                     onClick={() => getVerifiedCode_handler()}
-                     type="button"
-                  >
-                     인증 완료
-                  </button>
-                  </div>
+                  {!mailPassOK && (
+                     <CheckBtn
+                        onClick={() => createMailcode_handler()}
+                        disabled={mailRetry}
+                        content={'이메일 인증하기'}
+                     />
+                  )}
                </div>
-            ) : (
-               <div>메일 인증이 완료되었습니다!</div>
-            ))}
+            </div>
+            {verified_mail && (
+               <>
+                  {
+                     !mailPassOK && (
+                        <div className={styles.input_standard}>
+                           <span>
+                              이메일로 인증메일을 전송했습니다. 확인 후 인증번호를 입력해
+                              주세요.
+                           </span>
+
+                           <input
+                              name="email"
+                              type="text"
+                              onChange={mailcodePoster}
+                              placeholder="인증번호를 입력해 주세요."
+                           />
+                        </div>
+                     )
+                  }
+
+                  <div className={styles.verifed_count}>
+                     {remain_Count}
+                  </div>
+               </>
+            )}
+         </article>
+            
+         <div className={styles.btn_box}>
+            <SubmitBtn onClick={getVerifiedCode_handler} content="인증완료" />
+            <SubmitBtn submit={false} onClick={()=> setPage && setPage('login')} content="이전으로" />
          </div>
       </form>
    )
 }
 
 
-export function ResetPwForm ({okMail}:{okMail: string}) {
+export function ResetPwForm ({
+   okMail,
+   setCompleted,
+}:{
+   okMail: string
+   setCompleted: React.Dispatch<React.SetStateAction<boolean>>
+}) {
 
    const lostPwMail = okMail;
    const formRef = useRef<HTMLFormElement>(null);
-   const router = useRouter();
 
    const [showPw, setShowPw] = useState({
       password: false,
@@ -291,8 +321,8 @@ export function ResetPwForm ({okMail}:{okMail: string}) {
 
       if (isMissMatch || inputs.pwCheck.value.length < 0) {
          return NiceModal.show(ConfirmModal, {
-         message: "비밀번호가 일치하지 않습니다.",
-         autoClose: 1000,
+            message: "비밀번호가 일치하지 않습니다.",
+            autoClose: 1000,
          });
       }
 
@@ -300,12 +330,7 @@ export function ResetPwForm ({okMail}:{okMail: string}) {
          const res = await updatePassword(data);
 
          if(res.ok) {
-            await NiceModal.show(ConfirmModal, {
-               message: '비밀번호 변경이 완료되었습니다.',
-               autoClose: 3000,
-            });
-
-            return router.push('/');
+            setCompleted(true)
          }
 
       } catch (err) {
@@ -327,41 +352,47 @@ export function ResetPwForm ({okMail}:{okMail: string}) {
    if(!lostPwMail) return <p>인증 완료된 메일을 찾을 수 없습니다.</p>
 
    return (
-      <form ref={formRef}>
-         <div className={styles.write_field}>
-            <span className={styles.essential}>비밀번호 입력</span>
-            <div className={styles.pw_box}>
+      <form ref={formRef} className={styles.form}>
+         <div className={styles.input_box}>
+            <div className={styles.input_standard}>
+               <label className={styles.label}>
+                  <span>비밀번호 입력</span>
+                  <p>문자, 숫자, 기호를 8개 이상 사용하세요.</p>
+               </label>
                <div className={styles.pw_input}>
                   <input
-                  name={signupVal.pw.key}
-                  type={showPw.password ? "text" : "password"}
-                  value={inputs.password.value}
-                  placeholder={`(${signupVal.pw.min}글자 이상, ${signupVal.pw.max}이하)`}
-                  min={signupVal.pw.min}
-                  max={signupVal.pw.max}
-                  onBlur={(e) => {
-                        setInputs((prev) => ({
-                           ...prev,
-                           password: {
-                              ...prev.password,
-                              value: e.target.value,
-                           },
-                        }));
-                        lengthCheck_handler(e, signupVal.pw.min, signupVal.pw.max);
+                     name={signupVal.pw.key}
+                     type={showPw.password ? "text" : "password"}
+                     value={inputs.password.value}
+                     placeholder={`(${signupVal.pw.min}글자 이상, ${signupVal.pw.max}이하)`}
+                     min={signupVal.pw.min}
+                     max={signupVal.pw.max}
+                     onBlur={(e) => {
+                           setInputs((prev) => ({
+                              ...prev,
+                              password: {
+                                 ...prev.password,
+                                 value: e.target.value,
+                              },
+                           }));
+                           lengthCheck_handler(e, signupVal.pw.min, signupVal.pw.max);
+                        }
                      }
-                  }
-                  onChange={(e) => safeInput_changer(e)}
+                     onChange={(e) => safeInput_changer(e)}
                   />
-               <PwShow_Button
-                  type={'password'}
-                  showPw={showPw.password}
-                  setShowPw={setShowPw}
-               />
+                  <PwShow_Button
+                     type={'password'}
+                     showPw={showPw.password}
+                     setShowPw={setShowPw}
+                  />
+               </div>
                {
                   inputs.password.lengthErr && 
-                     <p>{`${signupVal.pw.min}글자 이상, ${signupVal.pw.max}이하로 작성해 주세요.`}</p>
+                     <p className={styles.confirm}>{`${signupVal.pw.min}글자 이상, ${signupVal.pw.max}이하로 작성해 주세요.`}</p>
                }
-               </div>
+            </div>
+
+            <div className={styles.input_standard}>
                <div className={styles.pw_input}>
                   <input
                   name={signupVal.pwCheck.key}
@@ -386,14 +417,24 @@ export function ResetPwForm ({okMail}:{okMail: string}) {
                      setShowPw={setShowPw}
                   />
                </div>
-               {isMissMatch && <p>비밀번호가 일치하지 않습니다.</p>}
+               {isMissMatch && <p className={styles.confirm}>비밀번호가 일치하지 않습니다.</p>}
             </div>
          </div>
 
-         <button type='submit' onClick={(e) => createSubmit_handler(e)}>
-            비밀번호 변경
-         </button>
+         <SubmitBtn onClick={(e) => createSubmit_handler(e)} content={'비밀번호 변경'} />
       </form>
+   )
+}
+
+export function ChangeCompleted ({
+   setPage,
+}:{
+   setPage: React.Dispatch<React.SetStateAction<AuthModalPage>> | undefined
+}) {
+   return (
+      <div className={styles.complete_box}>
+         <SubmitBtn onClick={()=> setPage && setPage('login')} content="로그인 하기" />
+      </div>
    )
 }
 
@@ -416,6 +457,7 @@ function PwShow_Button({
   return (
     <button
       type="button"
+      className={styles.show_eye}
       onClick={() =>
         setShowPw((prev) => ({
           ...prev,

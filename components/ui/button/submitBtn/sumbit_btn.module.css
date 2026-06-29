@@ -17,10 +17,7 @@
 }
 
 .cancel {
-   background: #ccc;
-   border: 1px solid #666;
-}
-
-.cancel:hover {
-   background: #aaa;
+   background: #797979;
+   border: none;
+   color: #fff;
 }

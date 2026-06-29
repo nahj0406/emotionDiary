@@ -14,11 +14,13 @@ export function Infomation(
    {
       user,
       recommendPosts,
+      bookmarkPosts,
       myPosts,
       recentlyPost,
    }:{
       user:WithId<UserDB> | null
       recommendPosts: PostCardDTO[]
+      bookmarkPosts: PostCardDTO[]
       myPosts: PostCardDTO[]
       recentlyPost: PostCardDTO[]
    }) {
@@ -26,10 +28,13 @@ export function Infomation(
    const TAB = {
       RECENTLY: 'recently',
       RECOMMEND: 'recommend',
+      BOOKMARK: 'bookmark',
       MYPOSTS: 'myPosts',
    } as const;
 
    const [activTab, setActiveTab] = useState<string>(TAB.RECENTLY);
+
+   // console.log(bookmarkPosts);
 
    return (
       <div className={styles.infomation}>
@@ -84,6 +89,18 @@ export function Infomation(
                <li 
                   className={
                      clsx(
+                        styles.tabItem,
+                        {[styles.active]: activTab == TAB.BOOKMARK}
+                     )
+                  }
+                  onClick={()=> setActiveTab(TAB.BOOKMARK)}
+               >
+                  저장된 글
+               </li>
+
+               <li 
+                  className={
+                     clsx(
                         styles.tabItem, 
                         {[styles.active]: activTab == TAB.MYPOSTS}
                      )
@@ -100,6 +117,9 @@ export function Infomation(
 
                {/* 좋아요 */}
                {activTab == TAB.RECOMMEND && <PostList list={recommendPosts} />}
+
+               {/* 저장된 글 */}
+               {activTab == TAB.BOOKMARK && <PostList list={bookmarkPosts} />}
 
                {/* 내가 쓴 글 */}
                {activTab == TAB.MYPOSTS && <PostList list={myPosts} editMode={true} />}

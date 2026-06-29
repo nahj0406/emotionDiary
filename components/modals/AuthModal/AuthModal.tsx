@@ -3,11 +3,14 @@
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import styles from "./AuthModal.module.css";
 import { motion, AnimatePresence } from "framer-motion";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import SvgIcon from "@/components/ui/svg/icon/svgIcon";
+import { AuthModalPage } from "@/types/interfaces";
 
 type ContentProps = {
   close: () => void;
+  page: AuthModalPage;
+  setPage: React.Dispatch<React.SetStateAction<AuthModalPage>>;
 };
 
 export default NiceModal.create(
@@ -21,6 +24,8 @@ export default NiceModal.create(
       // closeBtn?: boolean;
       content: (props: ContentProps) => React.ReactNode;
    }) => {
+      const [page, setPage] = useState<'login' | 'findPw' | 'signIn'>('login');
+
       const modal = useModal();
 
       const handleClose = () => {
@@ -71,6 +76,8 @@ export default NiceModal.create(
                   </button>
                   {content({
                      close: () => handleClose(),
+                     page,
+                     setPage,
                   })}
                </motion.div>
             </motion.div>

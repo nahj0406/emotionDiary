@@ -1,0 +1,127 @@
+.find_pw {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   gap: 40px;
+}
+
+.find_pw > .title_box {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   text-align: center;
+}
+
+.find_pw > .title_box > h4 {
+   font-size: 20px;
+   font-weight: bold;
+   line-height: 1.2;
+   color: #000;
+   margin-bottom: 10px;
+}
+
+.find_pw > .title_box > p {
+   font-size: 14px;
+   font-weight: 500;
+   line-height: 1.4;
+   color: #000;
+}
+
+/* input 상자 */
+
+.form {
+   width: 100%;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   gap: 40px;
+}
+
+.input_box {
+   width: 100%;
+   display: flex;
+   flex-direction: column;
+   gap: 15px;
+   align-items: start;
+}
+
+.input_standard {
+   display: flex;
+   flex-direction: column;
+   gap: 10px;
+   width: 100%;
+   align-items: start;
+}
+
+.input_standard > span {
+   font-size: 14px;
+   color: #000;
+   font-weight: 500;
+   margin-left: 5px;
+}
+
+.input_standard input {
+   border: 1px solid #91918C;
+   background: #fff;
+   color: #000;
+   font-size: 16px;
+   padding: 13px 15px;
+   border-radius: 15px;
+   width: 100%;
+}
+
+.input_standard .label {
+   display: flex;
+   gap: 7px;
+}
+
+.input_standard .label p {
+   color: #797979;
+   font-size: 14px;
+   font-weight: 500;
+}
+
+.input_request {
+   display: flex;
+   gap: 10px;
+   width: 100%;
+}
+
+.input_standard input::placeholder {
+   color: #91918C;
+}
+
+.verifed_count {
+   color: #F33D3D;
+   font-size: 14px;
+   font-weight: 500;
+}
+
+.btn_box {
+   display: flex;
+   flex-direction: column;
+   gap: 15px;
+   width: 100%;
+}
+
+
+/* 비밀번호 변경 */
+
+.pw_input {
+   position: relative;
+   width: 100%;
+}
+
+.show_eye {
+   position: absolute;
+   right: 10px;
+   top: 50%;
+   transform: translateY(-50%);
+   z-index: 2;
+}
+
+p.confirm {color: #F33D3D; font-size: 14px; line-height: 1.2;}
+
+
+/* 변경완료 최종 페이지 */
+.complete_box {width: 100%;}

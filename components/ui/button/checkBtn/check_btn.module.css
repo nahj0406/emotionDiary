@@ -1,0 +1,31 @@
+.checkBtn {
+   padding: 12px 10px;
+   font-size: 14px;
+   font-weight: 500;
+   background: #fff;
+   border: 1px solid var(--main-color);
+   border-radius: 10px;
+   cursor: pointer;
+   transition: all 0.1.5s;
+   text-align: center;
+   width: fit-content;
+   color: #333;
+   white-space: nowrap;
+   max-height: 46px;
+}
+
+.checkBtn:hover {
+   background: var(--main-color);
+   color: #fff;
+}
+
+.disabled {
+   background: #cdcdcd;
+   border: none;
+   color: #fff;
+}
+
+.disabled:hover {
+   cursor: none;
+   background: #cdcdcd;
+}
