@@ -66,7 +66,43 @@ export default async function View ({ params }: { params : Promise<{post_id : st
    const updatedAt = dateStringChanger(post.updatedAt);
 
    return (
-      <section className={clsx(styles.view_container, 'containerV1')}>
+      <section className={styles.view_container}>
+         <div className={styles.book_profile}>
+            {
+               post?.thumbnail &&
+               <figure className={styles.book_thumbnail}>
+                  <img src={post.thumbnail} alt="ddd" />
+               </figure>
+            }
+   
+            <ul className={styles.content}>
+               <li className={styles.title}>{book?.bookTitle}</li>
+               <li><label>저자:</label> {book?.bookAuthor}</li>
+               <li><label>출판사:</label> {book?.bookPublisher}</li>
+               <li><label>구매처:</label> <Link href={book?.bookLink} target='_blank'>{book?.bookLink}</Link></li>
+               <li className={styles.evaluation}>
+                  <label>게시자 평가</label>
+                  <ul className={styles.content}>
+                     <li>
+                        <label>장르</label> 
+                        <b>{findNameById(category, post.category.primary)}/{findNameById(category, post.category.secondary)}</b>
+                     </li>
+
+                     <li>
+                        <label>작품 성향</label> 
+                        <div className={styles.tag_list}>
+                           {post.tags.map((item) => {
+                              return (
+                                 <span key={item}>{findNameById(tags, item)}</span>
+                              )
+                           })}
+                        </div>
+                     </li>
+                  </ul>
+               </li>
+            </ul>
+         </div>
+
          {
             session?.user.id === post.user.id.toString() &&
                <>
@@ -74,42 +110,39 @@ export default async function View ({ params }: { params : Promise<{post_id : st
                   <DeleteBtn postId={post_id} />
                </>
          }
-         <h2 className={styles.title}>{post?.title}</h2>
-         {
-            userInfo?.thumbnail
-               ? <img src={userInfo?.thumbnail} alt="유저 썸네일" />
-               : <img src={'/img/unknown.png'} width={20} alt="기본 이미지" />
-         }
-         <p>작성자: {post?.user.nickName}</p>
-         <p>작성일: {createdAt}</p>
-         {
-            post.updatedAt && 
-            <p>수정일: {updatedAt}</p>
-         }
-         <p>장르: {findNameById(category, post.category.primary)}/{findNameById(category, post.category.secondary)}</p>
-         <p>
-            성향: {
-               post.tags
-                  .map(item => findNameById(tags, item))
-                  .join('/ ')
-            }
-         </p>
 
-         {
-            post?.thumbnail &&
-            <img src={post.thumbnail} alt="ddd" width={200} />
-         }
+         <div className={styles.board}>
+            <div className={styles.titleBox}>
+               <h2 className={styles.title}>{post?.title}</h2>
 
-         <p>책 제목: {book?.bookTitle}</p>
-         <p>출판사: {book?.bookPublisher}</p>
-         <p>저자: {book?.bookAuthor}</p>
-         <p>구매처: {book?.bookLink}</p>
+               <div className={styles.info}>
+                  <div className={styles.user}>
+                     <figure className={styles.user_thumbnail}>
+                        {
+                           userInfo?.thumbnail
+                              ? <img src={userInfo?.thumbnail} alt="유저 썸네일" />
+                              : <img src={'/img/unknown.png'} alt="기본 이미지" />
+                        }
+                     </figure>
+                     <p>{post?.user.nickName}</p>
+                  </div>
 
-         <Recommend session={session} postItem={{...post, _id: post._id.toString(),}}></Recommend>
+                  <div className={styles.at_box}>
+                     <p>작성일: {createdAt}</p>
+                     {
+                        post.updatedAt && 
+                        <p>수정일: {updatedAt}</p>
+                     }
+                  </div>
+               </div>
+            </div>
 
-         <article className={styles.content_box}>
-            <ContentBox contentDB={{ content: post.content }} />
-         </article>
+            <article className={styles.content_box}>
+               <ContentBox contentDB={{ content: post.content }} />
+
+               <Recommend session={session} postItem={{...post, _id: post._id.toString(),}}></Recommend>
+            </article>
+         </div>
 
          <Comment post_id={post_id} comment_list={comment_list} session={session} />
       </section>

@@ -1,22 +1,171 @@
 .view_container {
    display: grid;
    gap: 15px;
+   width: 100%;
+   max-width: 1000px;
+   margin: 0 auto;
 }
 
-.view_container .title {
-   font-size: 30px;
+.view_container .book_profile {
+   width: 100%;
+   border: 1px solid var(--border-color);
+   border-radius: 10px;
+   padding: 10px 15px;
+   display: flex;
+   align-items: center;
+   gap: 20px;
+}
+
+.book_profile .book_thumbnail {
+   width: 100%;
+   max-width: 200px;
+   overflow: hidden;
+   border-radius: 10px;
+   border: 1px solid #ededed;
+}
+
+.book_profile .book_thumbnail img {
+   width: 100%;
+}
+
+.book_profile .content {
+   display: flex;
+   flex-direction: column;
+   gap: 20px;
+}
+
+.book_profile .content .title {
+   font-size: 20px;
+   color: #1b1b1b;
    font-weight: 600;
 }
 
-.view_container .content_box {
+.book_profile .content > li {
+   font-size: 18px;
+   color: #2a2a2a;
+   display: flex;
+   gap: 10px;
+}
+
+.book_profile .content > li label {
+   color: #797979;
+}
+
+.book_profile .content > li a:hover {
+   text-decoration: underline;
+   color: var(--main-color);
+}
+
+.book_profile .evaluation {
+   flex-direction: column;
+   gap: 10px;
+   margin-top: 10px;
+}
+
+.book_profile .evaluation > label {
+   color: #000 !important;
+   font-weight: 500;
+}
+
+.book_profile .evaluation > .content {
+   padding: 10px 15px;
+   border-radius: 10px;
+   background: #F4F4F4;
+   border: 1px solid #E3E3E3;
+}
+
+.book_profile .evaluation .tag_list {
+   display: flex;
+   gap: 10px;
+   flex-wrap: wrap;
+}
+
+.board {margin-top: 30px;}
+
+.board .titleBox {
+   display: flex;
+   flex-direction: column;
+   gap: 30px;
+   padding-bottom: 15px;
+   border-bottom: 1px solid var(--border-color);
+}
+.board .title {
+   font-size: 25px;
+   font-weight: 700;
+   color: #000;
+}
+
+
+.board .info {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   gap: 10px;
+}
+
+.board .info .user {
+   display: flex;
+   align-items: center;
+   gap: 7px;
+}
+
+.board .info .user .user_thumbnail {
+   width: 20px;
+   height: 20px;
+   border-radius: 50%;
+   overflow: hidden;
    border: 1px solid #ededed;
-   padding-top: 20px;
-   min-height: 500px;
+}
+
+.board .info .user .user_thumbnail img {
+   width: 100%;
+}
+
+.board .info .user p {
+   color: #000;
+   font-size: 14px;
+}
+
+.board .info .at_box p {
+   color: #797979;
+   font-size: 14px;
+}
+
+.board .content_box {
+   padding: 40px 0;
+   width: 100%;
+   border-bottom: 1px solid var(--border-color);
+   display: flex;
+   flex-direction: column;
+}
+
+.board .content_box .content {min-height: 200px;}
+
+
+/* 좋아요, 저장 */
+
+.good_box {
+   display: flex;
+   align-items: center;
+   gap: 15px;
+   width: 100%;
+   justify-content: center;
+   margin-top: 40px;
 }
 
 .good_box .recommend_btn {
-   border: 1px solid #ccc;
-   padding: 5px 7px;
-   border-radius: 5px;
-   font-size: 20px;
+   display: flex;
+   flex-direction: column;
+   gap: 7px;
+   align-items: center;
+}
+
+.good_box .recommend_btn .symbol {
+   border: 1px solid var(--border-color);
+   border-radius: 50%;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   width: 50px;
+   height: 50px;
 }

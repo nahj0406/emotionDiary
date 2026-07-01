@@ -1,12 +1,12 @@
 
-import SignUpClient from "./client"
+import SignUp from "./client"
 import getTags from "@/lib/mongoDB/getTags";
 
-export default async function SignUp() {
+export default async function signUp() {
 
    const tags = await getTags();
 
    return (
-      <SignUpClient initialTags={tags} />
+      <SignUp initialTags={tags} />
    )
 }

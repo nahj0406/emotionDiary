@@ -196,11 +196,11 @@ export function Recommend (
    return (
       <div className={styles.good_box}>
          <button disabled={loading} onClick={post_good_handler} className={styles.recommend_btn}>
-            {liked ? '❤️' : '🤍'} 좋아요 {count}
+            <figure className={styles.symbol}>{liked ? '❤️' : '🤍'}</figure> 좋아요 {count}
          </button>
 
          <button disabled={loading} onClick={post_bookmark_handler} className={styles.recommend_btn}>
-            {bookmark ? '❤️' : '🤍'} 저장됨
+            <figure className={styles.symbol}>{bookmark ? '❤️' : '🤍'}</figure> 저장됨
          </button>
       </div>
    )
