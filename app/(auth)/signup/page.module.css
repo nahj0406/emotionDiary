@@ -1,3 +1,31 @@
+.signIn {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   gap: 40px;
+}
+
+.signIn > .title_box {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   text-align: center;
+}
+
+.signIn > .title_box > h4 {
+   font-size: 20px;
+   font-weight: bold;
+   line-height: 1.2;
+   color: #000;
+   margin-bottom: 10px;
+}
+
+.signIn > .title_box > p {
+   font-size: 14px;
+   font-weight: 500;
+   line-height: 1.4;
+   color: #000;
+}
 
 /* step public style */
 .button_box {

@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { deletePostOne } from '@/utils/requester/requester';
 import NiceModal from '@ebay/nice-modal-react';
 import ConfirmModal from '@/components/modals/confirmModal/ConfirmModal';
+import SvgIcon from '@/components/ui/svg/icon/svgIcon';
 
 export default function PostCard({item, editMode}: {item: PostCardDTO; editMode?: boolean}) {
    const router = useRouter();
@@ -40,10 +41,10 @@ export default function PostCard({item, editMode}: {item: PostCardDTO; editMode?
    return (
       <article 
          className={styles.postCard}
+         onClick={()=> router.push(`/list/${item._id}`)}
       >
          <Image 
             className={styles.thumbnail} src={item.thumbnail} fill alt={'책 썸네일'} 
-            onClick={()=> router.push(`/list/${item._id}`)}
          />
          {/* no-img 추가해주기 */}
          <div className={styles.thumbnail_txt}>
@@ -60,7 +61,7 @@ export default function PostCard({item, editMode}: {item: PostCardDTO; editMode?
                </div>
 
                <div className={styles.recommend}>
-                  좋아요: {item.recommend || 0}
+                  <SvgIcon name='heart' width='18px' /> {item.recommend || 0}
                </div>
             </div>
          </div>

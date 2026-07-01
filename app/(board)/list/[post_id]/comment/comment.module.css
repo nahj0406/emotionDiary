@@ -1,12 +1,60 @@
 .comment_box {
-   border: 1px solid #ccc;
-   padding: 15px;
+   padding: 0 10px;
 }
 
 .comment_box > h5 {
-   font-size: 20px;
+   font-size: 18px;
    margin-bottom: 20px;
+   font-weight: 600;
+   color: #000;
 }
+
+.write_box {
+   display: flex;
+   flex-direction: column;
+   gap: 13px;
+   width: 100%;
+}
+
+.write_box textarea {
+   border-radius: 100px;
+   border: 1px solid var(--border-color);
+   padding: 10px 20px;
+   font-size: 16px;
+   font-weight: 500;
+   height: fit-content;
+}
+
+.write_box textarea::placeholder {
+   color: #797979;
+   font-weight: 500;
+}
+
+.write_box .btn_box {
+   display: flex;
+   gap: 10px;
+   align-self: end;
+}
+
+.write_box .btn_box button {
+   border-radius: 50px;
+   border: 2px solid #2a2a2a;
+   font-size: 16px;
+   text-align: center;
+   padding: 4px 13px;
+}
+
+.write_box .btn_box button.cancel {
+   background: #fff;
+   color: #2a2a2a;
+}
+
+.write_box .btn_box button.submit {
+   background: #2a2a2a;
+   color: #fff;
+   font-weight: 600;
+}
+
 
 .list {
    display: grid;
@@ -44,7 +92,7 @@
    gap: 5px;
 }
 
-.write_box {
+/* .write_box {
    width: 100%;
    padding: 20px 0;
    display: flex;
@@ -66,4 +114,4 @@
 
 .write_box button:active {
    background: #ddd;
-}
+} */

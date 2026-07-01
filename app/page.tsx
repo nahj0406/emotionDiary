@@ -6,12 +6,14 @@ import { mergePosts } from "@/lib/mongoDB/mergePosts";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import { getUserById } from "@/lib/mongoDB/getUserById";
+import getTags from "@/lib/mongoDB/getTags";
 
 export default async function Home() {
 
    const posts = await getPosts();
    const merged = await mergePosts(posts);
    const session = await getServerSession(authOptions);
+   const tags = await getTags();
    let userInfo = null;
    
    if(session?.user.id) {
@@ -23,7 +25,7 @@ export default async function Home() {
    
    return (
       <main className={styles.main}>
-         <MainList initialPosts={merged} user={safeUser} />
+         <MainList initialPosts={merged} user={safeUser} initialTags={tags} />
       </main>
    );
 }

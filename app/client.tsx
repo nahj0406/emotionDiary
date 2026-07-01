@@ -1,7 +1,7 @@
 'use client'
 
 import styles from './css/page.module.css'
-import { PostCardDTO, UserDB } from "@/types/interfaces"
+import { PostCardDTO, TagDTO, UserDB } from "@/types/interfaces"
 import PostList from "@/components/post/list/postList/postList";
 import SearchBar from '@/components/ui/search/searchBar/searchBar';
 import { useState } from 'react';
@@ -13,10 +13,19 @@ import AuthModal from '@/components/modals/AuthModal/AuthModal';
 import SvgIcon from '@/components/ui/svg/icon/svgIcon';
 import { signOut } from "next-auth/react";
 import { FindPw } from './(auth)/findUser/findPw/client';
+import SignUp from './(auth)/signup/client';
 
 
 
-export default function MainList ({initialPosts, user}:{initialPosts: PostCardDTO[]; user: UserDB | null}) {
+export default function MainList ({
+   initialPosts, 
+   user,
+   initialTags,
+}:{
+   initialPosts: PostCardDTO[]; 
+   user: UserDB | null
+   initialTags: TagDTO[]
+}) {
    
    const [list, setList] = useState(initialPosts);
    const tabs = [
@@ -106,11 +115,10 @@ export default function MainList ({initialPosts, user}:{initialPosts: PostCardDT
 
                                  case 'signIn':
                                     return (
-                                       // <FindPw 
-                                       //    modalClose={close}
-                                       //    setPage={setPage}
-                                       // />
-                                       <div>11</div>
+                                       <SignUp 
+                                          initialTags={initialTags}
+                                          setPage={setPage}
+                                       />
                                  )
                               }
                            },

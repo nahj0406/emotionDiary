@@ -134,7 +134,10 @@ const CommentWrite = ({
             placeholder="욕설, 비방 등은 자제해 주세요."
             defaultValue={updateItem?.content}
          />
-         <button type="submit">작성하기</button>
+         <div className={styles.btn_box}>
+            <button className={styles.cancel} type="submit">취소</button>
+            <button className={styles.submit} type="submit">작성하기</button>
+         </div>
       </form>
    );
 };
@@ -404,6 +407,14 @@ export default function Comment({
    return (
       <article className={styles.comment_box}>
          <h5>댓글 {list.length}개</h5>
+
+         <CommentWrite 
+            post_id={post_id} 
+            onAddComment={handleAddComment}
+            onUpdateComment={handleUpdateComment} 
+            checkSession={checkSession}
+         />
+
          <div className={styles.list}>
             {currentList.length > 0 ? (
                currentList.map((item, i) => {
@@ -425,13 +436,6 @@ export default function Comment({
                <p>작성된 댓글이 없습니다.</p>
             )}
          </div>
-
-         <CommentWrite 
-            post_id={post_id} 
-            onAddComment={handleAddComment}
-            onUpdateComment={handleUpdateComment} 
-            checkSession={checkSession}
-         />
 
          <div className={styles.pagination}>
             {startPage > 1 && (
