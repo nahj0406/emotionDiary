@@ -6,7 +6,7 @@ import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import ConfirmModal from "@/components/modals/confirmModal/ConfirmModal";
-import MainLogoIcon from "@/components/ui/svg/mainLogo/mainLogo";
+import MainLogoIcon from "@/components/ui/img/svg/mainLogo/mainLogo";
 import SubmitBtn from "@/components/ui/button/submitBtn/submit_btn";
 import { AuthModalPage } from "@/types/interfaces";
 

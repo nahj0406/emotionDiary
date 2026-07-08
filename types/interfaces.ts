@@ -174,6 +174,7 @@ export interface CommentDTO {
    user: {
       id: string;
       nickName: string;
+      thumbnail: string;
    }
    content: string;
    recommend: number;

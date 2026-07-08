@@ -7,6 +7,8 @@ import NiceModal from "@ebay/nice-modal-react";
 import ConfirmModal from "@/components/modals/confirmModal/ConfirmModal";
 import { useSessionChecker } from "@/hooks/useSessionChecker";
 import { Session } from "next-auth";
+import UserThumbnail from "@/components/ui/img/user_thumbnail/userThumbnail";
+import SvgIcon from "@/components/ui/img/svg/icon/svgIcon";
 
 const CommentWrite = ({
   post_id,
@@ -276,29 +278,53 @@ function CommentItem({
 
    return (
       <div className={styles.item} style={{'--depth': `${item.depth}`} as React.CSSProperties}>
+         {children.length > 0 && 
+            <div className={styles.rply_line}>
+               <button type="button" className={styles.rply_toggle}>답글 ?? 개</button>
+            </div>
+         }
+
          <div className={styles.content_box}>
+
             <div className={styles.cmt_header}>
                <div className={styles.unit}>
+                  <UserThumbnail thumbnail={item.user.thumbnail} />
                   <b className={styles.name}>{item?.user.nickName}</b>
-                  <p>{createdAt}</p>
                </div>
-               <button disabled={loading} onClick={post_good_handler}>
-                  좋아요 : {count}개
-               </button>
+               <p className={styles.createdAt}>{createdAt}</p>
+               
                {!item?.isDeleted && 
-                  <>
-                     {session?.user.id === item.user.id && 
+                  <div className={styles.edit_status}>
+                     {(item?.updatedAt && !item.isDeleted) && <p>[수정됨]</p>}
+                     {session?.user.id !== item.user.id && 
                         <div className={styles.btn_group}>
                            <button type="button" onClick={()=> {setUpdate(item); setOnWrite(prev=> !prev);}}>수정</button>
                            <button type="button" onClick={deleteComment_handler}>삭제</button>
                         </div>
                      }
-                     <button type="button" onClick={()=> setOnWrite(prev=> !prev)}>댓글 쓰기</button>
-                  </>
+                  </div>
                }
             </div>
-            {(item?.updatedAt && !item.isDeleted) && <p>[수정됨]</p>}
-            <p>{item?.content}</p>
+
+            <div className={styles.content}>
+               <p className={styles.text}>{item?.content}</p>
+
+               <div className={styles.content_action}>
+                  <button disabled={loading} onClick={post_good_handler} className={styles.recommend}>
+                     <SvgIcon name={'heart'} width="18"></SvgIcon> {count}
+                  </button>
+                  {
+                     !item?.isDeleted &&
+                     <button 
+                        className={styles.rply_btn} 
+                        type="button" 
+                        onClick={()=> setOnWrite(prev=> !prev)}
+                        >
+                           답글
+                        </button>
+                  }
+               </div>
+            </div>
          </div>
          {
             onWrite &&

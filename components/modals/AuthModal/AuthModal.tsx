@@ -4,7 +4,7 @@ import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import styles from "./AuthModal.module.css";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
-import SvgIcon from "@/components/ui/svg/icon/svgIcon";
+import SvgIcon from "@/components/ui/img/svg/icon/svgIcon";
 import { AuthModalPage } from "@/types/interfaces";
 
 type ContentProps = {

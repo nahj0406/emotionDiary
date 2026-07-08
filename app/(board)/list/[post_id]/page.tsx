@@ -11,6 +11,7 @@ import getCategories from '@/lib/mongoDB/getCategories';
 import getTags from '@/lib/mongoDB/getTags';
 import Link from 'next/link';
 import { dateStringChanger } from '@/utils/dateStringChanger';
+import UserThumbnail from '@/components/ui/img/user_thumbnail/userThumbnail';
 
 
 export default async function View ({ params }: { params : Promise<{post_id : string}> }) {
@@ -30,17 +31,27 @@ export default async function View ({ params }: { params : Promise<{post_id : st
    );
 
    const comment_result = await db.collection<CommentDB>('comments').find({postId: post?._id.toString()}).toArray();
-   const comment_list: CommentDTO[] = comment_result.map(comment => ({
-     ...comment,
-     _id: comment._id.toString(),
-     user: {
-      id: comment.user.id.toString(),
-      nickName: comment.user.nickName,
-     },
-     postId: comment.postId.toString(),
-     createdAt: comment.createdAt.toISOString(),
-     updatedAt: comment.updatedAt?.toISOString() ?? '',
-   }));
+   const comment_list: CommentDTO[] = await Promise.all(
+      comment_result.map(async (comment) => {
+
+         const userInfo = await db.collection('user').findOne({
+            _id: new ObjectId(comment.user.id)
+         })
+
+         return {
+            ...comment,
+            _id: comment._id.toString(),
+            user: {
+               id: comment.user.id.toString(),
+               nickName: comment.user.nickName,
+               thumbnail: userInfo?.thumbnail ?? '',
+            },
+            postId: comment.postId.toString(),
+            createdAt: comment.createdAt.toISOString(),
+            updatedAt: comment.updatedAt?.toISOString() ?? '',
+         }
+      }
+   ));
 
    const session = await getServerSession(authOptions);
    const userInfo = await db.collection<UserDB>('user').findOne({_id: new ObjectId(post?.user.id)});
@@ -117,13 +128,7 @@ export default async function View ({ params }: { params : Promise<{post_id : st
 
                <div className={styles.info}>
                   <div className={styles.user}>
-                     <figure className={styles.user_thumbnail}>
-                        {
-                           userInfo?.thumbnail
-                              ? <img src={userInfo?.thumbnail} alt="유저 썸네일" />
-                              : <img src={'/img/unknown.png'} alt="기본 이미지" />
-                        }
-                     </figure>
+                     <UserThumbnail thumbnail={userInfo?.thumbnail} />
                      <p>{post?.user.nickName}</p>
                   </div>
 

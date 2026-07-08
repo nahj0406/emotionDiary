@@ -4,7 +4,7 @@ import connectDB from '@/lib/mongoDB/database/database'
 import { UserDB } from '@/types/interfaces';
 import { getServerSession } from 'next-auth';
 import { ObjectId } from 'mongodb';
-import MainLogoIcon from "@/components/ui/svg/mainLogo/mainLogo";
+import MainLogoIcon from "@/components/ui/img/svg/mainLogo/mainLogo";
 
 export default async function Header() {
 

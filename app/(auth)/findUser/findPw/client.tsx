@@ -10,7 +10,7 @@ import Image from "next/image";
 import { signupVal } from "@/utils/validations/signup/infoValidation";
 import { badWord_check, inputReplaceFilter, stringLengthBoolean } from "@/utils/functions";
 import {updatePassword} from "@/utils/requester/requester";
-import MainLogoIcon from "@/components/ui/svg/mainLogo/mainLogo";
+import MainLogoIcon from "@/components/ui/img/svg/mainLogo/mainLogo";
 import SubmitBtn from "@/components/ui/button/submitBtn/submit_btn";
 import { AuthModalPage } from "@/types/interfaces";
 import CheckBtn from "@/components/ui/button/checkBtn/check_btn";
