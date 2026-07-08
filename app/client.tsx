@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation';
 import NiceModal from '@ebay/nice-modal-react';
 import Login from './(auth)/login/login';
 import AuthModal from '@/components/modals/AuthModal/AuthModal';
-import SvgIcon from '@/components/ui/svg/icon/svgIcon';
+import SvgIcon from '@/components/ui/img/svg/icon/svgIcon';
 import { signOut } from "next-auth/react";
 import { FindPw } from './(auth)/findUser/findPw/client';
 import SignUp from './(auth)/signup/client';

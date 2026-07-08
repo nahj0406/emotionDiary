@@ -59,37 +59,174 @@
 .list {
    display: grid;
    grid-template-columns: 1fr;
-   gap: 20px;
-   padding-bottom: 20px;
 }
 
 .list .item {
-   padding-left: calc(var(--depth) * 10px);
+   position: relative;
+}
+
+.list .item .rply_line {
+   position: absolute;
+   height: calc(100% - 25px);
+   width: 30px;
+   top: 0;
+}
+
+.list > .item .rply_line {
+   left: 0;
+}
+
+.list .item .item .rply_line {
+   left: 30px;
+   height: calc(100% - 35px);
+}
+
+.list .item .rply_line::before {
+   content: '';
+   position: absolute;
+   bottom: 0;
+   left: 50%;
+   transform: translateX(-50%);
+   background: #c8c8c1;
+   width: 1px;
+   height: 100%;
+}
+
+.list .item .rply_line::after {
+   content: '';
+   position: absolute;
+   bottom: 0;
+   left: 50%;
+   transform: translateX(-50%);
+   background: #c8c8c1;
+   width: 15px;
+   height: 15px;
+   border-radius: 50%;
+}
+
+.rply_line .rply_toggle {
+   position: absolute;
+   bottom: 0;
+   left: 23px;
 }
 
 .list > .item {
-   border-bottom: 1px solid #333;
-   padding-bottom: 20px;
+   padding-bottom: 25px;
 }
 
 .list > .item .item {
-   border-bottom: 1px solid #eee;
    display: flex;
    flex-direction: column;
    gap: 10px;
    width: 100%;
-   background: #ccc;
-   padding-bottom: 20px;
+   padding-bottom: 35px;
+   padding-left: 30px;
+}
+
+.list > .item .content_box {
+   padding-bottom: 25px;
+   position: relative;
 }
 
 .list .item .cmt_header {
    display: flex;
    gap: 15px;
+   align-items: center;
 }
 
 .list .item .cmt_header .unit {
    display: flex;
-   gap: 5px;
+   gap: 6px;
+   align-items: center;
+}
+
+.list .item .cmt_header .unit b {
+   font-size: 16px;
+}
+
+.list .item .cmt_header .createdAt {
+   color: #797979;
+   font-size: 14px;
+   font-weight: 500;
+}
+
+.list .item .cmt_header .edit_status {
+   display: flex;
+   gap: 6px;
+   margin-left: auto;
+   align-items: center;
+   color: #797979;
+   font-size: 14px;
+}
+
+.list .item .cmt_header .edit_status .btn_group {
+   display: flex;
+   align-items: center;
+   gap: 12px;
+}
+
+.list .item .cmt_header .edit_status button {
+   color: inherit;
+}
+
+.list .item .cmt_header .edit_status button:hover {
+   text-decoration: underline;
+   color: #000;
+}
+
+.list .item .cmt_header .edit_status .btn_group button:first-child {
+   position: relative;
+}
+
+.list .item .cmt_header .edit_status .btn_group button:first-child::after {
+   content:'';
+   position: absolute;
+   right: -7px;
+   top: 50%;
+   transform: translateY(-50%);
+   background: #797979;
+   height: 90%;
+   width: 1px;
+}
+
+.content_box .content {
+   display: flex;
+   flex-direction: column;
+   gap: 25px;
+   padding-left: 30px;
+   width: 100%;
+   padding-top: 25px;
+}
+
+.content_box .content > .text {
+   color: #0A0A0A;
+   font-size: 16px;
+   font-weight: 500;
+   line-height: 1.4;
+}
+
+.content_box .content .content_action {
+   display: flex;
+   gap: 20px;
+   align-items: center;
+}
+
+.content_box .content .content_action .recommend {
+   display: flex;
+   align-items: center;
+   gap: 6px;
+   font-size: 14px;
+   font-weight: 500;
+}
+
+.content_box .content .content_action .recommend > svg {
+   fill: none;
+}
+
+.content_box .content .content_action .rply_btn {
+   font-size: 16px;
+   font-weight: 600;
+   color: #1A1A1A;
 }
 
 /* .write_box {

@@ -11,7 +11,7 @@ import { UserDB } from "@/types/interfaces";
 import { WithId } from "mongodb";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import SvgIcon from '@/components/ui/svg/icon/svgIcon';
+import SvgIcon from '@/components/ui/img/svg/icon/svgIcon';
 
 export const MenuLink = ({
    href, 

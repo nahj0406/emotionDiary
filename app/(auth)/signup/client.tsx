@@ -5,7 +5,7 @@ import Agree from "./steps/Agree/agree";
 import InfoEnter from "./steps/InfoEnter/infoEnter";
 import Complete from "./steps/Complete/complete";
 import { AuthModalPage, TagDTO } from "@/types/interfaces";
-import MainLogoIcon from "@/components/ui/svg/mainLogo/mainLogo";
+import MainLogoIcon from "@/components/ui/img/svg/mainLogo/mainLogo";
 import styles from './page.module.css'
 
 type TagListProps = {
