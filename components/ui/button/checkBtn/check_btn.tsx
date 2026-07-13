@@ -25,6 +25,6 @@ const CheckBtn = forwardRef<HTMLButtonElement, Props>(
   }
 )
 
-CheckBtn.displayName = 'SubmitBtn'
+CheckBtn.displayName = 'CheckBtn'
 
 export default CheckBtn

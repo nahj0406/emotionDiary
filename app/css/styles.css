@@ -33,6 +33,27 @@
    height: 100dvh;
 }
 
+.default_btn01 {
+   font-size: 14px;
+   color: #fff;
+   font-weight: 500;
+   border-radius: 5px;
+   background-color: var(--main-color);
+   padding: 7px 10px;
+   border: 1px solid var(--main-color);
+   transition: all 0.1s;
+}
+
+.default_btn01.cancle {
+   background: #fff;
+   color: #1a1a1a;
+   border-color: #1a1a1a;
+}
+
+.default_btn01:hover {
+   filter: brightness(0.9);
+}
+
 
 @media (max-width: 1380px) {
    .containerV1 {

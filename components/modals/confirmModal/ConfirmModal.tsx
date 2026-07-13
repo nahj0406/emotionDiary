@@ -35,9 +35,9 @@ export default NiceModal.create(
 
       return (
          <AnimatePresence
-         onExitComplete={() => {
-            modal.remove();
-         }}
+            onExitComplete={() => {
+               modal.remove();
+            }}
          >
          {modal.visible && (
             <motion.div

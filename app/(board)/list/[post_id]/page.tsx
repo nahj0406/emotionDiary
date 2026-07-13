@@ -12,6 +12,7 @@ import getTags from '@/lib/mongoDB/getTags';
 import Link from 'next/link';
 import { dateStringChanger } from '@/utils/dateStringChanger';
 import UserThumbnail from '@/components/ui/img/user_thumbnail/userThumbnail';
+import TagIcon from '@/components/ui/img/svg/icon/tagIcon';
 
 
 export default async function View ({ params }: { params : Promise<{post_id : string}> }) {
@@ -104,7 +105,10 @@ export default async function View ({ params }: { params : Promise<{post_id : st
                         <div className={styles.tag_list}>
                            {post.tags.map((item) => {
                               return (
-                                 <span key={item}>{findNameById(tags, item)}</span>
+                                 <figure key={item}>
+                                    <TagIcon name={findNameById(tags, item)} width='24' />
+                                    <span>{findNameById(tags, item)}</span>
+                                 </figure>
                               )
                            })}
                         </div>
@@ -113,14 +117,6 @@ export default async function View ({ params }: { params : Promise<{post_id : st
                </li>
             </ul>
          </div>
-
-         {
-            session?.user.id === post.user.id.toString() &&
-               <>
-                  <Link href={`/write/${post_id}`}>수정</Link>
-                  <DeleteBtn postId={post_id} />
-               </>
-         }
 
          <div className={styles.board}>
             <div className={styles.titleBox}>
@@ -141,6 +137,14 @@ export default async function View ({ params }: { params : Promise<{post_id : st
                   </div>
                </div>
             </div>
+
+            {
+               session?.user.id === post.user.id.toString() &&
+                  <div className={styles.edit_action}>
+                     <Link className={'default_btn01'} href={`/write/${post_id}`}>수정</Link>
+                     <DeleteBtn postId={post_id} />
+                  </div>
+            }
 
             <article className={styles.content_box}>
                <ContentBox contentDB={{ content: post.content }} />
