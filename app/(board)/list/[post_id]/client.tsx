@@ -68,7 +68,7 @@ export function DeleteBtn ({postId}:{postId: string}) {
    }
 
    return (
-      <button type='button' onClick={()=> handle_delete(postId)}>삭제</button>
+      <button className={'default_btn01 cancle'} type='button' onClick={()=> handle_delete(postId)}>삭제</button>
    )
 }
 

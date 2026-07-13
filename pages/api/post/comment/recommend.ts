@@ -29,95 +29,124 @@ export default async function handler (
       });
    }
 
-   if(req.method !== 'POST') {
-      return res.status(401).json({
-         message: '메서드가 올바르지 않습니다.'
+   if(req.method === 'GET') {
+      const commentId = req.query.comment_id as string;
+      const recommend_comments = await db.collection('comment_recommends').findOne({
+         commentId: commentId,
       })
+
+      try {
+         const liked = recommend_comments?.userId === session?.user?.id;
+
+         return res.status(200).json({
+            liked,
+         });
+      } catch(err) {
+         console.error(err);
+
+         return res.status(500).json({
+         liked: false,
+         message: '서버 에러',
+         });
+      }
    }
 
+   // if(req.method !== 'POST') {
+   //    return res.status(401).json({
+   //       message: '메서드가 올바르지 않습니다.'
+   //    })
+   // }
 
-   try {
-      const cmtId = req.body.id;
 
-      const alreadyLiked = await db
-         .collection('comment_recommends')
-         .findOne({
-            userId: session.user.id,
-            commentId: cmtId,
-         })
-      
-      let result;
+   if(req.method === 'POST') {
 
-      if(alreadyLiked) {
-         await db.collection('comment_recommends')
-         .deleteOne(
-            {
+      try {
+         const cmtId = req.body.id;
+
+         const alreadyLiked = await db
+            .collection('comment_recommends')
+            .findOne({
                userId: session.user.id,
                commentId: cmtId,
-            },
-         )
+            })
+         
+         let result;
 
-         if (!ObjectId.isValid(cmtId)) {
-            return res.status(400).json({
-               message: '잘못된 댓글 ID입니다.',
+         if(alreadyLiked) {
+            await db.collection('comment_recommends')
+            .deleteOne(
+               {
+                  userId: session.user.id,
+                  commentId: cmtId,
+               },
+            )
+
+            if (!ObjectId.isValid(cmtId)) {
+               return res.status(400).json({
+                  message: '잘못된 댓글 ID입니다.',
+               });
+            }
+
+            result = await db
+               .collection('comments')
+               .findOneAndUpdate(
+                  {
+                     _id: new ObjectId(cmtId),
+                  },
+                  {
+                     $inc: {
+                        recommend: -1,
+                     },
+                  },
+                  {
+                     returnDocument: 'after',
+                  }
+               );
+
+            return res.status(200).json({
+               liked: false,
+               recommend:
+                  result?.value?.recommend || 0,
             });
          }
 
-         result = await db
-            .collection('comments')
-            .findOneAndUpdate(
-               {
-                  _id: new ObjectId(cmtId),
+         await db
+         .collection('comment_recommends')
+         .insertOne(
+            {
+               userId: session.user.id,
+               commentId: cmtId,
+            }
+         );
+
+         result = await db.collection('comments').findOneAndUpdate(
+            {_id: new ObjectId(cmtId)},
+            {
+               $inc: {
+                  recommend: 1,
                },
-               {
-                  $inc: {
-                     recommend: -1,
-                  },
-               },
-               {
-                  returnDocument: 'after',
-               }
-            );
+            },
+            {
+               returnDocument: 'after',
+            }
+         );
 
          return res.status(200).json({
-            liked: false,
+            liked: true,
             recommend:
-               result?.value?.recommend || 0,
+            result?.value?.recommend || 0,
+         })
+
+      } catch(err) {
+         console.error(err);
+
+         return res.status(500).json({
+            message: '좋아요 기능이 실패했습니다.',
          });
       }
-
-      await db
-        .collection('comment_recommends')
-        .insertOne(
-          {
-            userId: session.user.id,
-            commentId: cmtId,
-          }
-        );
-
-      result = await db.collection('comments').findOneAndUpdate(
-         {_id: new ObjectId(cmtId)},
-         {
-            $inc: {
-               recommend: 1,
-            },
-         },
-         {
-            returnDocument: 'after',
-         }
-      );
-
-      return res.status(200).json({
-         liked: true,
-         recommend:
-          result?.value?.recommend || 0,
-      })
-
-   } catch(err) {
-      console.error(err);
-
-      return res.status(500).json({
-         message: '좋아요 기능이 실패했습니다.',
-      });
    }
+
+   return res.status(405).json({
+      message: '메서드가 올바르지 않습니다.'
+   })
 }

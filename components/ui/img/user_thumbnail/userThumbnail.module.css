@@ -1,6 +1,8 @@
 .img {
    border-radius: 50%;
    border: 1px solid #ededed;
+   background: #fff;
+   overflow: hidden;
 }
 
 .img > img {

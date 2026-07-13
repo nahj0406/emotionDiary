@@ -9,75 +9,33 @@
    color: #000;
 }
 
-.write_box {
-   display: flex;
-   flex-direction: column;
-   gap: 13px;
-   width: 100%;
-}
-
-.write_box textarea {
-   border-radius: 100px;
-   border: 1px solid var(--border-color);
-   padding: 10px 20px;
-   font-size: 16px;
-   font-weight: 500;
-   height: fit-content;
-}
-
-.write_box textarea::placeholder {
-   color: #797979;
-   font-weight: 500;
-}
-
-.write_box .btn_box {
-   display: flex;
-   gap: 10px;
-   align-self: end;
-}
-
-.write_box .btn_box button {
-   border-radius: 50px;
-   border: 2px solid #2a2a2a;
-   font-size: 16px;
-   text-align: center;
-   padding: 4px 13px;
-}
-
-.write_box .btn_box button.cancel {
-   background: #fff;
-   color: #2a2a2a;
-}
-
-.write_box .btn_box button.submit {
-   background: #2a2a2a;
-   color: #fff;
-   font-weight: 600;
-}
-
 
 .list {
    display: grid;
    grid-template-columns: 1fr;
+   gap: 30px;
 }
 
 .list .item {
    position: relative;
 }
 
+/* 왼쪽 답글 라인 및 답글 표시 버튼 */
 .list .item .rply_line {
    position: absolute;
-   height: calc(100% - 25px);
-   width: 30px;
+   height: 100%;
+   width: calc(var(--thumnail_size) * 1px);
    top: 0;
+   z-index: 10;
 }
 
 .list > .item .rply_line {
    left: 0;
+   z-index: 10;
 }
 
-.list .item .item .rply_line {
-   left: 30px;
+.list .item.child .rply_line {
+   left: calc(var(--thumnail_size) * 1px);
    height: calc(100% - 35px);
 }
 
@@ -107,24 +65,22 @@
 .rply_line .rply_toggle {
    position: absolute;
    bottom: 0;
-   left: 23px;
+   left: calc(var(--thumnail_size) * 1px);
+   width: fit-content;
+   white-space: nowrap;
+   color: #1a1a1a;
+   font-size: 16px;
+   font-weight: bold;
+   cursor: pointer;
 }
 
-.list > .item {
-   padding-bottom: 25px;
+.rply_line .rply_toggle:hover {
+   color: #797979;
 }
 
-.list > .item .item {
-   display: flex;
-   flex-direction: column;
-   gap: 10px;
-   width: 100%;
-   padding-bottom: 35px;
-   padding-left: 30px;
-}
 
+/* 본문 */
 .list > .item .content_box {
-   padding-bottom: 25px;
    position: relative;
 }
 
@@ -132,6 +88,8 @@
    display: flex;
    gap: 15px;
    align-items: center;
+   position: relative;
+   z-index: 11;
 }
 
 .list .item .cmt_header .unit {
@@ -144,7 +102,7 @@
    font-size: 16px;
 }
 
-.list .item .cmt_header .createdAt {
+.list .item .cmt_header .text1 {
    color: #797979;
    font-size: 14px;
    font-weight: 500;
@@ -193,7 +151,7 @@
    display: flex;
    flex-direction: column;
    gap: 25px;
-   padding-left: 30px;
+   padding-left: calc(var(--thumnail_size) * 1px);
    width: 100%;
    padding-top: 25px;
 }
@@ -203,6 +161,10 @@
    font-size: 16px;
    font-weight: 500;
    line-height: 1.4;
+}
+
+.content_box .own {
+   color: var(--main-color) !important;
 }
 
 .content_box .content .content_action {
@@ -223,32 +185,109 @@
    fill: none;
 }
 
+.content_box .content .content_action .recommend.liked > svg {
+   fill: #000;
+}
+
 .content_box .content .content_action .rply_btn {
    font-size: 16px;
    font-weight: 600;
    color: #1A1A1A;
 }
 
-/* .write_box {
-   width: 100%;
-   padding: 20px 0;
+.content_box .content .content_action .rply_btn:hover {
+   color: #797979;
+}
+
+
+/* 답글 전용 스타일 */
+.list .item.child {
    display: flex;
-   align-items: stretch;
-   gap: 10px;
+   flex-direction: column;
+   width: 100%;
+   padding-bottom: 35px;
+   padding-left: calc(var(--thumnail_size) * 1px);
+}
+
+.list .item.child_container > .content_box {
+   padding-bottom: 35px;
+}
+
+.list .item.child.child_container {
+   margin-bottom: 20px;
+}
+
+
+/* 쓰기란 */
+
+.first_write {
+   padding-bottom: 40px;
+}
+
+.write_box {
+   display: flex;
+   flex-direction: column;
+   gap: 13px;
+   width: 100%;
+   margin-bottom: 20px;
+}
+
+.list .item .write_box {
+   margin-top: 35px;
+}
+
+.list .item.child_container > .write_box {
+   padding-left: calc(var(--thumnail_size, 0) * 1px);
+   margin-top: 0;
+}
+
+.list .item.child > .write_box {
+   padding-left: 0;
 }
 
 .write_box textarea {
-   width: 100%; max-width: 90%;
-   min-height: 150px;
+   border-radius: 100px;
+   border: 1px solid var(--border-color);
+   padding: 10px 20px;
    font-size: 16px;
-   padding: 10px;
+   font-weight: 500;
+   height: 60px;
+   resize: none;
+   transition: all 0.3s;
 }
 
-.write_box button {
-   border: 1px solid #333;
-   padding: 5px;
+.write_box textarea.active {
+   height: 100px;
+   border-radius: 10px;
+   border-color: var(--main-color);
 }
 
-.write_box button:active {
-   background: #ddd;
-} */
+.write_box textarea::placeholder {
+   color: #797979;
+   font-weight: 500;
+}
+
+.write_box .btn_box {
+   display: flex;
+   gap: 10px;
+   align-self: end;
+}
+
+.write_box .btn_box button {
+   border-radius: 50px;
+   border: 2px solid #2a2a2a;
+   font-size: 16px;
+   text-align: center;
+   padding: 4px 13px;
+}
+
+.write_box .btn_box button.cancel {
+   background: #fff;
+   color: #2a2a2a;
+}
+
+.write_box .btn_box button.submit {
+   background: #2a2a2a;
+   color: #fff;
+   font-weight: 600;
+}

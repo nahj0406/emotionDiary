@@ -1,0 +1,36 @@
+.pagination {
+   display: flex;
+   align-items: center;
+   gap: 10px;
+   margin: 40px auto 0;
+   width: fit-content;
+}
+
+.pagination > button {
+   border-radius: 100px;
+   width: 30px;
+   height: 30px;
+   color: #000;
+   font-size: 18px;
+   font-weight: 500;
+   transition: all 0.2s;
+}
+
+.pagination > button.active,
+.pagination > button:hover {
+   background: var(--main-color);
+   color: #fff;
+}
+
+.pagination > .action_btn {
+   background: var(--main-color);
+   color: #fff;
+}
+
+.pagination > .action_btn.prev_btn svg {
+   transform: rotate(180deg);
+}
+
+.pagination > .action_btn.disabled {
+   background: var(--disabled-color) !important;
+}
