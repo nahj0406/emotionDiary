@@ -1,60 +1,35 @@
-"use client";
+import styles from './sideBar.module.css'
+import { MenuLink, SignWrapper, MenuOuter } from './client'
+import connectDB from '@/lib/mongoDB/database/database'
+import { UserDB } from '@/types/interfaces';
+import { getServerSession } from 'next-auth';
+import { ObjectId } from 'mongodb';
+import MainLogoIcon from "@/components/ui/img/svg/mainLogo/mainLogo";
 
-import Login from "@/app/(auth)/login/login";
-import styles from "./sideBar.module.css";
-import clsx from "clsx";
-import { useEffect, useRef } from "react";
-import { Dispatch, SetStateAction } from "react";
-import { usePathname } from "next/navigation";
-import { useSession } from "next-auth/react";
-import { UserDB } from "@/types/interfaces";
-// import { WithId } from "mongodb";
+export default async function SideBar() {
 
-export default function SideBar({
-   user,
-  openKey,
-  keyUpdate,
-}: {
-   user:UserDB | null
-  openKey: boolean;
-  keyUpdate: Dispatch<SetStateAction<boolean>>;
-}) {
+   const session = await getServerSession();
+   let userInfo = null;
 
-   const bodyRef = useRef<HTMLDivElement>(null);
-   const pathname = usePathname();
-   const prevPath = useRef(pathname);
-   const { data: sesstion } = useSession();
+   if(session?.user?.id) {
+      const client = await connectDB;
+      const db = client.db('community');
+      userInfo = await db.collection<UserDB>('user').findOne({_id: new ObjectId(session?.user?.id)});
+   }
 
-   useEffect(() => {
-      if (openKey) return;
+   const safeUser = userInfo
+      ? JSON.parse(JSON.stringify(userInfo))
+      : null;
 
-      const outSideTrigger = (e: MouseEvent) => {
-         if (bodyRef.current && !bodyRef.current.contains(e.target as Node)) {
-            keyUpdate(false);
-         }
-      };
+      return (
+         <header className={styles.header}>
+            <MenuLink href={'/'}>
+               <MainLogoIcon />
+            </MenuLink>
 
-      document.addEventListener("mousedown", outSideTrigger);
+            <MenuOuter />
 
-      return () => {
-         document.removeEventListener("mousedown", outSideTrigger);
-      };
-   }, []);
-
-   useEffect(()=> { // url 바뀌면 닫기
-      if(prevPath.current !== pathname) {
-         keyUpdate(false);
-         prevPath.current = pathname;
-      }
-   }, [pathname]);
-
-   return (
-      <div
-         ref={bodyRef}
-         className={clsx(styles.sideBar, { [styles.open]: openKey })}
-      >  
-         {/* {sesstion ? <Profile user={user}/> : <Login />} */}
-         <Login />
-      </div>
-   );
+            {/* <SignWrapper user={safeUser}></SignWrapper> */}
+         </header>
+      )
 }

@@ -1,45 +1,17 @@
 
 .wrapper {
    position: relative;
-   padding: 40px 20px 40px 100px;
+   padding: 0 20px 0 100px;
+}
+
+.main_container {
+   width: 100%;
+   position: relative;
+   padding-top: 25px;
 }
 
 .main {
    width: 100%;
-}
-
-.top_bar {
-   width: 100%;
-   position: sticky;
-   display: flex;
-   justify-content: space-between;
-   align-items: start;
-   gap: 20px;
-}
-
-.top_bar .login_box {
-   display: flex;
-   align-items: center;
-   gap: 14px;
-}
-
-.top_bar .login_box .user_thumbnail {
-   width: 45px;
-   height: 45px;
-   border-radius: 50%;
-   border: 2px solid #ededed;
-   cursor: pointer;
-   transition: all 0.3s;
-}
-
-.top_bar .login_box .user_thumbnail:hover {
-   border-color: var(--main-color);
-}
-
-.top_bar .login_box .more_btn {
-   color: #505050;
-   width: 16px;
-   cursor: pointer;
 }
 
 /* .list_layer .list_tab {

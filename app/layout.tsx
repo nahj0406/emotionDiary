@@ -5,7 +5,12 @@ import "./css/globals.css";
 import "./css/styles.css";
 import styles from './css/page.module.css'
 import ModalProvider from "./layout_client";
-import Header from "../components/layout/header/header";
+import SideBar from "../components/layout/sideBar/sideBar";
+import Header from "@/components/layout/header/header";
+import { getUserById } from "@/lib/mongoDB/getUserById";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
+import getTags from "@/lib/mongoDB/getTags";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,18 +27,54 @@ export const metadata: Metadata = {
   description: "여러분이 사랑하는 책과 이야기들을 공유하고 나눠보세요",
 };
 
-export default function RootLayout({
+// async function measure<T>(
+//   label: string,
+//   callback: () => Promise<T>
+// ): Promise<T> {
+//   const start = performance.now();
+
+//   try {
+//     return await callback();
+//   } finally {
+//     const duration = performance.now() - start;
+//     console.log(`[성능] ${label}: ${duration.toFixed(1)}ms`);
+//   }
+// }
+
+// const session = getServerSession(authOptions);
+
+// const userId = session?.user.id;
+
+// const userInfo = userId
+//   ? getUserById(userId)
+//   : null;
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+   const getTag = await getTags();
+   const getSession = await getServerSession(authOptions);
+
+   const [tags, session] = await Promise.all([getTag, getSession]);
+
+   const userInfo = 
+      session?.user.id 
+      ? await getUserById(session.user.id)
+      : null;
+
   return (
     <html lang="ko" className={`${geistSans.variable} ${geistMono.variable}`}>
       <body className={`${pretendard.className} ${poppins.variable} ${paperlogy.variable} antialiased`}>
         <ModalProvider>
           <div className={styles.wrapper}>
-            <Header />
-            {children}
+            <SideBar />
+            <div className={styles.main_container}>
+               <Header user={userInfo} initialTags={tags} />
+               {children}
+            </div>
           </div>
         </ModalProvider>
       </body>

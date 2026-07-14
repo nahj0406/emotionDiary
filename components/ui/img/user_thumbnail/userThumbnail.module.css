@@ -3,6 +3,7 @@
    border: 1px solid #ededed;
    background: #fff;
    overflow: hidden;
+   cursor: pointer;
 }
 
 .img > img {

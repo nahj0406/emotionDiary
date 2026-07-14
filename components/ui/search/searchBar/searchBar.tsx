@@ -1,39 +1,58 @@
-import { Dispatch, SetStateAction, useState } from 'react';
+'use client'
+
+import { useState } from 'react';
+import type { SubmitEventHandler } from 'react';
 import styles from './searchBar.module.css'
-import { PostCardDTO } from "@/types/interfaces"
+import { usePathname, useRouter, useSearchParams, } from 'next/navigation';
+import SvgIcon from '../../img/svg/icon/svgIcon';
 
+export default function SearchBar() {
+   const [keyword, setKeyword] = useState('');
 
-export default function SearchBar (
-   {
-      sort,
-      setList
-   }:{
-      sort: string;
-      setList: Dispatch<SetStateAction<PostCardDTO[]>>
-   }) {
+   const router = useRouter();
+   const pathname = usePathname();
+   const searchParams = useSearchParams();
 
-   const [keyword, setKeyword] = useState<string>('');
+   const searchSubmit: SubmitEventHandler<HTMLFormElement> = (e) => {
+      e.preventDefault();
 
-   const search = async () => {
-      const res = await fetch(
-         `/api/post/search/route?q=${encodeURIComponent(keyword)}&sort=${sort}`
+      const trimmedKeyword = keyword.trim();
+      const currentPath = pathname ?? '/';
+
+      const params = new URLSearchParams(
+         searchParams?.toString() ?? ''
       );
 
-      const data = await res.json();
+      if (trimmedKeyword) {
+         params.set('keyword', trimmedKeyword);
+      } else {
+         params.delete('keyword');
+      }
 
-      setList(data);
-   }
+      params.delete('page');
+
+      const queryString = params.toString();
+
+      // router.push(
+      //    queryString
+      //       ? `${currentPath}?${queryString}`
+      //       : currentPath
+      // );
+
+      router.push(queryString ? `/?${queryString}` : '/');
+      
+   };
 
    return (
-      <div className={styles.searchBar}>
-         <input 
-            type="search" 
+      <form onSubmit={searchSubmit} className={styles.searchBar}>
+         <input
+            type="search"
             value={keyword}
-            onChange={(e)=> setKeyword(e.target.value)}
-            placeholder='검색어를 입력해 주세요.'
+            onChange={(e) => setKeyword(e.target.value)}
+            placeholder="검색어를 입력해 주세요."
          />
 
-         <button onClick={search}>검색하기</button>
-      </div>
-   )
+         <button type="submit"><SvgIcon name={'search'} width={'22px'}></SvgIcon></button>
+      </form>
+   );
 }

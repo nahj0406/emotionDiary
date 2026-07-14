@@ -1,0 +1,13 @@
+
+
+.profile {
+   position: absolute;
+   min-width: 285px;
+   background: rgba(255,255,255,0.8);
+   backdrop-filter: blur(16px);
+   border-radius: 20px;
+   box-shadow: 0 0 12px 0px rgba(0, 0, 0, 0.2);
+   top: 110%;
+   right: 0;
+   padding: 12px;
+}
