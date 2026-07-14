@@ -1,17 +1,97 @@
-.sideBar {
-   position: absolute;
-   z-index: 1000;
+.header {
+   position: fixed;
    top: 0;
-   right: 313%;
-   width: 300px;
-   max-width: 300px;
+   left: 0;
+   width: fit-content;
    height: 100dvh;
-   background: rgba(0,0,0,0.9);
-   padding: 40px 20px 0;
-   backdrop-filter: blur(10px);
-   transition: all 0.3s;;
+   background: #FAFAFA;
+   border-right: 1px solid #E6E6E6;
+   padding: 40px 12px;
+   display: flex;
+   flex-direction: column;
+   z-index: 1000;
 }
 
-.sideBar.open {
-   right: -313%;
+.header .outer {
+   padding-top: 50px;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   width: 100%;
+   gap: 30px;
 }
+
+.header .outer > a {
+   padding: 10px 0;
+   position: relative;
+   transition: all 0.1s;
+   width: 100%;
+   max-width: 45px;
+   height: 45px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   color: #000;
+   background: #efefef;
+   border-radius: 10px;
+}
+/* .header .outer > a > * {
+   position: relative;
+   z-index: 2;
+} */
+
+.header .outer > a span {
+   position: absolute;
+   left: 100%;
+   top: 50%;
+   transform: translateY(-50%);
+   padding: 5px 8px;
+   display: inline-block;
+   background: #1a1a1a;
+   color: #fff;
+   font-size: 15px;
+   border-radius: 5px;
+   white-space: nowrap;
+   transition: all 0.2s;
+   opacity: 0;
+}
+
+.header .outer > a::before {
+   content: '';
+   position: absolute;
+   z-index: 1;
+   left: 50%;
+   bottom: -4px;
+   transform: translateX(-50%);
+   width: 60%;
+   height: 4px;
+   background: var(--main-color);
+   border-radius: 10px;
+   opacity: 0;
+}
+
+
+/* hover active */
+.header .outer > a:hover span {
+   opacity: 1; left: 110%;
+}
+
+.header .outer > a:hover,
+.header .outer > a.active {
+   color: var(--main-color);
+   box-shadow: inset 0 0 20px #5b4ff73b;
+}
+
+.header .outer > a.active::before {
+   bottom: -2px;
+   opacity: 1;
+}
+
+/* .header .outer > a:hover::before,
+.header .outer > a.active::before {
+   opacity: 1;
+} */
+/* .header .outer > a:hover::before,
+.header .outer > a.active::before {
+   width: 129.5%;
+} */

@@ -1,58 +1,29 @@
 .header {
-   position: fixed;
+   position: relative;
    top: 0;
    left: 0;
-   width: fit-content;
-   height: 100dvh;
-   background: #FAFAFA;
-   border-right: 1px solid #E6E6E6;
-   padding: 40px 12px;
+   width: 100%;
    display: flex;
-   flex-direction: column;
+   align-items: center;
+   padding: 10px 0;
+   justify-content: space-between;
+   gap: 50px;
    z-index: 1000;
 }
 
-.header .outer {
-   padding-top: 120px;
-   display: flex;
-   flex-direction: column;
-   align-items: center;
-   width: 100%;
-   gap: 30px;
-}
-
-.header .outer > a {
-   padding: 10px 0;
-   position: relative;
-   transition: all 0.3s;
-   width: 100%;
+.header .login_box {
    display: flex;
    align-items: center;
-   justify-content: center;
-   color: #000;
-}
-.header .outer > a > * {
+   gap: 14px;
    position: relative;
-   z-index: 2;
 }
 
-.header .outer > a::before {
-   content: '';
-   position: absolute;
-   z-index: 1;
-   width: 0;
-   right: -12px;
-   height: 100%;
-   background: #2B2B2B;
-   border-radius: 10px 0px 0px 10px;
-   transition: 0.3s;
+.header .login_box .user_thumbnail:hover {
+   border-color: var(--main-color);
 }
 
-.header .outer > a:hover,
-.header .outer > a.active {
-   color: #fff;
-}
-.header .outer > a:hover::before,
-.header .outer > a.active::before {
-   width: 129.5%;
+.header .login_box .more_btn {
+   color: #505050;
+   width: 16px;
+   cursor: pointer;
 }

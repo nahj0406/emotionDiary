@@ -1,21 +1,27 @@
 .searchBar {
    display: flex;
    gap: 10px;
-   margin-bottom: 20px;
+   padding: 10px 20px;
+   border-radius: 100px;
+   border: 1px solid #c4c4c4;
+   background: #fff;
+   width: 100%;
+   max-width: 1200px;
 }
 
 .searchBar input {
-   border: 1px solid #dedede;
-   border-radius: 100px;
-   padding: 5px 10px;
+   font-size: 16px;
+   color: #1a1a1a;
+   font-weight: 500;
+   width: 100%;
+}
+
+.searchBar input::placeholder {
+   color: #797979;
 }
 
 .searchBar button {
-   border: 1px solid #ededed;
-   background: #000;
-   color: #fff;
-   padding: 5px;
-   border-radius: 5px;
+   color: #000;
 }
 
 .searchBar button:active {

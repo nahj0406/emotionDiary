@@ -31,14 +31,14 @@ export default function SvgIcon ({
          }
 
          {name === 'menu_recommend' &&
-            <svg xmlns="http://www.w3.org/2000/svg" width={width ?? "27"} height="34" viewBox="0 0 27 34" fill="none">
+            <svg xmlns="http://www.w3.org/2000/svg" width={width ?? "27"} height="auto" viewBox="0 0 27 34" fill="none">
                <path d="M1 28.3438V4.90625C1 3.87025 1.41155 2.87668 2.14411 2.14411C2.87668 1.41155 3.87025 1 4.90625 1H24.4375C24.8519 1 25.2493 1.16462 25.5424 1.45765C25.8354 1.75067 26 2.1481 26 2.5625V30.6875C26 31.1019 25.8354 31.4993 25.5424 31.7924C25.2493 32.0854 24.8519 32.25 24.4375 32.25H4.90625C3.87025 32.25 2.87668 31.8384 2.14411 31.1059C1.41155 30.3733 1 29.3798 1 28.3438ZM1 28.3438C1 27.3077 1.41155 26.3142 2.14411 25.5816C2.87668 24.8491 3.87025 24.4375 4.90625 24.4375H26" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                <path d="M8.21889 13.1875C7.89017 12.8448 7.63429 12.439 7.4667 11.9947C7.2991 11.5503 7.22326 11.0767 7.24375 10.6022C7.26425 10.1278 7.38065 9.66242 7.58593 9.23419C7.79121 8.80597 8.08113 8.42378 8.43817 8.11068C8.79522 7.79758 9.21199 7.56006 9.66335 7.41245C10.1147 7.26485 10.5913 7.21021 11.0644 7.25185C11.5374 7.29349 11.9971 7.43054 12.4158 7.65472C12.8344 7.8789 13.2033 8.18558 13.5001 8.55624C13.7984 8.18945 14.1676 7.88659 14.5857 7.66578C15.0037 7.44497 15.462 7.31074 15.9331 7.27113C16.4042 7.23151 16.8785 7.28732 17.3275 7.43523C17.7765 7.58313 18.1911 7.82008 18.5465 8.13191C18.9018 8.44373 19.1906 8.82403 19.3956 9.25005C19.6006 9.67607 19.7176 10.1391 19.7395 10.6113C19.7614 11.0836 19.6879 11.5554 19.5233 11.9986C19.3586 12.4418 19.1063 12.8472 18.7814 13.1906L14.6783 17.6531C14.5319 17.8217 14.351 17.9568 14.1479 18.0494C13.9448 18.1421 13.7242 18.19 13.5009 18.19C13.2777 18.19 13.057 18.1421 12.8539 18.0494C12.6508 17.9568 12.47 17.8217 12.3236 17.6531L8.21889 13.1875Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
          }
 
          {name === 'menu_recently' &&
-            <svg xmlns="http://www.w3.org/2000/svg" width={width ?? "27"} height="30" viewBox="0 0 27 30" fill="none">
+            <svg xmlns="http://www.w3.org/2000/svg" width={width ?? "27"} height="auto" viewBox="0 0 27 30" fill="none">
                <path d="M17.6667 17.6667V20.7222L19.889 22.1111" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                <path d="M17.6667 3.77777H20.4445C21.1812 3.77777 21.8878 4.07043 22.4087 4.59136C22.9296 5.1123 23.2223 5.81884 23.2223 6.55555V7.7111" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                <path d="M6.55556 3.77777H3.77778C3.04107 3.77777 2.33453 4.07043 1.81359 4.59136C1.29266 5.1123 1 5.81884 1 6.55555V26C1 26.7367 1.29266 27.4432 1.81359 27.9642C2.33453 28.4851 3.04107 28.7778 3.77778 28.7778H6.55556" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -69,6 +69,13 @@ export default function SvgIcon ({
          {name === 'arrow_lr' && 
             <svg xmlns="http://www.w3.org/2000/svg" width={width ?? '8'} height="auto" viewBox="0 0 8 14" fill="none">
                <path d="M1 1L7 7L1 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+         }
+
+         {name === 'search' && 
+            <svg xmlns="http://www.w3.org/2000/svg" width={width ?? '22'} height="auto" viewBox="0 0 22 22" fill="none">
+               <path d="M21 21L16.1777 16.1777" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+               <path d="M9.8889 18.7778C14.7981 18.7778 18.7778 14.7981 18.7778 9.8889C18.7778 4.9797 14.7981 1 9.8889 1C4.9797 1 1 4.9797 1 9.8889C1 14.7981 4.9797 18.7778 9.8889 18.7778Z" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
          }
       </>

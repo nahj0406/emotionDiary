@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import connectDB from "@/lib/mongoDB/database/database";
 import { mergePosts } from "@/lib/mongoDB/mergePosts";
-import { PostDTO } from "@/types/interfaces";
+import { PostDTO, PostDB } from "@/types/interfaces";
 
 export default async function handler(
    req: NextApiRequest, 
@@ -19,7 +19,7 @@ export default async function handler(
       const client = await connectDB;
       const db = client.db("community");
 
-      const search_List = await db.collection<PostDTO>('post').find({
+      const search_List = await db.collection<PostDB>('post').find({
          $or: [
             {title: {$regex: keyword, $options: 'i'}},
             {'books.bookTitle': {$regex: keyword, $options: 'i'}},

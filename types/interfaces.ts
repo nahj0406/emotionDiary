@@ -19,7 +19,20 @@ export interface UserDB {
    email: string
    password: string
    emailVerified: boolean
-   createAt: Date
+   createdAt: Date
+   tags: string[]
+   post: {
+      recommend: string[]
+      recently: string[]
+   }
+}
+
+export interface UserDTO {
+   _id: string
+   name: string
+   nickName: string
+   thumbnail: string
+   email: string
    tags: string[]
    post: {
       recommend: string[]

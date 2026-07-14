@@ -1,10 +1,10 @@
 'use client'
 
 import Link from "next/link";
-import styles from './header.module.css';
+import styles from './sideBar.module.css';
 import { usePathname, useSearchParams } from "next/navigation";
 import clsx from "clsx";
-import SideBar from '../sideBar/sideBar';
+import Header from '../header/header';
 import { useEffect, useState } from 'react';
 import { useSession } from "next-auth/react";
 import { UserDB } from "@/types/interfaces";
@@ -24,7 +24,7 @@ export const MenuLink = ({
    const isActive = pathname === href;
    return (
       <Link 
-         className={clsx({[styles.active]:isActive})} 
+         className={clsx({[styles.active]:isActive})}
          href={href}
       >
          {children}
@@ -37,23 +37,28 @@ export const MenuOuter = () => {
    return (
       <nav className={styles.outer}>
          <MenuLink href={'/'}>
-            <SvgIcon name={'menu_home'} />
+            <SvgIcon name={'menu_home'} width="20" />
+            <span>홈</span>
          </MenuLink>
 
          <MenuLink href={'/write'}>
-            <SvgIcon name={'menu_write'} />
+            <SvgIcon name={'menu_write'} width="20" />
+            <span>글쓰기</span>
          </MenuLink>
 
          <MenuLink href={'/mypage?tab=bookMark'}>
-            <SvgIcon name={'menu_bookMark'} />
+            <SvgIcon name={'menu_bookMark'} width="20" />
+            <span>내 서재</span>
          </MenuLink>
 
          <MenuLink href={'/mypage?tab=recommend'}>
-            <SvgIcon name={'menu_recommend'} />
+            <SvgIcon name={'menu_recommend'} width="20" />
+            <span>좋아요</span>
          </MenuLink>
 
          <MenuLink href={'/mypage?tab=recently'}>
-            <SvgIcon name={'menu_recently'} />
+            <SvgIcon name={'menu_recently'} width="20" />
+            <span>최근 본 글</span>
          </MenuLink>
 
          {/* <MenuLink href={'/mypage'}>
@@ -106,7 +111,7 @@ export function SignWrapper({user}:{user:WithId<UserDB> | null}) {
            }
          </div>
          
-         {!sesstion && <SideBar user={user} openKey={sideOpen} keyUpdate={setSideOpen} />}
+         {!sesstion && <Header user={user} openKey={sideOpen} keyUpdate={setSideOpen} />}
       </>
    )
 }
