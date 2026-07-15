@@ -7,12 +7,13 @@
    }
 
    html {
-      font-size: 14px;
+      font-size: 62.5%;
    }
 
    body {
       line-height: 1;
       font-weight: 400;
+      font-size: 1.6rem;
       color: #000;
       word-wrap: break-word;
       word-break: keep-all;
@@ -111,5 +112,32 @@
       --main-color: #5B4FF7;
       --border-color: #c8c8c1;
       --disabled-color: #cdcdcd;
+
+      /* --font-size--18: clamp(16px, calc(1.6rem + 0.1vw), 2rem); */
+      --font-size--18: clamp(16px, 1.8rem, 2rem);
+      --font-size--16: clamp(14px, 1.6rem, 1.8rem);
+      --font-size--14: clamp(14px, 1.4rem, 1.6rem);
+   }
+
+   @media (max-width: 992px) {
+      html {
+         font-size: 56.25%; /* 9 */
+      }
+
+      /* :root {
+         --font-size--18: clamp(16px, 1.8rem, 2rem);
+      } */
+   }
+
+   @media (max-width: 768px) {
+      html {
+         font-size: 43.75%; /* 7 */
+      }
+   }
+
+   @media (max-width: 480px) {
+      html {
+         font-size: 31.25%; /* 5 */
+      }
    }
 }

@@ -78,6 +78,16 @@ export default function SvgIcon ({
                <path d="M9.8889 18.7778C14.7981 18.7778 18.7778 14.7981 18.7778 9.8889C18.7778 4.9797 14.7981 1 9.8889 1C4.9797 1 1 4.9797 1 9.8889C1 14.7981 4.9797 18.7778 9.8889 18.7778Z" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
          }
+
+         {name === 'categoryTab' && 
+            <svg xmlns="http://www.w3.org/2000/svg" width={width ?? '35'} height={width ?? '35'} viewBox="0 0 35 35" fill="none">
+               <rect width="35" height="35" rx="5" fill="#5B4FF7"/>
+               <path d="M26.4444 6H8.55556C7.14416 6 6 7.14416 6 8.55556V26.4444C6 27.8558 7.14416 29 8.55556 29H26.4444C27.8558 29 29 27.8558 29 26.4444V8.55556C29 7.14416 27.8558 6 26.4444 6Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+               <path d="M11.1113 11.1111V23.8889" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+               <path d="M16.2219 11.1111V23.8889" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+               <path d="M21.3335 11.1111L23.8891 23.8889" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+         }
       </>
    )
 }

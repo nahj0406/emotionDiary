@@ -1,0 +1,38 @@
+.footer {
+   background: #282828;
+   width: 100%;
+   padding: 20px 15px;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   gap: 20px;
+   color: #fff;
+}
+
+.footer .link_box {
+   display: flex;
+   gap: 15px;
+   align-items: center;
+}
+
+.footer .link_box > a {
+   font-size: var(--font-size--14);
+   font-weight: 500;
+   position: relative;
+}
+
+.footer .link_box > a:not(:last-child)::before {
+   content: '';
+   position: absolute;
+   right: -9px;
+   width: 2px;
+   height: 100%;
+   background: #fff;
+   top: 50%;
+   transform: translateY(-50%);
+}
+
+.footer .copyright {
+   font-size: var(--font-size--14);
+   font-weight: 500;
+}

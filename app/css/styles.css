@@ -2,6 +2,8 @@
 .paperLogy {font-family: var(--font-paperlogy) !important;}
 .poppins {font-family: var(--font-poppins) !important;}
 
+
+
 .font-\[120px\] {
    --min: 3.5714rem;
    --min: 7.1428rem;
@@ -61,6 +63,10 @@
    }
 }
 
+@media (max-width: 992px) {
+   /* .font-\[120px\] {--min: 70px;} */
+   
+}
 
 @media (max-width: 768px) {
    .font-\[120px\] {--min: 70px;}

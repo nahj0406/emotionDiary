@@ -1,5 +1,5 @@
 import styles from './sideBar.module.css'
-import { MenuLink, SignWrapper, MenuOuter } from './client'
+import { MenuLink, MenuOuter } from './client'
 import connectDB from '@/lib/mongoDB/database/database'
 import { UserDB } from '@/types/interfaces';
 import { getServerSession } from 'next-auth';
@@ -28,8 +28,6 @@ export default async function SideBar() {
             </MenuLink>
 
             <MenuOuter />
-
-            {/* <SignWrapper user={safeUser}></SignWrapper> */}
          </header>
       )
 }
