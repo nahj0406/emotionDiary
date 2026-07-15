@@ -12,7 +12,7 @@ import NiceModal from '@ebay/nice-modal-react';
 import AuthModal from '@/components/modals/AuthModal/AuthModal';
 import { FindPw } from "@/app/(auth)/findUser/findPw/client";
 import SignUp from "@/app/(auth)/signup/client";
-import { TagDTO, UserDTO } from "@/types/interfaces";
+import { TagDTO, UserDB, UserDTO } from "@/types/interfaces";
 import UserThumbnail from "@/components/ui/img/user_thumbnail/userThumbnail";
 import SearchBar from "@/components/ui/search/searchBar/searchBar";
 import LoginProfile from "../loginProfile/loginProfile";
@@ -56,7 +56,7 @@ export default function Header({
 
          <SearchBar />
 
-         {/* <div className={styles.login_box} ref={refBody}>
+         <div className={styles.login_box} ref={refBody}>
             <figure 
                className={styles.user_thumbnail}
                onClick={()=> {
@@ -105,7 +105,7 @@ export default function Header({
                   <LoginProfile user={user} tagList={initialTags} />
                }
             </AnimatePresence>
-         </div> */}
+         </div>
       </div>
    );
 }

@@ -7,6 +7,7 @@ import { deletePostOne } from '@/utils/requester/requester';
 import NiceModal from '@ebay/nice-modal-react';
 import ConfirmModal from '@/components/modals/confirmModal/ConfirmModal';
 import SvgIcon from '@/components/ui/img/svg/icon/svgIcon';
+import UserThumbnail from '@/components/ui/img/user_thumbnail/userThumbnail';
 
 export default function PostCard({item, editMode}: {item: PostCardDTO; editMode?: boolean}) {
    const router = useRouter();
@@ -48,15 +49,11 @@ export default function PostCard({item, editMode}: {item: PostCardDTO; editMode?
          />
          {/* no-img 추가해주기 */}
          <div className={styles.thumbnail_txt}>
-            <h3>{item.title}</h3>
+            <h3 className={styles.title}>{item.title}</h3>
             {/* <p>{content}</p> */}
             <div className={styles.postInfo}>
                <div className={styles.userInfo}>
-                  {
-                     item.user?.thumbnail
-                        ? <img src={item.user?.thumbnail} alt="유저 썸네일" />
-                        : <img src={'/img/unknown.png'} width={20} alt="기본 이미지" />
-                  }
+                  <UserThumbnail thumbnail={item.user?.thumbnail} size={20} />
                   <h5>{item.user?.nickName}</h5>
                </div>
 

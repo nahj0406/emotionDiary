@@ -6,6 +6,7 @@ import PostList from "@/components/post/list/postList/postList";
 import { useState } from 'react';
 import clsx from 'clsx';
 import { useRouter, useSearchParams } from 'next/navigation';
+import SvgIcon from '@/components/ui/img/svg/icon/svgIcon';
 
 
 
@@ -14,7 +15,7 @@ export default function MainList ({
    user,
    initialTags,
 }:{
-   initialPosts: PostCardDTO[]; 
+   initialPosts: PostCardDTO[];
    user: UserDTO | null;
    initialTags: TagDTO[];
 }) {
@@ -22,9 +23,9 @@ export default function MainList ({
    const [list, setList] = useState(initialPosts);
 
    const tabs = [
-      {name: '추천순', key: 'recommend',},
-      {name: '인기순', key: 'popular',},
-      {name: '최신순', key: 'latest',},
+      {name: '추천 피드', key: 'recommend',},
+      {name: '인기 피드', key: 'popular',},
+      {name: '최신 피드', key: 'latest',},
    ]
    const [tabActive, setTabActive] = useState<string>('recommend');
    // const [sort, setSort] = useState<string>('');
@@ -69,27 +70,27 @@ export default function MainList ({
    return (
       <>
          <div className={styles.top_bar}>
-            <div className={styles.search_box}>
-      
-               <ul className={styles.list_tab}>
-                  {
-                     tabs.map((item, i)=> {
-                        return (
-                           <li 
-                              key={`${item.key}_${i}`} 
-                              onClick={()=> {
-                                 sort_Change_handler(item.key);
-                                 setTabActive(item.key);
-                              }}
-                              className={clsx({[styles.active]:tabActive == item.key})}
-                           >
-                              {item.name}
-                           </li>
-                        )
-                     })
-                  }
-               </ul>
-            </div>
+            <button className={styles.category_btn} type='button'>
+               <SvgIcon name={'categoryTab'} />
+            </button>
+            <ul className={styles.feed_tab}>
+               {
+                  tabs.map((item, i)=> {
+                     return (
+                        <li 
+                           key={`${item.key}_${i}`}
+                           onClick={()=> {
+                              sort_Change_handler(item.key);
+                              setTabActive(item.key);
+                           }}
+                           className={clsx('paperLogy',{[styles.active]:tabActive == item.key})}
+                        >
+                           {item.name}
+                        </li>
+                     )
+                  })
+               }
+            </ul>
          </div>
 
          {

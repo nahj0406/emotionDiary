@@ -11,6 +11,7 @@ import { getUserById } from "@/lib/mongoDB/getUserById";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import getTags from "@/lib/mongoDB/getTags";
+import Footer from "@/components/layout/footer/footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -75,6 +76,7 @@ export default async function RootLayout({
                <Header user={userInfo} initialTags={tags} />
                {children}
             </div>
+            <Footer />
           </div>
         </ModalProvider>
       </body>
