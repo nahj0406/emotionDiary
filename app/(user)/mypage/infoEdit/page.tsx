@@ -7,7 +7,7 @@ import connectDB from '@/lib/mongoDB/database/database';
 import { UserDB } from '@/types/interfaces';
 import { ObjectId } from 'mongodb';
 import { EditFrame } from './client'
-import getTags from '@/lib/mongoDB/getTags';
+import getCollectionItems from '@/lib/mongoDB/getCollectionItems';
 
 export default async function InfoEdit() {
 
@@ -20,7 +20,7 @@ export default async function InfoEdit() {
       userInfo = await db.collection<UserDB>('user').findOne({_id: new ObjectId(session?.user?.id)});
    }
 
-   const tags = await getTags();
+   const tags = await getCollectionItems('tags');
 
    const safeUser = userInfo 
       ? JSON.parse(JSON.stringify(userInfo))

@@ -1,10 +1,10 @@
 
 import SignUp from "./client"
-import getTags from "@/lib/mongoDB/getTags";
+import getCollectionItems from "@/lib/mongoDB/getCollectionItems";
 
 export default async function signUp() {
 
-   const tags = await getTags();
+   const tags = await getCollectionItems('tags');
 
    return (
       <SignUp initialTags={tags} />

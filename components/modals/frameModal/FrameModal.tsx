@@ -4,18 +4,19 @@ import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import styles from "./FrameModal.module.css";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect } from "react";
+import SubmitBtn from "@/components/ui/button/submitBtn/submit_btn";
 
 export default NiceModal.create(
    ({ 
       autoClose = 7000,
       onClick,
       closeBtn = false,
-      children,
+      content,
    }: { 
       autoClose?: number;
-      onClick?: () => void;
+      onClick: () => void;
       closeBtn?: boolean;
-      children: React.ReactNode;
+      content: React.ReactNode;
    }) => {
       const modal = useModal();
 
@@ -24,24 +25,24 @@ export default NiceModal.create(
          modal.hide();
       }
 
-      useEffect(() => {
-         if(!closeBtn) {
-            if (autoClose > 0) {
-               const timer = setTimeout(() => handleClose(), autoClose);
-               return () => clearTimeout(timer);
-            }
-         }
-      }, [autoClose]);
+      // useEffect(() => {
+      //    if(!closeBtn) {
+      //       if (autoClose > 0) {
+      //          const timer = setTimeout(() => handleClose(), autoClose);
+      //          return () => clearTimeout(timer);
+      //       }
+      //    }
+      // }, [autoClose]);
 
       return (
          <AnimatePresence
-         onExitComplete={() => {
-            modal.remove();
-         }}
+            onExitComplete={() => {
+               modal.remove();
+            }}
          >
          {modal.visible && (
             <motion.div
-               className={styles.confirmModal}
+               className={styles.frameModal}
                key="modal-overlay"
                initial={{ opacity: 0 }}
                animate={{ opacity: 1 }}
@@ -59,7 +60,9 @@ export default NiceModal.create(
                   transition={{ duration: 0.2 }}
                   onClick={(e) => e.stopPropagation()}
                >
-                  {children}
+                  {content}
+
+                  <SubmitBtn content={'검색'} onClick={()=> {onClick; handleClose();}}  />
                </motion.div>
             </motion.div>
          )}

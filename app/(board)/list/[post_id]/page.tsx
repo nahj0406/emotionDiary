@@ -8,7 +8,7 @@ import Comment from './comment/comment';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import getCategories from '@/lib/mongoDB/getCategories';
-import getTags from '@/lib/mongoDB/getTags';
+import getCollectionItems from '@/lib/mongoDB/getCollectionItems';
 import Link from 'next/link';
 import { dateStringChanger } from '@/utils/dateStringChanger';
 import UserThumbnail from '@/components/ui/img/user_thumbnail/userThumbnail';
@@ -58,7 +58,7 @@ export default async function View ({ params }: { params : Promise<{post_id : st
    const userInfo = await db.collection<UserDB>('user').findOne({_id: new ObjectId(post?.user.id)});
 
    const category = await getCategories();
-   const tags = await getTags();
+   const tags = await getCollectionItems('tags');
 
    const findNameById = (
       items: { _id: string; name: string }[],

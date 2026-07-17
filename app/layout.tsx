@@ -10,7 +10,7 @@ import Header from "@/components/layout/header/header";
 import { getUserById } from "@/lib/mongoDB/getUserById";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
-import getTags from "@/lib/mongoDB/getTags";
+import getCollectionItems from "@/lib/mongoDB/getCollectionItems";
 import Footer from "@/components/layout/footer/footer";
 
 const geistSans = Geist({
@@ -56,7 +56,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
 
-   const getTag = await getTags();
+   const getTag = await getCollectionItems('tags');
    const getSession = await getServerSession(authOptions);
 
    const [tags, session] = await Promise.all([getTag, getSession]);

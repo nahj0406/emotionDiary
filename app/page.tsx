@@ -6,7 +6,7 @@ import { mergePosts } from "@/lib/mongoDB/mergePosts";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import { getUserById } from "@/lib/mongoDB/getUserById";
-import getTags from "@/lib/mongoDB/getTags";
+import getCollectionItems from "@/lib/mongoDB/getCollectionItems";
 import { getSearchPosts } from "@/utils/getSearchPosts";
 
 export default async function Home({
@@ -17,10 +17,11 @@ export default async function Home({
    const { keyword } = await searchParams;
    const posts = keyword ? await getSearchPosts(keyword) : await getPosts();
    const merged = await mergePosts(posts);
-   const getTag = await getTags();
+   const getTag = await getCollectionItems('tags');
    const getSession = await getServerSession(authOptions);
+   const getCategories = await getCollectionItems('categories');
    
-   const [tags, session] = await Promise.all([getTag, getSession]);
+   const [tags, category, session] = await Promise.all([getTag, getCategories, getSession]);
 
 
    const userInfo = 
@@ -30,7 +31,7 @@ export default async function Home({
    
    return (
       <main className={styles.main}>
-         <MainList key={keyword ?? ''} initialPosts={merged} user={userInfo} initialTags={tags} />
+         <MainList key={keyword ?? ''} initialPosts={merged} user={userInfo} initialTags={tags} initialCategories={category} />
       </main>
    );
 }
