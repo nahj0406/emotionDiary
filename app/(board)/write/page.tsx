@@ -2,12 +2,12 @@
 import WriteFrame from './client';
 import styles from './page.module.css';
 import clsx from "clsx";
-import getTags from "@/lib/mongoDB/getTags";
+import getCollectionItems from "@/lib/mongoDB/getCollectionItems";
 import getCategories from '@/lib/mongoDB/getCategories';
 
 export default async function Write() {
 
-   const tags = await getTags();
+   const tags = await getCollectionItems('tags');
    const categories = await getCategories();
 
    return (

@@ -114,6 +114,7 @@
       --disabled-color: #cdcdcd;
 
       /* --font-size--18: clamp(16px, calc(1.6rem + 0.1vw), 2rem); */
+      --font-size--20: clamp(18px, 2rem, 2.2rem);
       --font-size--18: clamp(16px, 1.8rem, 2rem);
       --font-size--16: clamp(14px, 1.6rem, 1.8rem);
       --font-size--14: clamp(14px, 1.4rem, 1.6rem);
