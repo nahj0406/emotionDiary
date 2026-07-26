@@ -14,7 +14,7 @@ export default NiceModal.create(
       content,
    }: { 
       autoClose?: number;
-      onClick: () => void;
+      onClick: () => void | Promise<void>;
       closeBtn?: boolean;
       content: React.ReactNode;
    }) => {
@@ -52,6 +52,17 @@ export default NiceModal.create(
                // onClick={handleClose}
             >
                <motion.div 
+                  className={styles.modal_bg}
+                  key='modal-bg'
+                  initial={{ y: 10, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={{ y: 10, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  onClick={()=> handleClose()}
+               >
+
+               </motion.div>
+               <motion.div 
                   className={styles.modal_body}
                   key="modal-content"
                   initial={{ y: 10, opacity: 0 }}
@@ -62,7 +73,12 @@ export default NiceModal.create(
                >
                   {content}
 
-                  <SubmitBtn content={'검색'} onClick={()=> {onClick; handleClose();}}  />
+                  <SubmitBtn content={'검색'} onClick={
+                     async ()=> {
+                        await onClick?.(); 
+                        handleClose();
+                     }}
+                  />
                </motion.div>
             </motion.div>
          )}
