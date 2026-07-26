@@ -41,38 +41,18 @@ export default function MainList ({
    const router = useRouter();
    const pathname = usePathname();
    const searchParams = useSearchParams();
-   const [searchCats, setSearchCats] = useState<string[]>([]);
-   const [searchTags, setSearchTags] = useState<string[]>([]);
+   // const [valueCats, setValueCats] = useState<string[]>([]);
+   // const [valueTags, setValueTags] = useState<string[]>([]);
    const searchCatsRef = useRef<string[]>([]);
    const searchTagsRef = useRef<string[]>([]);
-
-   console.log(searchCats);
-   console.log(searchTags);
-
-   const handleCats_Change = (category: string) => {
-      const current = searchCatsRef.current;
-
-      const next = current.includes(category)
-         ? current.filter((item) => item !== category)
-         : [...current, category];
-
-      searchCatsRef.current = next;
-      setSearchCats(next);
-   };
-
-   const handleTags_Change = (tag: string) => {
-      const current = searchTagsRef.current;
-
-      const next = current.includes(tag)
-         ? current.filter((item) => item !== tag)
-         : [...current, tag];
-
-      searchTagsRef.current = next;
-      setSearchTags(next);
-   };
+   const [viewCats, setViewCats] = useState<string[]>([]);
+   const [viewTags, setViewTags] = useState<string[]>([]);
 
    const keyword = searchParams?.get('keyword') ?? '';
 
+   // 추천,인기,최신 핸들러
+   // 이걸 지금 바꿔야 함. 클릭 시 url searchparams로 작동하도록.
+   // 지금은 url에 표시가 안되서 헷갈림
    const sort_Change_handler = async (type: string) => {
       try {
          setLoading(true);
@@ -105,42 +85,66 @@ export default function MainList ({
       
    }
 
+   // 탭 검색 필터
+   const tab_Search = async (
+      cat: string[],
+      tag: string[]
+   ) => {
+      const params = new URLSearchParams(
+         searchParams?.toString()
+      );
 
-   // 이거 만지는 중임. 
-   // 검색 필터로 sort.ts에 모달로 선택한 카테고리랑 성향 태그 같이 보내야 하는 상태.
-   // query에 카테고리랑 성향이 들어가도 현재 선택된 sort는 유지되어야 함.
-   // 그럴려면 api에 요청하는 방식을 바꾸어야 함.
-   const tab_Search = async (cat: string[], tag: string[]) => {
-      const params = new URLSearchParams(searchParams?.toString());
-
-      if(cat.length > 0) {
+      if (cat.length > 0) {
          params.set('cat', cat.join(','));
       } else {
-         params.delete('cat')
+         params.delete('cat');
       }
 
-      if(tag.length > 0) {
+      if (tag.length > 0) {
          params.set('tag', tag.join(','));
       } else {
-         params.delete('tag')
+         params.delete('tag');
       }
 
+      if (keyword) {
+         params.set('keyword', keyword);
+      } else {
+         params.delete('keyword');
+      }
+
+      // key가 없으면 최신순을 기본값으로 사용
+      if (!params.get('key')) {
+         params.set('key', 'latest');
+      }
+
+      const query = params.toString();
+
       try {
-         router.push(`${pathname}?${params.toString()}`);
          setLoading(true);
 
-         if (keyword) {
-            params.set('keyword', keyword);
-         }
+         router.push(`${pathname}?${query}`);
 
-         const res = await fetch(`/api/post/list/sort?${params.toString()}`)
+         const res = await fetch(
+            `/api/post/list/sort?${query}`
+         );
 
-         if(!res.ok) {
-            throw new Error(`HTTP Error: ${res.status}`);
+         if (!res.ok) {
+            const errorData = await res.json();
+
+            throw new Error(
+            errorData.message ??
+            `HTTP Error: ${res.status}`
+            );
          }
 
          const data = await res.json();
-         setList(Array.isArray(data) ? data : initialPosts);
+
+         setList(
+            Array.isArray(data)
+            ? data
+            : initialPosts
+         );
+         
 
       } catch (error) {
          console.error(error);
@@ -148,11 +152,12 @@ export default function MainList ({
       } finally {
          setLoading(false);
       }
-   }
+   };
 
+   // 카테고리 탭 오픈 모달
    const CategoryTab_open = ()=> {
-      searchCatsRef.current = [];
-      searchTagsRef.current = [];
+      searchCatsRef.current = [...viewCats];
+      searchTagsRef.current = [...viewTags];
 
 
       NiceModal.show(FrameModal, {
@@ -160,8 +165,12 @@ export default function MainList ({
             <SearchFilter
                tagTab={initialTags}
                catTab={initialCategories}
-               onCatsChange={handleCats_Change}
-               onTagsChange={handleTags_Change}
+               searchCatsRef={searchCatsRef}
+               searchTagsRef={searchTagsRef}
+               viewCats={viewCats}
+               viewTags={viewTags}
+               setViewCats={setViewCats}
+               setViewTags={setViewTags}
             />
          ),
          onClick: () => tab_Search(searchCatsRef.current, searchTagsRef.current),
@@ -197,6 +206,20 @@ export default function MainList ({
                }
             </ul>
          </div>
+         {
+            initialCategories.filter((cat) => viewCats.includes(String(cat.slug))).map((item, i)=> {
+               return (
+                  <div key={`${item.slug}_${i}`}>{item.name}</div>
+               )
+            })
+         }
+         {
+            initialTags.filter((tag) => viewTags.includes(String(tag.slug))).map((item, i)=> {
+               return (
+                  <div key={`${item.slug}_${i}`}>{item.name}</div>
+               )
+            })
+         }
 
          {
             list.length === 0 && (<div>일치하는 검색어가 없습니다.</div>)

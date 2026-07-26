@@ -59,3 +59,13 @@
    font-size: 12px;
    font-weight: 500;
 }
+
+
+/* 리스트 active 시 */
+.cat_list > li.active {
+   border: 2px solid var(--main-color);
+}
+
+.tag_list > li.active {
+   border: 2px solid var(--main-color);
+}
