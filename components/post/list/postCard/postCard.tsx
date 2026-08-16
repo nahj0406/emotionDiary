@@ -45,7 +45,7 @@ export default function PostCard({item, editMode}: {item: PostCardDTO; editMode?
          onClick={()=> router.push(`/list/${item._id}`)}
       >
          <Image 
-            className={styles.thumbnail} src={item.thumbnail} fill alt={'책 썸네일'} 
+            className={styles.thumbnail} src={item.thumbnail} fill alt={'책 썸네일'}
          />
          {/* no-img 추가해주기 */}
          <div className={styles.thumbnail_txt}>

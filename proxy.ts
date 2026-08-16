@@ -13,8 +13,13 @@ export async function proxy(req: NextRequest) {
    // }
 
    if(!token) {
-      const loginUrl = new URL('/?auth=required', req.url);
-      loginUrl.searchParams.set('callbackUrl', req.nextUrl.pathname)
+      const loginUrl = new URL('/', req.url);
+      
+      loginUrl.searchParams.set('auth', 'required');
+      loginUrl.searchParams.set(
+         'callbackUrl',
+         `${req.nextUrl.pathname}${req.nextUrl.search}`,
+      )
       // 로그인하기 전 직전 url로 저장해서 로그인 이후 리다이렉트용
 
       return NextResponse.redirect(loginUrl);
