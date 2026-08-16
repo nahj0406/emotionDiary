@@ -5,7 +5,7 @@ import styles from "./header.module.css";
 import clsx from "clsx";
 import { useEffect, useRef, useState } from "react";
 // import { Dispatch, SetStateAction } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import SvgIcon from "@/components/ui/img/svg/icon/svgIcon";
 
 import NiceModal from '@ebay/nice-modal-react';
@@ -29,6 +29,9 @@ export default function Header({
    const router = useRouter();
    const [open, setOpen] = useState<boolean>(false);
    const refBody = useRef<HTMLDivElement>(null);
+   const pathname = usePathname();
+   const searchParams = useSearchParams();
+   const AuthModalOpened = useRef(false);
 
    useEffect(()=> {
       if(!open) return
@@ -49,6 +52,63 @@ export default function Header({
       }
 
    }, [open, setOpen]);
+
+   // 모달 열고 닫기
+   const showAuthModal = () => {
+      return NiceModal.show(AuthModal, {
+         content: ({close, page, setPage}) => {
+            switch (page) {
+               case 'login':
+                  return (
+                  <Login 
+                     modalClose={close}
+                     setPage={setPage}
+                  />
+               )
+
+               case 'findPw':
+                  return (
+                     <FindPw 
+                        setPage={setPage}
+                     />
+               )
+
+               case 'signIn':
+                  return (
+                     <SignUp 
+                        initialTags={initialTags}
+                        setPage={setPage}
+                     />
+               )
+            }
+         }
+      })
+   }
+
+   // 비회원이 토큰 필요 페이지 접근할때 로그인 모달 띄우기
+   useEffect(()=> {
+      if (!pathname) return;
+      if (searchParams?.get('auth') !== 'required') return;
+      if (AuthModalOpened.current) return;
+
+      AuthModalOpened.current = true;
+
+      showAuthModal().finally(()=> {
+         const params = new URLSearchParams(searchParams.toString());
+
+         params.delete('auth');
+         params.delete('callbackUrl');
+
+         const query = params.toString();
+
+         router.replace(query ? `${pathname}?${query}` : pathname, {
+            scroll: false,
+         });
+
+         AuthModalOpened.current = false;
+
+      })
+   }, [pathname, router, searchParams]);
    
 
    return (
@@ -63,34 +123,7 @@ export default function Header({
                   if(user) {
                      router.push('/mypage');
                   } else {
-                     NiceModal.show(AuthModal, {
-                        content: ({close, page, setPage}) => {
-                           switch (page) {
-                              case 'login':
-                                 return (
-                                 <Login 
-                                    modalClose={close}
-                                    setPage={setPage}
-                                 />
-                              )
-
-                              case 'findPw':
-                                 return (
-                                    <FindPw 
-                                       setPage={setPage}
-                                    />
-                              )
-
-                              case 'signIn':
-                                 return (
-                                    <SignUp 
-                                       initialTags={initialTags}
-                                       setPage={setPage}
-                                    />
-                              )
-                           }
-                        },
-                     })
+                     showAuthModal();
                   }
                }}
             >
